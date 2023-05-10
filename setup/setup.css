@@ -89,3 +89,27 @@ input[type="text"]:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   border: 1px solid #ddd;
 }
+
+.fixed-top-left {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 5px ;
+  border-radius: 10px;
+  border: 0;
+  background-color: #ffffff;
+  color: #000;
+  transition: background-color 0.3s, color 0.3s;
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: #ddd;
+  cursor: pointer;
+  font-size: 24px;
+  z-index: 1000;
+}
+
+.fixed-top-left:hover {
+  background-color: #666;
+  color: #fff;
+  outline-style: none;
+}
