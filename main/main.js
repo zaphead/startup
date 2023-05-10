@@ -32,3 +32,23 @@ window.onclick = function(event) {
 
 
 //PROCESS FLOWCHART SCRIPTS
+
+// Get the Add Step button
+var addStepButton = document.querySelector(".click-button");
+
+// Get the parent container
+var cardGroup = document.querySelector(".card-group");
+
+// Add event listener to the Add Step button
+addStepButton.addEventListener("click", function() {
+  // Create a new card container div
+  var newCardContainer = document.createElement("div");
+  newCardContainer.classList.add("card-container");
+
+  // Copy the HTML of the card container div to the new div
+  newCardContainer.innerHTML = document.querySelector(".card-container").innerHTML;
+
+  // Insert the new card container div before the Add Step button
+  cardGroup.insertBefore(newCardContainer, addStepButton);
+});
+

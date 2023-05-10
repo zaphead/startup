@@ -35,35 +35,30 @@
           
       <section class="main-section">
         <div class="card-group">
-            <div class="card-container">
-                <div class="content-container">
-                  <div class="card">
-                    <div class="process-title" contenteditable="true" data-placeholder="Process title"></div>
-                    <div class="process-content" contenteditable="true" data-placeholder="Process content"></div>
-                  </div>
-                  
-                  
-                    <div class="arrow-buttons">
-                        <button class="up-button">&#8593;</button>
-                        <button class="down-button">&#8595;</button>
-                      </div>
-                </div>
-              
-              <div style="margin-top: 15px;">
-                <img class="arrowimg" height=50px src="../Images/down_arrow.png">
+          <div class="card-container">
+            <div class="content-container">
+              <div class="card">
+                <div class="process-title" contenteditable="true" data-placeholder="Process title"></div>
+                <div class="process-content" contenteditable="true" data-placeholder="Process content"></div>
               </div>
-              <button class="click-button">Add Step</button>
+              
+              <div class="arrow-buttons">
+                <button class="up-button">&#8593;</button>
+                <button class="down-button">&#8595;</button>
+              </div>
             </div>
-          </div>   
-        
-        <!-- button element -->
-        <div class="analyze-container">
-          <button class="button analyze">Analyze</button>
+            
+            <div>
+              <img class="arrowimg" height=50px src="../Images/down_arrow.png">
+            </div>
+          </div>
+          <button class="click-button">Add Step</button>
         </div>
+          
       </section>
 
       <section class="right-section">
-        <div id="analysis_div">
+
           <h2 style="text-align: center;">Analysis</h2>
             <div class="analysis-output">
             <!--In the paragraph below will go the analysis return from the LLM-->
@@ -72,11 +67,17 @@
                     The agency business model can be improved in several ways. Firstly, it's important to have a clear and defined target audience. This allows the agency to tailor their services to meet the specific needs and preferences of their clients. Secondly, offering a range of services that complement each other can increase revenue streams and create a more comprehensive offering for clients. Thirdly, building and maintaining strong relationships with clients can help with retention and referral business. Fourthly, investing in the right technology and tools can streamline operations and improve efficiency. Finally, staying ahead of industry trends and continuously adapting to changing market conditions can ensure the agency remains competitive and relevant in the long-term.
                 </p>
             </div>
-            <h5>This analysis is up to date ☑️</h5>
-        </div>
-        <div class="divider"></div>
+            <div class="analysis-info">
+              <div class="analyze-container">
+                <button class="analyze">Analyze</button>
+              </div>
+              <h5>This analysis is up to date ☑️</h5>
+          </div>
+
+
         <footer>
           <div class="logo">
+            <div class="divider"></div>
               <img width="100%" src="../Images/Processeon Logo.png" alt="Logo">
               <a target="_blank" href="https://github.com/zaphead/startup" class="text-button" style="text-align: center;">Spencer Terry | GitHub</a>
           </div>

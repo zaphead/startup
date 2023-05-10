@@ -5,16 +5,27 @@
 
 /* styles for the button */
 .button {
-    display: inline-block;
     padding: 10px 20px;
     border-radius: 5px;
     border: 0;
     background-color: #f7f7f5;
     color: #000;
     transition: background-color 0.3s, color 0.3s;
-    position: absolute;
-    bottom: 30px;
-    right: 40px;
+    position: relative;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: #ddd;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .analyze {
+    background-color: #666;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 0;
+    transition: background-color 0.3s, color 0.3s;
+    position: relative;
     outline-style: solid;
     outline-width: 1px;
     outline-color: #ddd;
@@ -22,11 +33,26 @@
     font-size: 16px;
   }
 
-  .analyze-container {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
+  .analyze:hover {
+    background-color: #fff;
+    color: #666;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+
   }
+  
+
+  .analyze-container {
+    margin-right: 10px;
+  }
+
+.analysis-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.analysis-info {
+  margin-top: 10px;
+}
   
   .text-button {
     text-decoration: none;
@@ -88,7 +114,8 @@ section.main-section {
     overflow-y: auto;
     display: flex;
     justify-content: center;
-    align-items: center;
+
+    overflow-y: scroll;
 }
 
 section.right-section {
@@ -121,7 +148,6 @@ section.right-section .logo {
     transform: translateX(-50%);
   }
 
-  
  
   .card {
     width: 500px;
@@ -176,8 +202,7 @@ section.right-section .logo {
   }
   .card-group {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
   }
   
@@ -192,7 +217,7 @@ section.right-section .logo {
 
   
   .click-button {
-    margin-top: 20px;
+    margin: 0px;
     padding: 10px 20px;
     border-radius: 5px;
     background-color: #ffffff;
@@ -245,7 +270,7 @@ section.right-section .logo {
   }
 
   .arrowimg {
-    margin: 15px 0;
+    margin-top: 10px;
   }
   .content-container {
     display: flex;
@@ -276,8 +301,8 @@ section.right-section .logo {
   .analysis-output {
 
     line-height: 1.6;
-    overflow: auto;
-    height: 600px;
+    overflow: scroll;
+    height: 60%;
     margin-top: 18px;
     border: 1px solid #ddd;
     border-radius: 15px;
@@ -325,4 +350,8 @@ section.right-section .logo {
     border-radius: 25px;
   }
   
+  .divider {
+    height: 1px;
+    background-color: #ccc;
+  }
   
