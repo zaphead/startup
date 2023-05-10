@@ -1,0 +1,243 @@
+@font-face {
+    font-family: SerifFont;
+    src: url('./Fonts/Merriweather/Merriweather-Regular.ttf');
+  }
+
+/* styles for the button */
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 0;
+    background-color: #ffffff;
+    color: #000;
+    transition: background-color 0.3s, color 0.3s;
+    position: absolute;
+    bottom: 30px;
+    right: 40px;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: #ddd;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .text-button {
+    text-decoration: none;
+    display: block;
+    margin: 5px 0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #7a7a7a;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .text-button:hover {
+    background-color: #ddd;
+  }
+
+  
+
+
+.button:hover {
+    background-color: #666;
+    color: #fff;
+    outline-style: none;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+h5, h4 {
+    color: #8d8d83;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+    color: #252524;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+section.left-section {
+    width: calc(20vw);
+    min-width: 200px;
+    max-width: 250px;
+    height: 100vh;
+    background-color: #f7f7f5;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+section.main-section {
+    flex-grow: 1;
+    height: 100vh;
+    background-color: #fff;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+section.right-section {
+    width: calc(30vw);
+    min-width: 300px;
+    max-width: 500px;
+    height: 100vh;
+    background-color: #f7f7f5;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+section.left-section h2,
+section.right-section h2 {
+    margin: 0;
+}
+
+section.right-section .logo {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  
+ 
+  .card {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    outline: 1px solid #ddd;
+    transition: box-shadow 0.3s ease-in-out;
+    margin-right: 10px;
+  }
+  
+  .card:hover {
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+    outline: none;
+  }
+  .card-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .card-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+
+  
+  .click-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #000;
+    transition: background-color 0.3s, color 0.3s;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: #ddd;
+  }
+  
+  .click-button:hover {
+    background-color: #666;
+    color: #fff;
+  }
+  
+  .arrow-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .up-button,
+  .down-button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #000;
+    transition: background-color 0.3s, color 0.3s;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: #ddd;
+  }
+  
+  .up-button:hover,
+  .down-button:hover {
+    background-color: #666;
+    color: #fff;
+  }
+  
+  .down-button {
+    margin-top: 10px;
+  }
+
+  .arrowimg {
+    margin: 15px 0;
+  }
+  .content-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logout-button {
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #000;
+    transition: background-color 0.3s, color 0.3s;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: #ddd;
+    padding: 5px 5px;
+    font-size: 20px;
+  }
+  .logout-button:hover {
+    background-color: #666;
+    color: #fff;
+  }
+
+  .analysis-output {
+
+    line-height: 1.6;
+    overflow: auto;
+    height: 600px;
+    margin-top: 18px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  .analysis-output:hover {
+    box-shadow: 0 0 20px 5px rgba(41, 41, 41, 0.1);
+  }
+  
