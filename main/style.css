@@ -145,6 +145,22 @@ section.right-section .logo {
     text-align: left;
   }
   
+  .business-title {
+    text-align: center;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 24px;
+  }
+  
+  .business-content {
+    text-align: left;
+    height: 90%;
+    margin: 25px;;
+    outline-color: #000000;
+    
+  }
+  
 
   [contenteditable]:empty:not(:focus):before {
     content: attr(data-placeholder);
@@ -271,4 +287,42 @@ section.right-section .logo {
   .analysis-output:hover {
     box-shadow: 0 0 20px 5px rgba(41, 41, 41, 0.1);
   }
+  
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    justify-content: center; /* Center children elements */
+  }
+  
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    justify-content: center; /* Center children elements */
+  }
+  
+  /* Style for the modal content box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    height: 70vh;
+    border-radius: 25px;
+  }
+  
   

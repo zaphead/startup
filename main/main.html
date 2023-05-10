@@ -6,25 +6,27 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="../Images/favicon.png">
 
+
   </head>
   <body>
     <div class="container">
         <section class="left-section">
-            <div id="processes_div">
-              <h2 style="margin-bottom: 20px;">Processes</h2>
-              <a href="#" class="text-button">Client Acquisition</a>
-              <a href="#" class="text-button">Marketing Strategy</a>
-              <a href="#" class="text-button">Service Process</a>
-            </div>
-            <div id="processes_div">
-              <h2 style="margin-bottom: 20px; margin-top: 20px;">Business</h2>
-              <a href="#" class="text-button">Business Name</a>
-              <a href="#" class="text-button">Target Market</a>
-              <a href="#" class="text-button">Product</a>
-              <a href="#" class="text-button">Stage</a>
-              <a href="#" class="text-button">Work Time</a>
-              <a href="#" class="text-button">Experience</a>
-            </div>
+          <div id="processes_div">
+            <h2 style="margin-bottom: 20px;">Processes</h2>
+            <a href="#" id="client-acquisition" class="text-button">Client Acquisition</a>
+            <a href="#" id="marketing-strategy" class="text-button">Marketing Strategy</a>
+            <a href="#" id="service-process" class="text-button">Service Process</a>
+          </div>
+          <div id="business_div">
+            <h2 style="margin-bottom: 20px; margin-top: 20px;">Business</h2>
+            <a href="#" business="yes" id="business-name" class="text-button">Business Name</a>
+            <a href="#" business="yes" id="target-market" class="text-button">Target Market</a>
+            <a href="#" business="yes" id="product" class="text-button">Product</a>
+            <a href="#" business="yes" id="stage" class="text-button">Stage</a>
+            <a href="#" business="yes" id="work-time" class="text-button">Work Time</a>
+            <a href="#" business="yes" id="experience" class="text-button">Experience</a>
+          </div>
+          
             <h4 style="position: absolute; bottom: 0;">
               Larry Page
               <a href="../index.html"><button class="logout-button" style="margin-left: 10px;">🔒</button></a>
@@ -82,5 +84,15 @@
         </footer>      
       </section>
     </div>
+
+    <!--Text editor modal for editing business information-->
+    <div id="myModal" class="modal">
+      <div class="modal-content card">
+        <div id="modal-title" contenteditable="false" class="business-title"></div>
+        <div id="modal-content" contenteditable="true" class="business-content" data-placeholder=""></div>
+      </div>
+    </div>
+    
   </body>
+  <script src="./main.js"></script>
 </html>
