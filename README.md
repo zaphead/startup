@@ -41,4 +41,4 @@ The user will input as much information as possible about his business, such as 
 - **********React********** - App will be using the React web framework.
 
 ### Layout Concept
-<img src="./Images/Process%20concept.png alt="Login Page" width="500" />
+<img src="./Images/Process%20concept.png" alt="Login Page" width="500" />
