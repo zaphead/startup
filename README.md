@@ -17,7 +17,7 @@ Here are your common signup and login pages:
 
 The user will input as much information as possible about his business, such as the business model, the product or service they provide, and most-importantly, their business processes. These can be things such as client acquisition, marketing efforts, click funneling techniques, etc... The user creates a flow chart for these processes. Once the user hits "analyze", a large language model AI such as ChatGPT or Google Bard will take all the business data, and provide critiques, suggestions, and modifications for that specific process, given the context of the business, product, market, and more. The use can then edit the flow chart and reanalyze.
 
- ![Main Page](./Images/Main%20Spec.png)
+ ![Main Page](./Images/New%20Main%20Spec.png)
 
 ### Key Features
 
