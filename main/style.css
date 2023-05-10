@@ -9,7 +9,7 @@
     padding: 10px 20px;
     border-radius: 5px;
     border: 0;
-    background-color: #ffffff;
+    background-color: #f7f7f5;
     color: #000;
     transition: background-color 0.3s, color 0.3s;
     position: absolute;
@@ -209,7 +209,7 @@ section.right-section .logo {
   
   .logout-button {
     border-radius: 5px;
-    background-color: #ffffff;
+    background-color: none;
     color: #000;
     transition: background-color 0.3s, color 0.3s;
     outline: none;
