@@ -30,7 +30,6 @@ window.onclick = function(event) {
   }
 }
 
-
 // JSON DUMMY DATA
 fetch('client_acquisition.json')
   .then((response) => response.json())
@@ -45,9 +44,7 @@ fetch('client_acquisition.json')
     console.error('Error fetching data from JSON file:', error);
   });
 
-
 function parseData(data) {
-  //JSON PARSING PROGRAM
   // Get the container element
   const container = document.querySelector('.main-section');
 
@@ -104,6 +101,15 @@ function parseData(data) {
       upButton.classList.add('up-button');
       upButton.innerHTML = '&#8593;';
       arrowButtons.appendChild(upButton);
+
+      // Add event listener to the up button
+      upButton.addEventListener('click', () => {
+        // Swap the nodes in the data object
+        [data.process[index], data.process[index - 1]] = [data.process[index - 1], data.process[index]];
+
+        // Re-render the steps
+        renderSteps();
+      });
     }
 
     // Create the down button
@@ -112,6 +118,15 @@ function parseData(data) {
       downButton.classList.add('down-button');
       downButton.innerHTML = '&#8595;';
       arrowButtons.appendChild(downButton);
+
+      // Add event listener to the down button
+      downButton.addEventListener('click', () => {
+        // Swap the nodes in the data object
+        [data.process[index], data.process[index + 1]] = [data.process[index + 1], data.process[index]];
+
+        // Re-render the steps
+        renderSteps();
+      });
     }
 
     // Create the arrow image
@@ -122,7 +137,7 @@ function parseData(data) {
 
     // Create the arrow image container
     const arrowImageContainer = document.createElement('div');
-    arrowImageContainer.classList.add('arrow-image-container');
+       arrowImageContainer.classList.add('arrow-image-container');
     arrowImageContainer.appendChild(arrowImg);
 
     // Append the card container to the steps container
@@ -131,10 +146,21 @@ function parseData(data) {
     stepsContainer.appendChild(cardContainer);
   }
 
-  // Loop through the process data and render each card
-  data.process.forEach((step, i) => {
-    renderStep(step, i, stepsContainer);
-  });
+  // Function to render all steps
+  function renderSteps() {
+    // Remove all child elements of the stepsContainer
+    while (stepsContainer.firstChild) {
+      stepsContainer.removeChild(stepsContainer.firstChild);
+    }
+
+    // Re-render the steps
+    data.process.forEach((step, i) => {
+      renderStep(step, i, stepsContainer);
+    });
+  }
+
+  // Render the initial steps
+  renderSteps();
 
   // Create the "Add Step" button
   const addStepButton = document.createElement('button');
@@ -150,13 +176,71 @@ function parseData(data) {
     // Add the new step to the data object
     data.process.push(newStep);
 
-    // Remove all child elements of the stepsContainer
-    while (stepsContainer.firstChild) {
-      stepsContainer.removeChild(stepsContainer.firstChild);
-    }
-      // Re-render the steps
-      data.process.forEach((step, i) => {
-        renderStep(step, i, stepsContainer);
-      });
-    });
+    // Re-render the steps
+    renderSteps();
+  });
 }
+
+
+
+
+
+
+//SAVING DATA PROGRAM
+
+function saveDataAndRerender() {
+  // Save the data to a JSON file
+  saveDataToFile(data);
+
+  // Re-render the steps
+  renderSteps();
+}
+
+function saveDataToFile(data) {
+  const jsonData = JSON.stringify(data, null, 2);
+  const blob = new Blob([jsonData], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+
+  const downloadLink = document.createElement('a');
+  downloadLink.href = url;
+  downloadLink.download = 'client_acquisition_updated.json';
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+}
+
+// Create the process title
+const processTitle = document.createElement('div');
+processTitle.classList.add('process-title');
+processTitle.contentEditable = true;
+processTitle.dataset.placeholder = 'Process title';
+processTitle.textContent = step.title;
+card.appendChild(processTitle);
+
+// Listen for changes in the process title
+processTitle.addEventListener('input', () => {
+  data.process[index].title = processTitle.textContent;
+  saveDataAndRerender();
+});
+processTitle.addEventListener('blur', () => {
+  data.process[index].title = processTitle.textContent;
+  saveDataAndRerender();
+});
+
+// Create the process content
+const processContent = document.createElement('div');
+processContent.classList.add('process-content');
+processContent.contentEditable = true;
+processContent.dataset.placeholder = 'Process content';
+processContent.textContent = step.description;
+card.appendChild(processContent);
+
+// Listen for changes in the process content
+processContent.addEventListener('input', () => {
+  data.process[index].description = processContent.textContent;
+  saveDataAndRerender();
+});
+processContent.addEventListener('blur', () => {
+  data.process[index].description = processContent.textContent;
+  saveDataAndRerender();
+});
