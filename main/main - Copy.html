@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>StrataMind</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="../Images/favicon.png">
+
+
+  </head>
+  <body>
+    <div class="container">
+        <section class="left-section">
+          <div id="processes_div">
+            <h2 style="margin-bottom: 20px;">Processes</h2>
+            <a href="#" id="client-acquisition" class="text-button">Client Acquisition</a>
+            <a href="#" id="marketing-strategy" class="text-button">Marketing Strategy</a>
+            <a href="#" id="service-process" class="text-button">Service Process</a>
+          </div>
+          <div id="business_div">
+            <h2 style="margin-bottom: 20px; margin-top: 20px;">Business</h2>
+            <a href="#" business="yes" id="business-name" class="text-button">Business Name</a>
+            <a href="#" business="yes" id="target-market" class="text-button">Target Market</a>
+            <a href="#" business="yes" id="product" class="text-button">Product</a>
+            <a href="#" business="yes" id="stage" class="text-button">Stage</a>
+            <a href="#" business="yes" id="work-time" class="text-button">Work Time</a>
+            <a href="#" business="yes" id="experience" class="text-button">Experience</a>
+          </div>
+          
+            <h4 style="position: absolute; bottom: 0;">
+              Larry Page
+              <a href="../index.html"><button class="logout-button" style="margin-left: 10px;">🔒</button></a>
+            </h4>
+          </section>
+          
+      <section class="main-section">
+        
+          
+      </section>
+
+      <section class="right-section">
+
+          <h2 style="text-align: center;">Analysis</h2>
+            <div class="analysis-output">
+            <!--In the paragraph below will go the analysis return from the LLM-->
+                <p>
+                    The agency business model can be improved in several ways. Firstly, it's important to have a clear and defined target audience. This allows the agency to tailor their services to meet the specific needs and preferences of their clients. Secondly, offering a range of services that complement each other can increase revenue streams and create a more comprehensive offering for clients. Thirdly, building and maintaining strong relationships with clients can help with retention and referral business. Fourthly, investing in the right technology and tools can streamline operations and improve efficiency. Finally, staying ahead of industry trends and continuously adapting to changing market conditions can ensure the agency remains competitive and relevant in the long-term.
+                    The agency business model can be improved in several ways. Firstly, it's important to have a clear and defined target audience. This allows the agency to tailor their services to meet the specific needs and preferences of their clients. Secondly, offering a range of services that complement each other can increase revenue streams and create a more comprehensive offering for clients. Thirdly, building and maintaining strong relationships with clients can help with retention and referral business. Fourthly, investing in the right technology and tools can streamline operations and improve efficiency. Finally, staying ahead of industry trends and continuously adapting to changing market conditions can ensure the agency remains competitive and relevant in the long-term.
+                </p>
+            </div>
+            <div class="analysis-info">
+              <div class="analyze-container">
+                <button class="analyze">Analyze</button>
+              </div>
+              <h5>This analysis is up to date ☑️</h5>
+          </div>
+
+
+        <footer>
+          <div class="logo">
+            <div class="divider"></div>
+              <img width="100%" src="../Images/Processeon Logo.png" alt="Logo">
+              <a target="_blank" href="https://github.com/zaphead/startup" class="text-button" style="text-align: center;">Spencer Terry | GitHub</a>
+          </div>
+          
+        </footer>      
+      </section>
+    </div>
+
+    <!--Text editor modal for editing business information-->
+    <div id="myModal" class="modal">
+      <div class="modal-content card">
+        <div id="modal-title" contenteditable="false" class="business-title"></div>
+        <div id="modal-content" contenteditable="true" class="business-content" data-placeholder=""></div>
+      </div>
+    </div>
+    
+  </body>
+  <script src="./main - Copy.js"></script>
+</html>

@@ -1,0 +1,28 @@
+{
+    "process": [
+      {
+        "id": "1",
+        "title": "Initial Inquiry",
+        "description": "Potential client contacts the company expressing interest in their services",
+        "next": ["2"]
+      },
+      {
+        "id": "2",
+        "title": "On-site Visit",
+        "description": "Company representative visits the client's site to assess the project",
+        "next": ["3"]
+      },
+      {
+        "id": "3",
+        "title": "Estimate",
+        "description": "Company provides a detailed estimate of the project cost to the client",
+        "next": ["4"]
+      },
+      {
+        "id": "4",
+        "title": "Contract Signing",
+        "description": "Client agrees to the estimate and signs a contract with the company to begin work",
+        "next": []
+      }
+    ]
+  }

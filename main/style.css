@@ -92,6 +92,7 @@ body {
 .container {
     display: flex;
     width: 100%;
+    flex-direction: row;
 }
 
 section.left-section {
@@ -105,18 +106,19 @@ section.left-section {
 }
 
 section.main-section {
-    flex-grow: 1;
-    height: 100vh;
-    background-color: #fff;
-    padding: 20px;
-    box-sizing: border-box;
-    position: relative;
-    overflow-y: auto;
-    display: flex;
-    justify-content: center;
-
-    overflow-y: scroll;
+  flex-grow: 1;
+  height: 100vh;
+  background-color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
 }
+
+
 
 section.right-section {
     width: calc(30vw);
@@ -217,7 +219,8 @@ section.right-section .logo {
 
   
   .click-button {
-    margin: 0px;
+    display: block;
+    margin: 0 auto;
     padding: 10px 20px;
     border-radius: 5px;
     background-color: #ffffff;
@@ -230,6 +233,7 @@ section.right-section .logo {
     outline-width: 1px;
     outline-color: #ddd;
   }
+  
   
   .click-button:hover {
     background-color: #666;
