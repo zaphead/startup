@@ -40,5 +40,5 @@ const tone = 'reasonable'; // or "cutthroat"
 const maxWords = 150; // Set to -1 for unlimited words
 const analyzeWholeBusiness = false; // Set to true to analyze the whole business
 
-const prompt = generatePrompt(businessInfoPath, processInfoPath, tone, maxWords, analyzeWholeBusiness);
+const analysisPrompt = generatePrompt(businessInfoPath, processInfoPath, tone, maxWords, analyzeWholeBusiness);
 console.log(prompt);
