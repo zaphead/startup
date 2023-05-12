@@ -1,0 +1,86 @@
+[
+  {
+    "process1": [
+      {
+        "id": "1",
+        "title": "Initial Inquiry",
+        "description": "Potential client contacts the company expressing interest in their services",
+        "next": ["2"]
+      },
+      {
+        "id": "2",
+        "title": "Consultation",
+        "description": "Company schedules a consultation meeting with the client to discuss their needs",
+        "next": ["3"]
+      },
+      {
+        "id": "3",
+        "title": "Proposal Submission",
+        "description": "Company prepares and submits a proposal outlining the scope of work and cost",
+        "next": ["4"]
+      },
+      {
+        "id": "4",
+        "title": "Negotiation and Agreement",
+        "description": "Client and company negotiate terms and reach an agreement to move forward",
+        "next": []
+      }
+    ]
+  },
+  {
+    "process3": [
+      {
+        "id": "1",
+        "title": "Preparation",
+        "description": "Company prepares the necessary equipment and props for the photo shoot",
+        "next": ["2"]
+      },
+      {
+        "id": "2",
+        "title": "On-site Shoot",
+        "description": "Photographer visits the location and conducts the photo shoot according to the client's requirements",
+        "next": ["3"]
+      },
+      {
+        "id": "3",
+        "title": "Editing and Post-production",
+        "description": "Company processes and enhances the captured photos to meet the desired quality",
+        "next": ["4"]
+      },
+      {
+        "id": "4",
+        "title": "Delivery of Final Photos",
+        "description": "Company delivers the edited and finalized photos to the client",
+        "next": []
+      }
+    ]
+  },
+  {
+    "process3": [
+      {
+        "id": "1",
+        "title": "Follow-up Communication",
+        "description": "Company reaches out to clients after the completion of a project to ensure satisfaction",
+        "next": ["2"]
+      },
+      {
+        "id": "2",
+        "title": "Offer Additional Services",
+        "description": "Company identifies opportunities to provide additional services or products to the client",
+        "next": ["3"]
+      },
+      {
+        "id": "3",
+        "title": "Maintain Regular Contact",
+        "description": "Company maintains regular contact with clients through newsletters, updates, or personalized messages",
+        "next": ["4"]
+      },
+      {
+        "id": "4",
+        "title": "Referral Program",
+        "description": "Company encourages satisfied clients to refer their contacts and provides incentives for referrals",
+        "next": []
+      }
+    ]
+  }
+]
