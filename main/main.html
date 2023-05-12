@@ -34,26 +34,7 @@
           </section>
           
       <section class="main-section">
-        <div class="card-group">
-          <div class="card-container">
-            <div class="content-container">
-              <div class="card">
-                <div class="process-title" contenteditable="true" data-placeholder="Process title"></div>
-                <div class="process-content" contenteditable="true" data-placeholder="Process content"></div>
-              </div>
-              
-              <div class="arrow-buttons">
-                <button class="up-button">&#8593;</button>
-                <button class="down-button">&#8595;</button>
-              </div>
-            </div>
-            
-            <div>
-              <img class="arrowimg" height=50px src="../Images/down_arrow.png">
-            </div>
-          </div>
-          <button class="click-button">Add Step</button>
-        </div>
+        
           
       </section>
 
@@ -70,8 +51,36 @@
             <div class="analysis-info">
               <div class="analyze-container">
                 <button class="analyze">Analyze</button>
+                <div id="modal-analyze" class="modal analyze-modal">
+                  <div class="analyze-modal-content">
+                    <h3>Select Analysis Parameters</h3>
+                    <label for="select1">Length of Response</label>
+                    <select id="select1" class="select-dropdown">
+                      <option value="option1">Short</option>
+                      <option value="option2">Medium</option>
+                      <option value="option3">Long</option>
+                    </select>
+                    
+                    <label for="select2">Analysis Scope</label>
+                    <select id="select2" class="select-dropdown">
+                      <option value="option1">Whole Business</option>
+                      <option value="option2">Client Acquisition</option>
+                      <option value="option3">Marketing Strategy</option>
+                      <option value="option3">Service Process</option>
+                    </select>
+                    
+                    <label for="select3">Tone</label>
+                    <select id="select3" class="select-dropdown">
+                      <option value="option2">Straight Forward</option>
+                      <option value="option1">Nice and Soft (It won't be very helpful)</option>
+                      <option value="option3">Roast Me and everything I've built🔥</option>
+                    </select>
+                    
+                    <button class="modal-button">Submit</button>
+                  </div>
+                </div>
               </div>
-              <h5>This analysis is up to date ☑️</h5>
+              <h5 id="analysisCurrent">This analysis is up to date ☑️</h5>
           </div>
 
 
