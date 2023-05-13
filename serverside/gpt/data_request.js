@@ -1,6 +1,9 @@
 import { MongoClient } from 'mongodb';
+import 'dotenv/config';
+const cred = process.env.MONGO_URL;
 
-const uri = 'mongodb+srv://bruh:bruh@cluster0.qkibkhv.mongodb.net/?retryWrites=true&w=majority';
+
+const uri = cred;
 
 
 //Retrieve PROCESSES data given specific email
