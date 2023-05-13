@@ -1,6 +1,7 @@
 [
   {
-    "process1": [
+    "id": "process1",
+    "steps": [
       {
         "id": "1",
         "title": "Initial Inquiry",
@@ -28,7 +29,8 @@
     ]
   },
   {
-    "process3": [
+    "id": "process2",
+    "steps": [
       {
         "id": "1",
         "title": "Preparation",
@@ -56,7 +58,8 @@
     ]
   },
   {
-    "process3": [
+    "id": "process3",
+    "steps": [
       {
         "id": "1",
         "title": "Follow-up Communication",

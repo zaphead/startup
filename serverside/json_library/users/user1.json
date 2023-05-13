@@ -1,0 +1,75 @@
+{
+    "_id": "6158f7a26a25bfcf7d415a01",
+    "email": "john@example.com",
+    "password": "<hashed_password>",
+    "name": "John Doe",
+    "processes": [
+      {
+        "processName": "process1",
+        "steps": [
+          {
+            "id": "1",
+            "title": "Initial Inquiry",
+            "description": "Potential client contacts the company expressing interest in their services",
+            "next": ["2"]
+          },
+          {
+            "id": "2",
+            "title": "Consultation",
+            "description": "Company schedules a consultation meeting with the client to discuss their needs",
+            "next": ["3"]
+          },
+          {
+            "id": "3",
+            "title": "Proposal Submission",
+            "description": "Company prepares and submits a proposal outlining the scope of work and cost",
+            "next": ["4"]
+          },
+          {
+            "id": "4",
+            "title": "Negotiation and Agreement",
+            "description": "Client and company negotiate terms and reach an agreement to move forward",
+            "next": []
+          }
+        ]
+      },
+      {
+        "processName": "process3",
+        "steps": [
+          {
+            "id": "1",
+            "title": "Preparation",
+            "description": "Company prepares the necessary equipment and props for the photo shoot",
+            "next": ["2"]
+          },
+          {
+            "id": "2",
+            "title": "On-site Shoot",
+            "description": "Photographer visits the location and conducts the photo shoot according to the client's requirements",
+            "next": ["3"]
+          },
+          {
+            "id": "3",
+            "title": "Editing and Post-production",
+            "description": "Company processes and enhances the captured photos to meet the desired quality",
+            "next": ["4"]
+          },
+          {
+            "id": "4",
+            "title": "Delivery of Final Photos",
+            "description": "Company delivers the edited and finalized photos to the client",
+            "next": []
+          }
+        ]
+      }
+    ],
+    "businessInfo": {
+      "business_name": "ABC Photography",
+      "target_market": "Weddings and Events",
+      "product": "Photography services",
+      "business_stage": "Established",
+      "hours": 40,
+      "experience": "5 years"
+    }
+  }
+  

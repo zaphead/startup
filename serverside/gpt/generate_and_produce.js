@@ -56,10 +56,12 @@ Let's get started.
 
 **Business Information:**
 
+//This could be a query to the bizinfo section of the document
 ${businessInfo}
 
 **Process Information:**
 
+//A query to the processes section of the document
 ${processInfo}
 
 Couple more things to keep in mind:
