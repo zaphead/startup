@@ -1,0 +1,156 @@
+@font-face {
+  font-family: 'merriweather';
+  src: url('../Fonts/Merriweather/Merriweather-Black.ttf') format('truetype');
+}
+
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  justify-content: center;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+
+header {
+  background-color: #ffffff;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 25px;
+  margin: 25px;
+  position: fixed;
+  width: calc(100% - 50px);
+  padding: 0px;
+  border: 1px solid #ddd;
+  transition: box-shadow 0.3s ease, border 0.3s ease, width 0.3s ease, margin 0.3s ease, border-radius 0.3s ease;
+  z-index: 1;
+}
+
+
+header:hover {
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+  border: 1px solid white;
+}
+
+
+.logo {
+  width: 325px;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+nav {
+  margin-left: 10px;
+  margin-right: 25px;
+}
+
+.nav-items {
+  color: #333333;
+  text-decoration: none;
+  padding: 25px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-items:hover {
+background-color: #ddd;
+}
+
+
+.header-spacer {
+  width: 100%;
+  height: 0;;
+}
+
+.main-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100vh;
+  padding: 100px;
+}
+
+#section1content {
+  margin-top: 50px;
+}
+
+
+.section-content {
+  border: 1px solid #ddd;
+  position: relative;
+  width: 100%;
+  background-color: #344e66;
+  border-radius: 100px;
+  color: white;
+  padding: 1em;
+  display: flex;
+  
+
+}
+.section-content-left {
+  width: 65%;
+}
+.section-content-right {
+  width: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.big-header {
+  font-size: 90px;
+  margin: 30px;
+  font-family: merriweather;
+}
+.descriptor-text {
+  font-size: 22px;
+  margin-bottom: 60px;
+  margin-left: 30px;
+  opacity: 0.8;
+  font-weight:600; 
+  width: 70%;
+}
+
+
+.image-backplate {
+  background-color: none;
+  border-radius: 25px;
+  margin: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: fit-content;
+}
+
+
+.image-concept {
+  width: 90%;
+
+}
+
+footer {
+  position: relative;
+  bottom: 0;
+  text-align: center;
+}
