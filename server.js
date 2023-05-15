@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -99,11 +99,9 @@ app.post('/api/signup', async (req, res) => {
 
 
 
-
-
-
 //Posting info from Setup Survey
 app.post('/api/setup', ensureAuthenticated, async (req, res) => {
+  console.log('Setup route called'); // Add this line
   const { question1, question2, question3, question4, question5, question6 } = req.body;
 
   const client = new MongoClient(uri);
@@ -132,12 +130,12 @@ app.post('/api/setup', ensureAuthenticated, async (req, res) => {
       res.status(200).json({ message: 'Business info updated successfully.' });
     }
   } catch (error) {
+    console.error('Error in /api/setup:', error); // Add this line
     res.status(500).json({ error: 'An error occurred while processing your request.' });
   } finally {
     await client.close();
   }
 });
-
 
 
 
