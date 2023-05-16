@@ -3,47 +3,10 @@
     src: url('./Fonts/Merriweather/Merriweather-Regular.ttf');
   }
 
-/* styles for the button */
-.button {
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: 0;
-    background-color: #f7f7f5;
-    color: #000;
-    transition: background-color 0.3s, color 0.3s;
-    position: relative;
-    outline-style: solid;
-    outline-width: 1px;
-    outline-color: #ddd;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  .analyze {
-    background-color: #666;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: 0;
-    transition: background-color 0.3s, color 0.3s;
-    position: relative;
-    outline-style: solid;
-    outline-width: 1px;
-    outline-color: #ddd;
-    cursor: pointer;
-    font-size: 16px;
-  }
 
-  .analyze:hover {
-    background-color: #fff;
-    color: #666;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
-
-  }
-  
-
-  .analyze-container {
-    margin-right: 10px;
-  }
+.analyze-container {
+  margin-right: 10px;
+}
 
 .analysis-info {
   display: flex;
@@ -54,61 +17,32 @@
   margin-top: 10px;
 }
   
-  .text-button {
-    text-decoration: none;
-    display: block;
-    margin: 5px 0;
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: #7a7a7a;
-    transition: background-color 0.3s, color 0.3s;
-  }
-  
-  .text-button:hover {
-    background-color: #ddd;
-  }
-
-
-.button:hover {
-    background-color: #666;
-    color: #fff;
-    outline-style: none;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
-}
-
 h5, h4 {
     color: #8d8d83;
 }
 
 
-body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-    color: #252524;
-}
+
 
 .container {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
 }
 
 section.left-section {
-    width: calc(20vw);
-    min-width: 200px;
-    max-width: 250px;
-    height: 100vh;
-    background-color: #f7f7f5;
-    padding: 20px;
-    box-sizing: border-box;
+  width: calc(20vw);
+  min-width: 200px;
+  max-width: 250px;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: left;
 }
 
 section.main-section {
   flex-grow: 1;
   height: 100vh;
-  background-color: #fff;
   padding: 20px;
   box-sizing: border-box;
   position: relative;
@@ -118,17 +52,14 @@ section.main-section {
   overflow-y: scroll;
 }
 
-
-
 section.right-section {
-    width: calc(30vw);
-    min-width: 300px;
-    max-width: 500px;
-    height: 100vh;
-    background-color: #f7f7f5;
-    padding: 30px;
-    box-sizing: border-box;
-    position: relative;
+  width: calc(30vw);
+  min-width: 300px;
+  max-width: 500px;
+  height: 100vh;
+  padding: 30px;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .footer-wrap {
@@ -144,283 +75,195 @@ section.right-section h2 {
 }
 
 section.right-section .logo {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
- 
-  .card {
-    width: 500px;
-    background-color: #fff;
-    border-radius: 20px;
-    padding: 20px;
-    text-align: center;
-    outline: 1px solid #ddd;
-    transition: box-shadow 0.3s ease-in-out;
-    margin-right: 10px;
-  }
-  
-  .process-title {
-    text-align: center;
-    font-weight: bold;
-    margin: 0;
-    margin-bottom: 10px;
-  }
-  
-  .process-content {
-    text-align: left;
-  }
-  
-  .business-title {
-    text-align: center;
-    font-weight: bold;
-    margin: 0;
-    margin-bottom: 10px;
-    font-size: 24px;
-  }
-  
-  .business-content {
-    text-align: left;
-    height: 90%;
-    margin: 25px;;
-    outline-color: #000000;
-    
-  }
-  
-
-  [contenteditable]:empty:not(:focus):before {
-    content: attr(data-placeholder);
-    color: #999;
-    pointer-events: none;
-  }
-  
-  
-  
-  .card:hover {
-    box-shadow: 0px 10px 30px rgba(48, 48, 48, 0.1);
-    outline: none;
-  }
-  .card-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .card-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
 
-  
-  .click-button {
-    display: block;
-    margin: 0 auto;
-    padding: 10px 20px;
-    border-radius: 5px;
-    background-color: #ffffff;
-    color: #000;
-    transition: background-color 0.3s, color 0.3s;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    outline-style: solid;
-    outline-width: 1px;
-    outline-color: #ddd;
-  }
-  
-  
-  .click-button:hover {
-    background-color: #666;
-    color: #fff;
-  }
-  
-  .arrow-buttons {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .up-button,
-  .down-button {
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: #ffffff;
-    color: #000;
-    transition: background-color 0.3s, color 0.3s;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    margin-top: 0px;
-    outline-style: solid;
-    outline-width: 1px;
-    outline-color: #ddd;
-  }
-  
-  .up-button:hover,
-  .down-button:hover {
-    background-color: #666;
-    color: #fff;
-  }
-  
-  .down-button {
-    margin-top: 10px;
-  }
+.card {
+  width: 500px;
+  margin-right: 10px;
+}
 
-  .arrowimg {
-    margin-top: 10px;
-  }
-  .content-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .logout-button {
-    border-radius: 5px;
-    background-color: none;
-    color: #000;
-    transition: background-color 0.3s, color 0.3s;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    outline-style: solid;
-    outline-width: 1px;
-    outline-color: #ddd;
-    padding: 5px 5px;
-    font-size: 20px;
-  }
-  .logout-button:hover {
-    background-color: #666;
-    color: #fff;
-  }
+.process-title {
+  text-align: center;
+  font-weight: bold;
+  margin: 0;
+  margin-bottom: 10px;
+}
 
-  .analysis-output {
+.process-content {
+  text-align: left;
+}
 
-    line-height: 1.6;
-    overflow: scroll;
-    height: 60%;
-    margin-top: 18px;
-    border: 1px solid #ddd;
-    border-radius: 15px;
-    padding: 20px;
-    transition: box-shadow 0.3s ease-in-out;
-  }
-  .analysis-output:hover {
-    box-shadow: 0 0 20px 5px rgba(41, 41, 41, 0.1);
-  }
-  
-  .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-    justify-content: center; /* Center children elements */
-  }
-  
-  /* Style for the modal content box */
-  .modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
-    height: 70vh;
-    border-radius: 25px;
-  }
-  
-  .divider {
-    height: 1px;
-    background-color: #ccc;
-  }
-  
-  .analyze-modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, .2);
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .analyze-modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    width: 30%;
-    min-width: 250px;
-    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
-    border-radius: 25px;
-    margin-top: 15%;
+.business-title {
+  text-align: center;
+  font-weight: bold;
+  margin: 0;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
 
-  }
+.business-content {
+  text-align: left;
+  height: 90%;
+  margin: 25px;;
+  outline-color: #000000;
   
-  .modal-content h3 {
-    text-align: center;
-  }
-  
-  .modal-content select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .modal-button {
-    display: block;
-    margin: 0 auto;
-    padding: 10px 20px;
-    border-radius: 5px;
-    background-color: #ffffff;
-    color: none;
-    transition: background-color 0.3s, color 0.3s;
-    outline: none;
-    border: 1px solid #ddd;
-    cursor: pointer;
-  }
-  
-  .modal-button:hover {
-    background-color: #666;
-    color: white;
-  }
-  
-  .select-dropdown {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    margin-top: 10px;
-    border-radius: 5px;
-    border: 1px solid #888;
-    font-size: 15px;
-  }
-  
-  .select-dropdown:focus {
-    outline: none;
-    border-color: #555;
-  }
-  
-  .select-dropdown option {
-    padding: 5px;
-  }
+}
 
 
-  .label-spacing {
-    margin-bottom: 10px;
-  }
-  
+[contenteditable]:empty:not(:focus):before {
+  content: attr(data-placeholder);
+  color: #999;
+  pointer-events: none;
+}
+
+
+
+.card:hover {
+  box-shadow: 0px 10px 30px rgba(48, 48, 48, 0.1);
+  outline: none;
+}
+.card-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+
+
+.click-button {
+  display: block;
+  margin: 0 auto;
+  padding: 10px 20px;
+}
+
+.arrow-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.up-button,
+.down-button {
+  padding: 5px 10px;
+  margin-top: 0px;
+}
+
+
+.down-button {
+  margin-top: 10px;
+}
+
+.arrowimg {
+  margin-top: 10px;
+}
+.content-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.analysis-output {
+  line-height: 1.6;
+  overflow: scroll;
+  height: 60%;
+  margin-top: 18px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  padding: 20px;
+  transition: box-shadow 0.3s ease-in-out;
+}
+.analysis-output:hover {
+  box-shadow: 0 0 20px 5px rgba(41, 41, 41, 0.1);
+}
+
+/* Style for the modal content box */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  height: 70vh;
+  border-radius: 25px;
+}
+
+.divider {
+  height: 1px;
+  background-color: #ccc;
+}
+
+.analyze-modal {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.analyze-modal-content {
+  margin: auto;
+  padding: 20px;
+  width: 30%;
+  min-width: 250px;
+  margin-top: 15%;
+
+}
+
+.modal-content h3 {
+  text-align: center;
+}
+
+.modal-content select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-button {
+  display: block;
+  margin: 0 auto;
+}
+
+.select-dropdown {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #888;
+  font-size: 15px;
+}
+
+.select-dropdown:focus {
+  outline: none;
+  border-color: #555;
+}
+
+.select-dropdown option {
+  padding: 5px;
+}
+
+
+.label-spacing {
+  margin-bottom: 10px;
+}

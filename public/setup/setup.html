@@ -2,19 +2,20 @@
 <html>
 <head>
 	<title>StrataMind Setup</title>
+	<link rel="stylesheet" type="text/css" href="../main-style.css">
 	<link rel="stylesheet" type="text/css" href="setup.css">
 	<link rel="icon" type="image/png" href="../Images/favicon.png">
 </head>
 <body>
 	<div class="container">
-		<a href="../index.html"><button type="button" class="fixed-top-left" onclick="scrollToSection('#section0')">⬅</button></a>
-		<formn id="setup-form">
+		<a href="../index.html"><button type="button" class="fixed-top-left secondary-button" onclick="scrollToSection('#section0')">⬅️</button></a>
+		<form id="setup-form">
 			<section class="section" id="section0">
 				<div class="section-contents">
 					<h2>1</h2>
 					<label for="question1">Let's get your business running smoother than ever!</label>
 					<p>We're gonna ask you a few questions to get to know you and your business more. Be as specific as you'd like. Remember, the more information we have, the better our suggestions will be. You'll be able to edit these later.</p>
-					<button type="button" onclick="scrollToSection('#section1')">Rock on</button>
+					<button class="main-button" type="button" onclick="scrollToSection('#section1')">Rock on</button>
 				</div>
 			</section>
 			<section class="section" id="section1">
@@ -22,7 +23,7 @@
 					<h2>1</h2>
 					<label for="question1">What’s your business called?</label>
 					<input type="text" id="question1" name="question1" placeholder="Happy Tails Dog Grooming, Green Thumb Landscaping...">
-					<button type="button" onclick="scrollToSection('#section2')">Next</button>
+					<button class="main-button" type="button" onclick="scrollToSection('#section2')">Next</button>
 				</div>
 			</section>
 			<section class="section" id="section2">
@@ -30,7 +31,7 @@
 					<h2>2</h2>
 					<label for="question2">What’s your target market?</label>
 					<input type="text" id="question2" name="question2" placeholder="Retirees looking for travel opportunities, Eco-conscious consumers...">
-					<button type="button" onclick="scrollToSection('#section3')">Next</button>
+					<button class="main-button" type="button" onclick="scrollToSection('#section3')">Next</button>
 				</div>
 			</section>
 		
@@ -39,7 +40,7 @@
 					<h2>3</h2>
 					<label for="question3">What’s your product or service?</label>
 					<input type="text" id="question3" name="question3" placeholder="Handcrafted artisanal soap, Personalized fitness plans...">
-					<button type="button" onclick="scrollToSection('#section4')">Next</button>
+					<button class="main-button" class="main-button" type="button" onclick="scrollToSection('#section4')">Next</button>
 				</div>
 			</section>
 		
@@ -48,7 +49,7 @@
 					<h2>4</h2>
 					<label for="question4">What stage are you at in your business?</label>
 					<input type="text" id="question4" name="question4" placeholder="Seed funding stage, Established and growing...">
-					<button type="button" onclick="scrollToSection('#section5')">Next</button>
+					<button class="main-button" type="button" onclick="scrollToSection('#section5')">Next</button>
 				</div>
 			</section>
 		
@@ -57,7 +58,7 @@
 					<h2>5</h2>
 					<label for="question5">How many hours per week are you working on this business?</label>
 					<input type="text" id="question5" name="question5" placeholder="20-30 hours, As much as needed to get the job done">
-					<button type="button" onclick="scrollToSection('#section6')">Next</button>
+					<button class="main-button" type="button" onclick="scrollToSection('#section6')">Next</button>
 				</div>
 			</section>
 		
@@ -66,7 +67,7 @@
 					<h2>6</h2>
 					<label for="question6">How experienced are you in business in general?</label>
 					<input type="text" id="question6" name="question6" placeholder="Experienced business owner, No prior business experience, but willing to learn...">
-					<button type="submit">Let's go!</button>
+					<button class="main-button" type="submit">Let's go!</button>
 				</div>
 			</section>
 		</form>
@@ -76,7 +77,7 @@
 			document.querySelector(sectionId).scrollIntoView({ behavior: 'smooth' });
 		}
 	</script>
-	<script  src="./client_setup.js"></script>
+	<script  src="/setup/setup.js"></script>
 	</body>
 	</html>
 	

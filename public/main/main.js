@@ -88,7 +88,7 @@ function parseData(data) {
 
     // Create the card
     const card = document.createElement('div');
-    card.classList.add('card');
+    card.classList.add('card', 'card-outline');
     contentContainer.appendChild(card);
 
     // Create the process title
@@ -115,7 +115,7 @@ function parseData(data) {
     // Create the up button
     if (index > 0) {
       const upButton = document.createElement('button');
-      upButton.classList.add('up-button');
+      upButton.classList.add('up-button', 'main-button');
       upButton.innerHTML = '&#8593;';
       arrowButtons.appendChild(upButton);
 
@@ -132,7 +132,7 @@ function parseData(data) {
     // Create the down button
     if (index < data.process.length - 1) {
       const downButton = document.createElement('button');
-      downButton.classList.add('down-button');
+      downButton.classList.add('down-button', 'main-button');
       downButton.innerHTML = '&#8595;';
       arrowButtons.appendChild(downButton);
 
@@ -181,7 +181,7 @@ function parseData(data) {
 
   // Create the "Add Step" button
   const addStepButton = document.createElement('button');
-  addStepButton.classList.add('click-button');
+  addStepButton.classList.add('click-button', 'main-button');
   addStepButton.textContent = 'Add Step';
   cardWrapper.appendChild(addStepButton);
 

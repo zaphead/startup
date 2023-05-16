@@ -24,6 +24,8 @@ async function handleFormSubmit(event) {
   const question5 = document.getElementById('question5').value;
   const question6 = document.getElementById('question6').value;
 
+  console.log('Form values:', { question1, question2, question3, question4, question5, question6 });
+
   try {
     const response = await fetch('/api/setup', {
       method: 'POST',

@@ -8,8 +8,6 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
 import session from 'express-session';
-import { promisify } from 'util';
-
 
 dotenv.config();
 
@@ -35,12 +33,14 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
   const user = await collection.findOne({ email });
 
   if (!user) {
+    console.log('User not found:', email);
     return done(null, false, { message: 'Incorrect email or password.' });
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid) {
+    console.log('Incorrect password for user:', email);
     return done(null, false, { message: 'Incorrect email or password.' });
   }
 
@@ -61,8 +61,59 @@ passport.deserializeUser(async (id, done) => {
   done(null, user);
 });
 
+// Authentication routes
+app.post('/api/login', passport.authenticate('local'), (req, res) => {
+  res.status(200).json({ message: 'Login successful.' });
+});
 
-//Posting info from user signup and authenticating to proceed to the setup survey
+app.get('/api/logout', (req, res) => {
+  req.logout();
+  res.status(200).json({ message: 'Logout successful.' });
+});
+
+app.get('/api/user', ensureAuthenticated, (req, res) => {
+  res.status(200).json({ user: req.user });
+});
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ error: 'Unauthorized access.' });
+}
+
+//Login Form Route
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Find user by email
+    const user = await usersCollection.findOne({ email });
+
+    if (!user) {
+      // Return a 404 error if the email is not found
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the password matches the stored password
+    // Assuming you're using bcrypt for hashing the password
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      // Return a 401 error if the password doesn't match
+      return res.status(401).json({ message: 'Incorrect password' });
+    }
+
+    // If the password matches, set the user session and return a success status
+    req.session.user = user;
+    res.status(200).json({ message: 'Login successful' });
+  } catch (error) {
+    console.error('Error in /api/login:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+//Signup route
 app.post('/api/signup', async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -72,9 +123,12 @@ app.post('/api/signup', async (req, res) => {
     const database = client.db('users');
     const collection = database.collection('users');
 
+    // Hash the password before inserting the new user
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = {
       email,
-      password,
+      password: hashedPassword, // Store the hashed password
       name,
       processes: [],
       businessInfo: {
@@ -97,11 +151,8 @@ app.post('/api/signup', async (req, res) => {
   }
 });
 
-
-
-//Posting info from Setup Survey
+//Setup route
 app.post('/api/setup', ensureAuthenticated, async (req, res) => {
-  console.log('Setup route called'); // Add this line
   const { question1, question2, question3, question4, question5, question6 } = req.body;
 
   const client = new MongoClient(uri);
@@ -130,36 +181,17 @@ app.post('/api/setup', ensureAuthenticated, async (req, res) => {
       res.status(200).json({ message: 'Business info updated successfully.' });
     }
   } catch (error) {
-    console.error('Error in /api/setup:', error); // Add this line
+    console.error('Error in /api/setup:', error);
     res.status(500).json({ error: 'An error occurred while processing your request.' });
   } finally {
     await client.close();
   }
 });
 
-
-
-
-
-//Authentication code
-app.post('/api/login', passport.authenticate('local'), (req, res) => {
-  res.status(200).json({ message: 'Login successful.' });
-});
-
-app.get('/api/logout', (req, res) => {
-  req.logout();
-  res.status(200).json({ message: 'Logout successful.' });
-});
-
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.status(401).json({ error: 'Unauthorized access.' });
-}
+// Add more routes below, as needed.
 
 // Use ensureAuthenticated for any routes that require authentication.
-// Example: app.post('/api/setup', ensureAuthenticated, async (req, res) => { ... });
+// Example: app.post('/api/protected', ensureAuthenticated, async (req, res) => { ... });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

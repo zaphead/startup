@@ -2,14 +2,17 @@
 <html>
 <head>
 	<title>Log In</title>
+	<link rel="stylesheet" type="text/css" href="main-style.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="icon" type="image/png" href="./Images/favicon.png">
 </head>
 <body>
 	<div class="container">
+		<div class="toast">Incorrect password</div>
 		<div class="logo">
 			<img src="./Images/Processeon Logo.png" alt="Logo">
 		</div>
+
 		<div class="card">
 			<h2>Log In</h2>
 			<form>
@@ -18,14 +21,39 @@
 				<label for="password">Password:</label>
 				<input type="password" id="password" name="password" required>
 				<div class="button-container">
-					<a href="./signup/signup.html"><button type="button" class="submit-button secondary-button">Sign Up</button></a>
-					<button type="submit" class="main-button">Log In</button>
+					<a href="./signup/signup.html"><button type="button" class="secondary-button">Sign Up</button></a>
+					<button type="submit" class="main-button">Sign In</button>
 				</div>				
 			</form>
 		</div>
-		<p class="notes">Until actual functionality is built in, click "sign up" twice to go through the user set up. Github link is in the main.html page</p>
-		<p>Spencer Terry</p>
 	</div>
+	<script src="./index.js"></script>
+	<!-- <script>
+    document.addEventListener('mousemove', function(event) {
+      var button = document.querySelector('.main-button');
+      var buttonRect = button.getBoundingClientRect();
+      var mouseX = event.clientX;
+      var mouseY = event.clientY;
+
+      var buttonX = buttonRect.left + (buttonRect.width / 2);
+      var buttonY = buttonRect.top + (buttonRect.height / 2);
+
+      var distanceX = mouseX - buttonX;
+      var distanceY = mouseY - buttonY;
+
+      var maxDistance = 250;
+      var fallOff = 0.05;
+
+      if (Math.abs(distanceX) <= maxDistance && Math.abs(distanceY) <= maxDistance) {
+        var translationX = distanceX * fallOff * (1 - Math.abs(distanceX) / maxDistance);
+        var translationY = distanceY * fallOff * (1 - Math.abs(distanceY) / maxDistance);
+
+        button.style.transform = 'translate(' + translationX + 'px, ' + translationY + 'px)';
+      } else {
+        button.style.transform = 'none';
+      }
+    });
+	  </script> -->
 	
 </body>
 </html>

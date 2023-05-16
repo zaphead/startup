@@ -34,7 +34,7 @@ header {
   width: calc(100% - 50px);
   padding: 0px;
   border: 1px solid #ddd;
-  transition: box-shadow 0.3s ease, border 0.3s ease, width 0.3s ease, margin 0.3s ease, border-radius 0.3s ease;
+  transition: all 0.3s ease-in-out;
   z-index: 1;
 }
 
@@ -99,7 +99,7 @@ background-color: #ddd;
   border: 1px solid #ddd;
   position: relative;
   width: 100%;
-  background-color: #344e66;
+  background: linear-gradient(to right, #0061ff, #60efff);
   border-radius: 100px;
   color: white;
   padding: 1em;

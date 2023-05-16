@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>StrataMind</title>
+    <link rel="stylesheet" href="../main-style.css">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="../Images/favicon.png">
 
@@ -10,7 +11,7 @@
   </head>
   <body>
     <div class="container">
-        <section class="left-section">
+        <section class="left-section section-menu">
           <div id="processes_div">
             <h2 style="margin-bottom: 20px;">Processes</h2>
             <a href="#" id="client-acquisition" class="text-button">Client Acquisition</a>
@@ -29,16 +30,16 @@
           
             <h4 style="position: absolute; bottom: 0;">
               Larry Page
-              <a href="../index.html"><button class="logout-button" style="margin-left: 10px;">🔒</button></a>
+              <a href="../index.html"><button class="logout-button main-button" style="margin-left: 10px;">🔒</button></a>
             </h4>
           </section>
           
-      <section class="main-section">
+      <section class="section-menu main-section">
         
           
       </section>
 
-      <section class="right-section">
+      <section class="right-section section-menu">
 
           <h2 style="text-align: center;">Analysis</h2>
             <div class="analysis-output">
@@ -50,35 +51,7 @@
             </div>
             <div class="analysis-info">
               <div class="analyze-container">
-                <button class="analyze">Analyze</button>
-                <div id="modal-analyze" class="modal analyze-modal">
-                  <div class="analyze-modal-content">
-                    <h3>Select Analysis Parameters</h3>
-                    <label for="select1">Length of Response</label>
-                    <select id="select1" class="select-dropdown">
-                      <option value="option1">Short</option>
-                      <option value="option2">Medium</option>
-                      <option value="option3">Long</option>
-                    </select>
-                    
-                    <label for="select2">Analysis Scope</label>
-                    <select id="select2" class="select-dropdown">
-                      <option value="option1">Whole Business</option>
-                      <option value="option2">Client Acquisition</option>
-                      <option value="option3">Marketing Strategy</option>
-                      <option value="option3">Service Process</option>
-                    </select>
-                    
-                    <label for="select3">Tone</label>
-                    <select id="select3" class="select-dropdown">
-                      <option value="option2">Straight Forward</option>
-                      <option value="option1">Nice and Soft (It won't be very helpful)</option>
-                      <option value="option3">Roast Me and everything I've built🔥</option>
-                    </select>
-                    
-                    <button class="modal-button">Submit</button>
-                  </div>
-                </div>
+                <button class="analyze main-button">Analyze</button>
               </div>
               <h5 id="analysisCurrent">This analysis is up to date ☑️</h5>
           </div>
@@ -96,10 +69,38 @@
     </div>
 
     <!--Text editor modal for editing business information-->
-    <div id="myModal" class="modal">
-      <div class="modal-content card">
+    <div id="myModal" class="modal modal-generic">
+      <div class="modal-content-generic">
         <div id="modal-title" contenteditable="false" class="business-title"></div>
         <div id="modal-content" contenteditable="true" class="business-content" data-placeholder=""></div>
+      </div>
+    </div>
+    <div id="modal-analyze" class="modal-generic analyze-modal">
+      <div class="analyze-modal-content modal-content-generic">
+        <h3>Select Analysis Parameters</h3>
+        <label for="select1">Length of Response</label>
+        <select id="select1" class="select-dropdown">
+          <option value="option1">Short</option>
+          <option value="option2">Medium</option>
+          <option value="option3">Long</option>
+        </select>
+        
+        <label for="select2">Analysis Scope</label>
+        <select id="select2" class="select-dropdown">
+          <option value="option1">Whole Business</option>
+          <option value="option2">Client Acquisition</option>
+          <option value="option3">Marketing Strategy</option>
+          <option value="option3">Service Process</option>
+        </select>
+        
+        <label for="select3">Tone</label>
+        <select id="select3" class="select-dropdown">
+          <option value="option2">Straight Forward</option>
+          <option value="option1">Nice and Soft (It won't be very helpful)</option>
+          <option value="option3">Roast Me and everything I've built🔥</option>
+        </select>
+        
+        <button class="modal-button main-button">Analyze</button>
       </div>
     </div>
     
