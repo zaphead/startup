@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>StrataMind</title>
     <link rel="stylesheet" href="../main-style.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
     <link rel="icon" type="image/png" href="../Images/favicon.png">
 
 
@@ -20,18 +20,19 @@
           </div>
           <div id="business_div">
             <h2 style="margin-bottom: 20px; margin-top: 20px;">Business</h2>
-            <a href="#" business="yes" id="business-name" class="text-button">Business Name</a>
-            <a href="#" business="yes" id="target-market" class="text-button">Target Market</a>
-            <a href="#" business="yes" id="product" class="text-button">Product</a>
-            <a href="#" business="yes" id="stage" class="text-button">Stage</a>
-            <a href="#" business="yes" id="work-time" class="text-button">Work Time</a>
-            <a href="#" business="yes" id="experience" class="text-button">Experience</a>
+            <a href="#" business="yes" data-title="Business Name" id="business_name" class="text-button">Business Name</a>
+            <a href="#" business="yes" data-title="Target Market" id="target_market" class="text-button">Target Market</a>
+            <a href="#" business="yes" data-title="Product" id="product" class="text-button">Product</a>
+            <a href="#" business="yes" data-title="Stage" id="stage" class="text-button">Stage</a>
+            <a href="#" business="yes" data-title="Work Time" id="hours" class="text-button">Work Time</a>
+            <a href="#" business="yes" data-title="Experience" id="experience" class="text-button">Experience</a>
           </div>
           
-            <h4 style="position: absolute; bottom: 0;">
-              Larry Page
-              <a href="../index.html"><button class="logout-button main-button" style="margin-left: 10px;">🔒</button></a>
-            </h4>
+          <div class="user-control">
+            <h4 id="authenticated-user">Larry Page</h4>
+            <a href="../splash/splash.html"><button class="logout-button main-button" style="margin-left: 10px;">🔒</button></a>
+            <p id="save-status">☑️</p>
+          </div>
           </section>
           
       <section class="section-menu main-section">

@@ -78,7 +78,7 @@ background-color: #ddd;
 
 .header-spacer {
   width: 100%;
-  height: 0;;
+  height: 75px;
 }
 
 .main-section {
@@ -86,27 +86,34 @@ background-color: #ddd;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  height: 100vh;
-  padding: 100px;
-}
-
-#section1content {
-  margin-top: 50px;
+  height: fit-content;
+  padding: 50px;
+  min-height: fit-content;
 }
 
 
 .section-content {
-  border: 1px solid #ddd;
   position: relative;
   width: 100%;
-  background: linear-gradient(to right, #0061ff, #60efff);
   border-radius: 100px;
   color: white;
   padding: 1em;
   display: flex;
-  
+  justify-content: center;
+}
+
+#section0content {
+  position: relative;
+  width: 100%;
+  border-radius: 100px;
+  color: white;
+  padding: 1em;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(to right, #0061ff, #60efff);
 
 }
+
 .section-content-left {
   width: 65%;
 }
@@ -117,11 +124,79 @@ background-color: #ddd;
   align-items: center;
 }
 
+.section-1-content {
+  position: relative;
+  width: 100%;
+  border-radius: 100px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333333;
+  backdrop-filter: blur(10px);
+  outline: 1px solid #ffffff;
+  padding: 0;
+  margin: 0;
+  height: fit-content;
+  min-height: 400px;
+}
+
+
+.section-1-content-left {
+  background: linear-gradient(to bottom left, #0061ff, #60efff);
+  border-radius: 50px;
+  border-top-left-radius: 100px;
+  border-bottom-left-radius: 100px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 1em;
+  min-height: 400px;
+}
+
+.section-1-content-right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 1em;
+  min-height: 400px;
+}
+
+
+.middle-section-element {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 150px;
+  font-weight: 800;
+  z-index: 10;
+  text-align: center;
+  margin:0;
+}
+
 .big-header {
-  font-size: 90px;
+  font-size: 100px;
   margin: 30px;
   font-family: merriweather;
 }
+
+.big-header2 {
+  font-size: 90px;
+  margin: 0;
+  margin-bottom: 25px;;
+}
+.medium-header {
+  font-size: 30px;
+  color: white;
+}
+
 .descriptor-text {
   font-size: 22px;
   margin-bottom: 60px;
@@ -129,6 +204,11 @@ background-color: #ddd;
   opacity: 0.8;
   font-weight:600; 
   width: 70%;
+  text-align: left;
+}
+
+.text-items {
+  line-height: 200%;
 }
 
 

@@ -38,6 +38,7 @@ section.left-section {
   padding: 20px;
   box-sizing: border-box;
   text-align: left;
+  position: relative;
 }
 
 section.main-section {
@@ -49,7 +50,6 @@ section.main-section {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
 }
 
 section.right-section {
@@ -266,4 +266,16 @@ section.right-section .logo {
 
 .label-spacing {
   margin-bottom: 10px;
+}
+
+.user-control {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+  margin-bottom: 25px;
+}
+
+#save-status {
+  margin: 10px;
 }

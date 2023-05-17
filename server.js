@@ -188,10 +188,77 @@ app.post('/api/setup', ensureAuthenticated, async (req, res) => {
   }
 });
 
-// Add more routes below, as needed.
+// Get user's name Route
+app.get('/api/user/name', ensureAuthenticated, async (req, res) => {
+  try {
+    const { name } = req.user;
+    res.status(200).json({ name });
+  } catch (error) {
+    console.error('Error in /api/user/name:', error);
+    res.status(500).json({ error: 'An error occurred while fetching the user name.' });
+  }
+});
+
+//Get all business info Route. Separate it out in the client cod.
+app.get('/api/user', ensureAuthenticated, (req, res) => {
+  console.log('req.user:', req.user); // Log the req.user object
+
+  // Assuming the authenticated user's business info is stored in req.user.businessInfo
+  const businessInfo = req.user.businessInfo;
+
+  console.log('businessInfo:', businessInfo); // Log the businessInfo object
+
+  res.status(200).json({ businessInfo });
+});
+
+
 
 // Use ensureAuthenticated for any routes that require authentication.
 // Example: app.post('/api/protected', ensureAuthenticated, async (req, res) => { ... });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
+//UPDATING THE BIZINFO DATA API
+  //Function
+  async function updateBusinessInfo(userId, key, content) {
+    const client = new MongoClient(uri);
+    try {
+      await client.connect();
+      const database = client.db('users');
+      const collection = database.collection('users');
+  
+      const updateResult = await collection.updateOne(
+        { _id: new ObjectId(userId) },
+        {
+          $set: {
+            [`businessInfo.${key}`]: content,
+          },
+        }
+      );
+  
+      if (updateResult.matchedCount === 0) {
+        throw new Error('User not found');
+      }
+    } catch (error) {
+      console.error('Error updating business info:', error);
+      throw error;
+    } finally {
+      await client.close();
+    }
+  }
+  
+
+  app.post('/api/update-business-info', ensureAuthenticated, async (req, res) => {
+    try {
+      const { key, content } = req.body;
+
+      // Assuming you have a function to update the business info in the database
+      await updateBusinessInfo(req.user._id, key, content);
+
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error('Error updating business info:', error);
+      res.status(500).json({ error: 'Error updating business info' });
+    }
+  });

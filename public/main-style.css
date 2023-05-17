@@ -61,6 +61,8 @@ body {
     border-radius: 5px;
     color: #7a7a7a;
     transition: background-color 0.3s, color 0.3s;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
   
   .text-button:hover {
@@ -129,7 +131,55 @@ body {
     font-weight: 500;
     color: #666;
     outline: 2px solid rgba(255, 255, 255, 0.075);
+    position: fixed;
+    top: -100px; /* Initially position it above the viewport */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    font-size: 14px;
+    opacity: 0;
+    visibility: hidden;
+    animation: slideIn 0.25s ease-out forwards;
   }
+  
+  @keyframes slideIn {
+    0% {
+      top: -100px; /* Start from above the viewport */
+      opacity: 0;
+      visibility: hidden;
+    }
+    1% {
+      visibility: visible;
+    }
+    100% {
+      top: 20px; /* Move to the desired position */
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  
+  .toast.slide-out {
+    animation: slideOut 0.25s ease-in forwards;
+  }
+  
+  @keyframes slideOut {
+    0% {
+      top: 20px; /* Start position */
+      opacity: 1;
+      visibility: visible;
+    }
+    99% {
+      visibility: visible;
+    }
+    100% {
+      top: -100px; /* Move above the viewport */
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+  
+  
+  
 
   /* Modal */
   .modal-generic {
