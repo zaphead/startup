@@ -79,3 +79,16 @@ function showNewToast(message, duration, resolve) {
 function clearPasswordInput() {
   document.getElementById('password').value = '';
 }
+
+// Check if the user has a cookie indicating a previous visit
+function hasVisitedBefore() {
+  return document.cookie.includes('visited=true');
+}
+
+// Redirect the user to the splash page if they haven't visited before
+if (!hasVisitedBefore()) {
+  window.location.href = './splash/splash.html';
+}
+
+// Set a cookie to indicate the user has visited the website
+document.cookie = 'visited=true; max-age=31536000; path=/';

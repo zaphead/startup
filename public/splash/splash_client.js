@@ -16,3 +16,10 @@ window.addEventListener('scroll', function() {
       header.style.backgroundColor = 'white'
     }
   });
+
+  window.addEventListener('DOMContentLoaded', function() {
+    var header = document.querySelector('header');
+    var headerSpacer = document.querySelector('.header-spacer');
+    headerSpacer.style.height = header.offsetHeight + 'px';
+    console.log("header spaced yo")
+  });

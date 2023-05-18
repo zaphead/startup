@@ -1,0 +1,92 @@
+{
+  "_id": {
+    "$oid": "64655f6a4c77ab575af65c61"
+  },
+  "email": "sterryyr@gmail.com",
+  "password": "$2a$10$PgEp7hEwGf9oEb2/4YeafOjFI/3gThfEvRayhxHku1kflOMH60nTC",
+  "name": "Spencer Terry",
+  "processes": {
+    "process1": [
+      {
+        "id": "1",
+        "title": "Initial Inquiry",
+        "description": "Potential client contacts the company expressing interest in their services",
+        "next": [
+          "2"
+        ]
+      },
+      {
+        "id": "2",
+        "title": "On-site Visit",
+        "description": "Company representative visits the client's site to assess the project",
+        "next": [
+          "3"
+        ]
+      },
+      {
+        "id": "3",
+        "title": "Estimate",
+        "description": "Company provides a detailed estimate of the project cost to the client",
+        "next": [
+          "4"
+        ]
+      },
+      {
+        "id": "4",
+        "title": "Contract Signing",
+        "description": "Client agrees to the estimate and signs a contract with the company to begin work",
+        "next": []
+      }
+    ],
+    "process2": [
+      {
+        "id": "1",
+        "title": "Online Inquiry",
+        "description": "Potential client submits an online inquiry form expressing interest in the company's services",
+        "next": [
+          "2"
+        ]
+      },
+      {
+        "id": "2",
+        "title": "Phone Consultation",
+        "description": "A company representative contacts the client to discuss their requirements and answer any initial questions",
+        "next": [
+          "3",
+          "4"
+        ]
+      },
+      {
+        "id": "3",
+        "title": "Proposal Submission",
+        "description": "The company prepares and submits a detailed proposal outlining the scope, timeline, and cost of the project",
+        "next": [
+          "4"
+        ]
+      },
+      {
+        "id": "4",
+        "title": "Negotiation",
+        "description": "The company and the client engage in negotiations to finalize the project details and terms",
+        "next": [
+          "5"
+        ]
+      },
+      {
+        "id": "5",
+        "title": "Contract Signing",
+        "description": "Both parties agree on the terms and conditions and sign a contract to initiate the project",
+        "next": []
+      }
+    ]
+  },
+  "businessInfo": {
+    "business_name": "My",
+    "target_market": "Name",
+    "product": "is",
+    "business_stage": "skylar",
+    "hours": "black",
+    "experience": "yo",
+    "stage": "skylar"
+  }
+}

@@ -199,6 +199,8 @@ app.get('/api/user/name', ensureAuthenticated, async (req, res) => {
   }
 });
 
+
+
 //Get all business info Route. Separate it out in the client cod.
 app.get('/api/user', ensureAuthenticated, (req, res) => {
   console.log('req.user:', req.user); // Log the req.user object
@@ -212,9 +214,20 @@ app.get('/api/user', ensureAuthenticated, (req, res) => {
 });
 
 
+//Get a specific user's process Route
+app.get('/api/user/processes/:processName', ensureAuthenticated, (req, res) => {
+  let processName = req.params.processName;
+  if (req.user.processes.hasOwnProperty(processName)) {
+    // If the user has the process, return it
+    return res.status(200).json({ process: req.user.processes[processName] });
+  } else {
+    // If the user doesn't have the process, return an error
+    return res.status(404).json({ error: 'Process not found' });
+  }
+});
 
-// Use ensureAuthenticated for any routes that require authentication.
-// Example: app.post('/api/protected', ensureAuthenticated, async (req, res) => { ... });
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

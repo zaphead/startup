@@ -279,3 +279,7 @@ section.right-section .logo {
 #save-status {
   margin: 10px;
 }
+
+.card-outlined {
+  border: 1px solid #ddd;
+}
