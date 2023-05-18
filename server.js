@@ -226,6 +226,39 @@ app.get('/api/user/processes/:processName', ensureAuthenticated, (req, res) => {
   }
 });
 
+//UPDATE A SPECIFIC USER'S PROCESS ROUTE
+app.put('/api/user/processes/:processName', ensureAuthenticated, async (req, res) => {
+  const processName = req.params.processName;
+  const updatedProcess = req.body;
+
+  const client = new MongoClient(uri);
+  try {
+    await client.connect();
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    const updateResult = await collection.updateOne(
+      { _id: new ObjectId(req.user._id) },
+      {
+        $set: {
+          [`processes.${processName}`]: updatedProcess,
+        },
+      }
+    );
+
+    if (updateResult.matchedCount === 0) {
+      res.status(404).json({ error: 'User not found.' });
+    } else {
+      res.status(200).json({ message: 'Process updated successfully.' });
+    }
+  } catch (error) {
+    console.error('Error in /api/user/processes/:processName:', error);
+    res.status(500).json({ error: 'An error occurred while processing your request.' });
+  } finally {
+    await client.close();
+  }
+});
+
 
 
 
