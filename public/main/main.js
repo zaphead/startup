@@ -364,7 +364,7 @@ class ProcessEditor {
       clearTimeout(this.saveTimeout);
     }
   
-    // Set a new save to occur after 5 seconds of inactivity
+    // Set a new save to occur after 1.5 seconds of inactivity
     this.saveTimeout = setTimeout(() => saveProcess(this), 1500);
   }
 
@@ -459,4 +459,51 @@ link.addEventListener('click', async (event) => {
   currentProcessEditor = new ProcessEditor(event.target.id);
   currentProcessEditor.fetchProcess();
 });
+});
+
+
+//ANALYSIS FORM SUBMISSION AND RETRIEVAL
+document.getElementById("analysisForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  // Get form data
+  const lengthOfResponse = document.getElementById("select1").value;
+  const analysisScope = document.getElementById("select2").value;
+  const tone = document.getElementById("select3").value;
+
+  // Fetch user info
+  let userResponse = await fetch('/api/user', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin'
+  });
+
+  if (userResponse.ok) {
+    let userInfo = await userResponse.json();
+    let userId = userInfo.user._id; // Assuming the user info includes _id
+
+    // Post analysis data
+    let response = await fetch('/api/analysis', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId, lengthOfResponse, analysisScope, tone }),
+      credentials: 'same-origin'
+    });
+
+    if (response.ok) {
+      let result = await response.json();
+
+      // Assuming the returned result is a string containing the analysis
+      document.getElementById("analysisPane").innerText = result.message;
+    } else {
+      console.error('Error:', response.status, response.statusText);
+    }
+
+  } else {
+    console.error('Failed to fetch user info:', userResponse.status, userResponse.statusText);
+  }
 });

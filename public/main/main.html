@@ -55,10 +55,7 @@
           <h2 style="text-align: center;">Analysis</h2>
             <div class="analysis-output">
             <!--In the paragraph below will go the analysis return from the LLM-->
-                <p id="analysisPane">
-                    The agency business model can be improved in several ways. Firstly, it's important to have a clear and defined target audience. This allows the agency to tailor their services to meet the specific needs and preferences of their clients. Secondly, offering a range of services that complement each other can increase revenue streams and create a more comprehensive offering for clients. Thirdly, building and maintaining strong relationships with clients can help with retention and referral business. Fourthly, investing in the right technology and tools can streamline operations and improve efficiency. Finally, staying ahead of industry trends and continuously adapting to changing market conditions can ensure the agency remains competitive and relevant in the long-term.
-                    The agency business model can be improved in several ways. Firstly, it's important to have a clear and defined target audience. This allows the agency to tailor their services to meet the specific needs and preferences of their clients. Secondly, offering a range of services that complement each other can increase revenue streams and create a more comprehensive offering for clients. Thirdly, building and maintaining strong relationships with clients can help with retention and referral business. Fourthly, investing in the right technology and tools can streamline operations and improve efficiency. Finally, staying ahead of industry trends and continuously adapting to changing market conditions can ensure the agency remains competitive and relevant in the long-term.
-                </p>
+                <p id="analysisPane">Analysis will appear here.</p>
             </div>
             <div class="analysis-info">
               <div class="analyze-container">
@@ -92,24 +89,24 @@
           <h3>Select Analysis Parameters</h3>
           <label for="select1">Length of Response</label>
           <select id="select1" class="select-dropdown">
-            <option value="option1">Short</option>
-            <option value="option2">Medium</option>
-            <option value="option3">Long</option>
+            <option value="Short (Under 150 words)">Short</option>
+            <option value="Medium(150-300 words)">Medium</option>
+            <option value="Long (As much as you need)">Long</option>
           </select>
           
           <label for="select2">Analysis Scope</label>
           <select id="select2" class="select-dropdown">
-            <option value="option1">Whole Business</option>
-            <option value="option2">Client Acquisition</option>
-            <option value="option3">Marketing Strategy</option>
-            <option value="option3">Service Process</option>
+            <option value="whole business">Whole Business</option>
+            <option value="client-acquisition">Client Acquisition process</option>
+            <option value="marketing-strategy">Marketing Strategy process</option>
+            <option value="service-process">Service Process process</option>
           </select>
           
           <label for="select3">Tone</label>
           <select id="select3" class="select-dropdown">
-            <option value="option2">Straight Forward</option>
-            <option value="option1">Nice and Soft (It won't be very helpful)</option>
-            <option value="option3">Roast Me and everything I've built🔥</option>
+            <option value="Straight Forward">Straight Forward</option>
+            <option value="Nice and soft. Dont be hard on the business.">Nice and Soft (It won't be very helpful)</option>
+            <option value="Roast the business and it's strategies. Be critical, harsh and don't hold back. This is what the user wants and needs.">Roast Me and everything I've built🔥</option>
           </select>
           
           <button type="submit" class="modal-button main-button">Analyze</button>

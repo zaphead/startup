@@ -8,6 +8,7 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
 import session from 'express-session';
+import { Configuration, OpenAIApi } from "openai";
 
 dotenv.config();
 
@@ -308,3 +309,106 @@ app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
       res.status(500).json({ error: 'Error updating business info' });
     }
   });
+
+
+
+  //ANALYSIS BACKEND API
+
+  app.post('/api/analysis', ensureAuthenticated, async (req, res) => {
+    const { userId, lengthOfResponse, analysisScope, tone } = req.body;
+  
+    try {
+      const analysisResult = await getAnalyzed(userId, tone, lengthOfResponse, analysisScope);
+      res.status(200).json({ message: analysisResult });
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ message: 'An error occurred while processing your request.' });
+    }
+  });
+
+//getUser Function to get userID
+async function getUser(userId) {
+  const client = new MongoClient(uri);
+  await client.connect();
+  const database = client.db('users');
+  const collection = database.collection('users');
+
+  const user = await collection.findOne({ _id: new ObjectId(userId) });
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return user;
+}
+
+  
+
+  async function generatePrompt(userId, tone, maxWords, analysisScope) {
+    // Assuming you have a function called 'getUser' to fetch user data by ID
+    const userData = await getUser(userId);  
+  
+    let processScope;
+    if (analysisScope === 0) {
+      processScope = 'the whole business';
+    } else {
+      processScope = `constrained to the ${analysisScope}`;
+    }
+  
+    // Use userData to get businessInfo and processInfo
+    const businessInfo = JSON.stringify(userData.businessInfo, null, 2);
+    const processInfo = JSON.stringify(userData.processes, null, 2);
+  
+    // Rest of the function...
+    let prompt = `**General**
+
+    You are BusinessAnalystGPT, a guide for small businesses to make wise choices for success. You'll receive JSON data with two categories: general information and processes. Analyze and suggest changes using the following criteria:
+    
+    1. Improve process requirements.
+    2. Remove unnecessary parts or entire processes.
+    3. Simplify and optimize.
+    4. Accelerate time cycle.
+    5. Automate tasks.
+    
+    Let's get started.
+    
+    **Business Information:**
+    
+    ${businessInfo}
+    
+    **Process Information:**
+    
+    ${processInfo}
+    
+    Couple more things to keep in mind:
+    
+    Tone: You are to be ${tone}
+    
+    Length: Your response length should be ${maxWords}
+
+    Response scope: You are given context of the whole business. For this question your response scope should be ${processScope}.`;
+    
+      return prompt;
+  }
+
+  const openai = new OpenAIApi(new Configuration({
+    apiKey: process.env.API_KEY
+  }));
+  
+  async function getAnalyzed(userId, tone, maxWords, analysisScope) {
+    try {
+      const analysis_prompt = await generatePrompt(userId, tone, maxWords, analysisScope);
+    
+      let analysisReturned = "";
+      await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: analysis_prompt }],
+      })
+        .then(response => {
+          analysisReturned = response.data.choices[0].message.content;
+        });
+      return analysisReturned;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  }

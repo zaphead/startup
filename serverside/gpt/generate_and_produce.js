@@ -31,15 +31,15 @@ function getAnalyzed(prompt_param) {
 
 //PROMPT FORMATTER
 
-function generatePrompt(businessInfoPath, processInfoPath, tone, maxWords, processNumber) {
+function generatePrompt(businessInfoPath, processInfoPath, tone, maxWords, analysisScope) {
   const businessInfo = fs.readFileSync(businessInfoPath, 'utf8');
   const processInfo = fs.readFileSync(processInfoPath, 'utf8');
 
   let processScope;
-  if (processNumber === 0) {
+  if (analysisScope === 0) {
     processScope = 'the whole business';
   } else {
-    processScope = `constrained to process ${processNumber}`;
+    processScope = `constrained to process ${analysisScope}`;
   }
 
   let prompt = `**General**
@@ -76,14 +76,14 @@ Response scope: You are given context of the whole business. For this question y
 }
 
 // Example usage
-const businessInfoPath = '../json_library/business_json/bizinfo.json';
-const processInfoPath = '../json_library/process_json/processes.json';
-const tone = 'cutthroat. no beating around the bush. be absolutely brutal. Give a subtle roast at the end.'; // or "cutthroat. No beating around the bush"
-const maxWords = 150; // Set to -1 for unlimited words
-const processNumber = 3; // The process number to be analyzed (set to 0 for the whole business)
+// const businessInfoPath = '../json_library/business_json/bizinfo.json';
+// const processInfoPath = '../json_library/process_json/processes.json';
+// const tone = 'cutthroat. no beating around the bush. be absolutely brutal. Give a subtle roast at the end.'; // or "cutthroat. No beating around the bush"
+// const maxWords = 150; // Set to -1 for unlimited words
+// const processNumber = 3; // The process number to be analyzed (set to 0 for the whole business)
 
-let analysisPrompt = generatePrompt(businessInfoPath, processInfoPath, tone, maxWords, 1);
+// let analysisPrompt = generatePrompt(businessInfoPath, processInfoPath, tone, maxWords, 1);
 
 
-const prompt = generatePrompt(businessInfoPath, processInfoPath, tone, maxWords, 1);
+// const prompt = generatePrompt(businessInfoPath, processInfoPath, tone, maxWords, 1);
 

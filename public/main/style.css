@@ -283,3 +283,6 @@ section.right-section .logo {
 .card-outlined {
   border: 1px solid #ddd;
 }
+#analysisPane {
+  text-align: left;
+}
