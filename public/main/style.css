@@ -141,10 +141,21 @@ section.right-section .logo {
   padding: 20px;
 }
 
+.svg-splash {
+  height: 40%;
+  opacity: .05;
+  margin-left: 50px;
+}
 
+.intro-splash {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .click-button {
-  display: block;
+  display: none;
   margin: 0 auto;
   padding: 10px 20px;
 }

@@ -446,9 +446,10 @@ async function loadProcess(processName) {
   await processEditor.fetchProcess();
   return processEditor;
 }
-
+//Initial load of page
 const mainSection = document.querySelector('.main-section .steps-container');
-mainSection.innerHTML = '<p>Select a process or business topic to get started.</p>';
+const addButton = document.querySelector('.click-button');
+const introSplash = document.getElementById('introSplash'); // Corrected this line
 
 let currentProcessEditor = null;
 
@@ -468,6 +469,16 @@ document.querySelectorAll('#processes_div .text-button').forEach((link) => {
     }
     currentProcessEditor = new ProcessEditor(event.target.id);
     currentProcessEditor.fetchProcess();
+    addButton.style.display = 'block';
+    introSplash.style.display = 'none'; // This should work now
+
+    // Remove 'button-highlight' from all buttons
+    document.querySelectorAll('#processes_div .text-button').forEach(button => {
+      button.classList.remove('button-highlight');
+    });
+
+    // Add 'button-highlight' to the clicked button
+    event.target.classList.add('button-highlight');
   });
 });
 

@@ -69,6 +69,15 @@ body {
     background-color: #ddd;
   }
 
+  .button-highlight {
+    background-color: #e7e7e7;
+  }
+  .hint-text {
+    opacity: .3;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
   /* Cards */
   .card {
     background-color: rgba(255, 255, 255, 0.5);

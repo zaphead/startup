@@ -8,7 +8,7 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
 import session from 'express-session';
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, OpenAIApi } from 'openai';
 
 dotenv.config();
 
@@ -25,41 +25,62 @@ app.use(session({ secret: passport_key, resave: false, saveUninitialized: false 
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
-  const client = new MongoClient(uri);
-  await client.connect();
-  const database = client.db('users');
-  const collection = database.collection('users');
+const client = new MongoClient(uri);
 
-  const user = await collection.findOne({ email });
-
-  if (!user) {
-    console.log('User not found:', email);
-    return done(null, false, { message: 'Incorrect email or password.' });
+const connectToMongo = async () => {
+  try {
+    await client.connect();
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
   }
+};
 
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+connectToMongo();
 
-  if (!isPasswordValid) {
-    console.log('Incorrect password for user:', email);
-    return done(null, false, { message: 'Incorrect email or password.' });
-  }
+passport.use(
+  new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
+    try {
+      const database = client.db('users');
+      const collection = database.collection('users');
 
-  return done(null, user);
-}));
+      const user = await collection.findOne({ email });
+
+      if (!user) {
+        console.log('User not found:', email);
+        return done(null, false, { message: 'Incorrect email or password.' });
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid) {
+        console.log('Incorrect password for user:', email);
+        return done(null, false, { message: 'Incorrect email or password.' });
+      }
+
+      return done(null, user);
+    } catch (error) {
+      console.error('Error in passport LocalStrategy:', error);
+      return done(error);
+    }
+  })
+);
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
 });
 
 passport.deserializeUser(async (id, done) => {
-  const client = new MongoClient(uri);
-  await client.connect();
-  const database = client.db('users');
-  const collection = database.collection('users');
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
 
-  const user = await collection.findOne({ _id: new ObjectId(id) });
-  done(null, user);
+    const user = await collection.findOne({ _id: new ObjectId(id) });
+    done(null, user);
+  } catch (error) {
+    console.error('Error in passport deserializeUser:', error);
+    done(error);
+  }
 });
 
 // Authentication routes
@@ -83,66 +104,32 @@ function ensureAuthenticated(req, res, next) {
   res.status(401).json({ error: 'Unauthorized access.' });
 }
 
-//Login Form Route
-app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    // Find user by email
-    const user = await usersCollection.findOne({ email });
-
-    if (!user) {
-      // Return a 404 error if the email is not found
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // Check if the password matches the stored password
-    // Assuming you're using bcrypt for hashing the password
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    if (!passwordMatch) {
-      // Return a 401 error if the password doesn't match
-      return res.status(401).json({ message: 'Incorrect password' });
-    }
-
-    // If the password matches, set the user session and return a success status
-    req.session.user = user;
-    res.status(200).json({ message: 'Login successful' });
-  } catch (error) {
-    console.error('Error in /api/login:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-//Signup route
+// Signup route
 app.post('/api/signup', async (req, res) => {
   const { name, email, password } = req.body;
 
-  const client = new MongoClient(uri);
   try {
-    await client.connect();
     const database = client.db('users');
     const collection = database.collection('users');
 
-    // Hash the password before inserting the new user
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {
       email,
-      password: hashedPassword, // Store the hashed password
+      password: hashedPassword,
       name,
       processes: {
-        "client-acquisition": [],
-        "marketing-strategy": [],
-        "service-process": []
+        'client-acquisition': [],
+        'marketing-strategy': [],
+        'service-process': [],
       },
       businessInfo: {
-        business_name: "",
-        target_market: "",
-        product: "",
-        business_stage: "",
-        hours: "",
-        experience: "",
+        business_name: '',
+        target_market: '',
+        product: '',
+        business_stage: '',
+        hours: '',
+        experience: '',
       },
     };
 
@@ -150,19 +137,17 @@ app.post('/api/signup', async (req, res) => {
     res.status(200).json({ insertedId: result.insertedId });
   } catch (error) {
     console.error('Error in /api/signup:', error);
-    res.status(500).json({ error: 'An error occurred while processing your request.', details: error.message });
-  } finally {
-    await client.close();
+    res
+      .status(500)
+      .json({ error: 'An error occurred while processing your request.', details: error.message });
   }
 });
 
-//Setup route
+// Setup route
 app.post('/api/setup', ensureAuthenticated, async (req, res) => {
   const { question1, question2, question3, question4, question5, question6 } = req.body;
 
-  const client = new MongoClient(uri);
   try {
-    await client.connect();
     const database = client.db('users');
     const collection = database.collection('users');
 
@@ -188,8 +173,6 @@ app.post('/api/setup', ensureAuthenticated, async (req, res) => {
   } catch (error) {
     console.error('Error in /api/setup:', error);
     res.status(500).json({ error: 'An error occurred while processing your request.' });
-  } finally {
-    await client.close();
   }
 });
 
@@ -204,41 +187,57 @@ app.get('/api/user/name', ensureAuthenticated, async (req, res) => {
   }
 });
 
+// Get all business info Route. Separate it out in the client code.
+app.get('/api/user/business-info', ensureAuthenticated, async (req, res) => {
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
 
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) });
 
-//Get all business info Route. Separate it out in the client cod.
-app.get('/api/user', ensureAuthenticated, (req, res) => {
-  console.log('req.user:', req.user); // Log the req.user object
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
 
-  // Assuming the authenticated user's business info is stored in req.user.businessInfo
-  const businessInfo = req.user.businessInfo;
-
-  console.log('businessInfo:', businessInfo); // Log the businessInfo object
-
-  res.status(200).json({ businessInfo });
-});
-
-
-//Get a specific user's process Route
-app.get('/api/user/processes/:processName', ensureAuthenticated, (req, res) => {
-  let processName = req.params.processName;
-  if (req.user.processes.hasOwnProperty(processName)) {
-    // If the user has the process, return it
-    return res.status(200).json({ process: req.user.processes[processName] });
-  } else {
-    // If the user doesn't have the process, return an error
-    return res.status(404).json({ error: 'Process not found' });
+    const businessInfo = user.businessInfo;
+    res.status(200).json({ businessInfo });
+  } catch (error) {
+    console.error('Error in /api/user/business-info:', error);
+    res.status(500).json({ error: 'An error occurred while fetching business info.' });
   }
 });
 
-//UPDATE A SPECIFIC USER'S PROCESS ROUTE
+// Get a specific user's process Route
+app.get('/api/user/processes/:processName', ensureAuthenticated, async (req, res) => {
+  const processName = req.params.processName;
+
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    if (user.processes.hasOwnProperty(processName)) {
+      return res.status(200).json({ process: user.processes[processName] });
+    } else {
+      return res.status(404).json({ error: 'Process not found.' });
+    }
+  } catch (error) {
+    console.error('Error in /api/user/processes/:processName:', error);
+    res.status(500).json({ error: 'An error occurred while fetching the user process.' });
+  }
+});
+
+// Update a specific user's process Route
 app.put('/api/user/processes/:processName', ensureAuthenticated, async (req, res) => {
   const processName = req.params.processName;
   const updatedProcess = req.body;
 
-  const client = new MongoClient(uri);
   try {
-    await client.connect();
     const database = client.db('users');
     const collection = database.collection('users');
 
@@ -259,110 +258,86 @@ app.put('/api/user/processes/:processName', ensureAuthenticated, async (req, res
   } catch (error) {
     console.error('Error in /api/user/processes/:processName:', error);
     res.status(500).json({ error: 'An error occurred while processing your request.' });
-  } finally {
-    await client.close();
   }
 });
-
-
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 
-//UPDATING THE BIZINFO DATA API
-  //Function
-  async function updateBusinessInfo(userId, key, content) {
-    const client = new MongoClient(uri);
-    try {
-      await client.connect();
-      const database = client.db('users');
-      const collection = database.collection('users');
-  
-      const updateResult = await collection.updateOne(
-        { _id: new ObjectId(userId) },
-        {
-          $set: {
-            [`businessInfo.${key}`]: content,
-          },
-        }
-      );
-  
-      if (updateResult.matchedCount === 0) {
-        throw new Error('User not found');
+// Update the business info data API
+async function updateBusinessInfo(userId, key, content) {
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    const updateResult = await collection.updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $set: {
+          [`businessInfo.${key}`]: content,
+        },
       }
-    } catch (error) {
-      console.error('Error updating business info:', error);
-      throw error;
-    } finally {
-      await client.close();
+    );
+
+    if (updateResult.matchedCount === 0) {
+      throw new Error('User not found');
     }
+  } catch (error) {
+    console.error('Error updating business info:', error);
+    throw error;
   }
-  
-
-  app.post('/api/update-business-info', ensureAuthenticated, async (req, res) => {
-    try {
-      const { key, content } = req.body;
-
-      // Assuming you have a function to update the business info in the database
-      await updateBusinessInfo(req.user._id, key, content);
-
-      res.status(200).json({ success: true });
-    } catch (error) {
-      console.error('Error updating business info:', error);
-      res.status(500).json({ error: 'Error updating business info' });
-    }
-  });
-
-
-
-  //ANALYSIS BACKEND API
-
-  app.post('/api/analysis', ensureAuthenticated, async (req, res) => {
-    const { userId, lengthOfResponse, analysisScope, tone } = req.body;
-  
-    try {
-      const analysisResult = await getAnalyzed(userId, tone, lengthOfResponse, analysisScope);
-      res.status(200).json({ message: analysisResult });
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ message: 'An error occurred while processing your request.' });
-    }
-  });
-
-//getUser Function to get userID
-async function getUser(userId) {
-  const client = new MongoClient(uri);
-  await client.connect();
-  const database = client.db('users');
-  const collection = database.collection('users');
-
-  const user = await collection.findOne({ _id: new ObjectId(userId) });
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  return user;
 }
 
-  
+app.post('/api/update-business-info', ensureAuthenticated, async (req, res) => {
+  try {
+    const { key, content } = req.body;
 
-  async function generatePrompt(userId, tone, maxWords, analysisScope) {
-    // Assuming you have a function called 'getUser' to fetch user data by ID
-    const userData = await getUser(userId);  
-  
+    await updateBusinessInfo(req.user._id, key, content);
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error updating business info:', error);
+    res.status(500).json({ error: 'Error updating business info' });
+  }
+});
+
+// Analysis backend API
+const openai = new OpenAIApi(new Configuration({
+  apiKey: process.env.API_KEY,
+}));
+
+async function getUser(userId) {
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    const user = await collection.findOne({ _id: new ObjectId(userId) });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user;
+  } catch (error) {
+    console.error('Error getting user:', error);
+    throw error;
+  }
+}
+
+async function generatePrompt(userId, tone, maxWords, analysisScope) {
+  try {
+    const userData = await getUser(userId);
+
     let processScope;
     if (analysisScope === 0) {
       processScope = 'the whole business';
     } else {
       processScope = `constrained to the ${analysisScope}`;
     }
-  
-    // Use userData to get businessInfo and processInfo
+
     const businessInfo = JSON.stringify(userData.businessInfo, null, 2);
     const processInfo = JSON.stringify(userData.processes, null, 2);
-  
-    // Rest of the function...
+
     let prompt = `**General**
 
     You are BusinessAnalystGPT, a guide for small businesses to make wise choices for success. You'll receive JSON data with two categories: general information and processes. Analyze and suggest changes using the following criteria:
@@ -389,30 +364,44 @@ async function getUser(userId) {
     
     Length: Your response length should be ${maxWords}
 
-    Response scope: You are given context of the whole business. For this question your response scope should be ${processScope}.`;
-    
-      return prompt;
-  }
+    Response scope: You are given context of the whole business. For this question, your response scope should be ${processScope}.`;
 
-  const openai = new OpenAIApi(new Configuration({
-    apiKey: process.env.API_KEY
-  }));
-  
-  async function getAnalyzed(userId, tone, maxWords, analysisScope) {
-    try {
-      const analysis_prompt = await generatePrompt(userId, tone, maxWords, analysisScope);
-    
-      let analysisReturned = "";
-      await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: analysis_prompt }],
-      })
-        .then(response => {
-          analysisReturned = response.data.choices[0].message.content;
-        });
-      return analysisReturned;
-    } catch (error) {
-      console.error('Error:', error);
-      throw error;
-    }
+    return prompt;
+  } catch (error) {
+    console.error('Error generating prompt:', error);
+    throw error;
   }
+}
+
+async function getAnalyzed(userId, tone, maxWords, analysisScope) {
+  try {
+    const analysisPrompt = await generatePrompt(userId, tone, maxWords, analysisScope);
+
+    let analysisReturned = '';
+    await openai
+      .createChatCompletion({
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: analysisPrompt }],
+      })
+      .then((response) => {
+        analysisReturned = response.data.choices[0].message.content;
+      });
+
+    return analysisReturned;
+  } catch (error) {
+    console.error('Error in getAnalyzed:', error);
+    throw error;
+  }
+}
+
+app.post('/api/analysis', ensureAuthenticated, async (req, res) => {
+  const { userId, lengthOfResponse, analysisScope, tone } = req.body;
+
+  try {
+    const analysisResult = await getAnalyzed(userId, tone, lengthOfResponse, analysisScope);
+    res.status(200).json({ message: analysisResult });
+  } catch (error) {
+    console.error('Error in /api/analysis:', error);
+    res.status(500).json({ message: 'An error occurred while processing your request.' });
+  }
+});
