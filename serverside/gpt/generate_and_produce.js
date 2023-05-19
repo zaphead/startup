@@ -87,6 +87,3 @@ let analysisPrompt = generatePrompt(businessInfoPath, processInfoPath, tone, max
 
 const prompt = generatePrompt(businessInfoPath, processInfoPath, tone, maxWords, 1);
 
-console.log(prompt);
-
-getAnalyzed(prompt);

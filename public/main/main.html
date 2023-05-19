@@ -55,7 +55,7 @@
           <h2 style="text-align: center;">Analysis</h2>
             <div class="analysis-output">
             <!--In the paragraph below will go the analysis return from the LLM-->
-                <p>
+                <p id="analysisPane">
                     The agency business model can be improved in several ways. Firstly, it's important to have a clear and defined target audience. This allows the agency to tailor their services to meet the specific needs and preferences of their clients. Secondly, offering a range of services that complement each other can increase revenue streams and create a more comprehensive offering for clients. Thirdly, building and maintaining strong relationships with clients can help with retention and referral business. Fourthly, investing in the right technology and tools can streamline operations and improve efficiency. Finally, staying ahead of industry trends and continuously adapting to changing market conditions can ensure the agency remains competitive and relevant in the long-term.
                     The agency business model can be improved in several ways. Firstly, it's important to have a clear and defined target audience. This allows the agency to tailor their services to meet the specific needs and preferences of their clients. Secondly, offering a range of services that complement each other can increase revenue streams and create a more comprehensive offering for clients. Thirdly, building and maintaining strong relationships with clients can help with retention and referral business. Fourthly, investing in the right technology and tools can streamline operations and improve efficiency. Finally, staying ahead of industry trends and continuously adapting to changing market conditions can ensure the agency remains competitive and relevant in the long-term.
                 </p>
@@ -87,32 +87,34 @@
       </div>
     </div>
     <div id="modal-analyze" class="modal-generic analyze-modal">
-      <div class="analyze-modal-content modal-content-generic">
-        <h3>Select Analysis Parameters</h3>
-        <label for="select1">Length of Response</label>
-        <select id="select1" class="select-dropdown">
-          <option value="option1">Short</option>
-          <option value="option2">Medium</option>
-          <option value="option3">Long</option>
-        </select>
-        
-        <label for="select2">Analysis Scope</label>
-        <select id="select2" class="select-dropdown">
-          <option value="option1">Whole Business</option>
-          <option value="option2">Client Acquisition</option>
-          <option value="option3">Marketing Strategy</option>
-          <option value="option3">Service Process</option>
-        </select>
-        
-        <label for="select3">Tone</label>
-        <select id="select3" class="select-dropdown">
-          <option value="option2">Straight Forward</option>
-          <option value="option1">Nice and Soft (It won't be very helpful)</option>
-          <option value="option3">Roast Me and everything I've built🔥</option>
-        </select>
-        
-        <button class="modal-button main-button">Analyze</button>
-      </div>
+      <form id="analysisForm">
+        <div class="analyze-modal-content modal-content-generic">
+          <h3>Select Analysis Parameters</h3>
+          <label for="select1">Length of Response</label>
+          <select id="select1" class="select-dropdown">
+            <option value="option1">Short</option>
+            <option value="option2">Medium</option>
+            <option value="option3">Long</option>
+          </select>
+          
+          <label for="select2">Analysis Scope</label>
+          <select id="select2" class="select-dropdown">
+            <option value="option1">Whole Business</option>
+            <option value="option2">Client Acquisition</option>
+            <option value="option3">Marketing Strategy</option>
+            <option value="option3">Service Process</option>
+          </select>
+          
+          <label for="select3">Tone</label>
+          <select id="select3" class="select-dropdown">
+            <option value="option2">Straight Forward</option>
+            <option value="option1">Nice and Soft (It won't be very helpful)</option>
+            <option value="option3">Roast Me and everything I've built🔥</option>
+          </select>
+          
+          <button type="submit" class="modal-button main-button">Analyze</button>
+        </div>
+      </form>
     </div>
     
   </body>
