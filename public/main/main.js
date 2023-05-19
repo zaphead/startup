@@ -289,7 +289,6 @@ function showNewToast(message, duration, resolve) {
 }
 
 //RENDERING FLOWCHART
-
 class ProcessEditor {
   constructor(processName) {
     this.processName = processName;
@@ -297,8 +296,6 @@ class ProcessEditor {
     this.saveTimeout = null;
     this.process = null;
   }
-
-  
 
   fetchProcess = () => {
     fetch(`/api/user/processes/${this.processName}`)
@@ -326,27 +323,34 @@ class ProcessEditor {
       card.classList.add('card-container');
       card.innerHTML = `
         <div class="content-container">
-            <div class="card">
-                <div class="process-title" contenteditable="true" data-id="${index}">${step.title}</div>
-                <div class="process-content" contenteditable="true" data-id="${index}">${step.description}</div>
-            </div>
-            <div class="arrow-buttons">
-                <button class="up-button main-button">&#8593;</button>
-                <button class="down-button main-button">&#8595;</button>
-            </div>
+          <div class="delete-process secondary-button" data-id="${index}">
+            🗑️
+          </div>
+          <div class="card card-outlined">
+            <div class="process-title" contenteditable="true" data-id="${index}">${step.title}</div>
+            <div class="process-content" contenteditable="true" data-id="${index}">${step.description}</div>
+          </div>
+          <div class="arrow-buttons">
+            <button class="up-button main-button">&#8593;</button>
+            <button class="down-button main-button">&#8595;</button>
+          </div>
         </div>
         <div class="arrow-image-container">
-            <img class="arrowimg" height="30" src="../Images/down_arrow.png" />
+          <img class="arrowimg" height="30" src="../Images/down_arrow.png" />
         </div>
       `;
 
       mainSection.appendChild(card);
     });
 
-    // Add event listeners to all editable elements
     const editableElements = mainSection.querySelectorAll('[contenteditable]');
     editableElements.forEach(element => {
       element.addEventListener('input', this.handleTyping);
+    });
+
+    const deleteButtons = mainSection.querySelectorAll('.delete-process');
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', this.handleDeleteStep);
     });
   }
 
@@ -354,24 +358,33 @@ class ProcessEditor {
     const textContent = event.target.textContent;
     const stepIndex = event.target.dataset.id;
     const field = event.target.classList.contains('process-title') ? 'title' : 'description';
-  
-    // Update the process with the new content
+
     this.process[stepIndex][field] = textContent;
     this.unsavedChanges = true;
-  
-    // If there is a pending save, clear it
+
     if (this.saveTimeout !== null) {
       clearTimeout(this.saveTimeout);
     }
-  
-    // Set a new save to occur after 1.5 seconds of inactivity
+
     this.saveTimeout = setTimeout(() => saveProcess(this), 1500);
   }
 
+  handleDeleteStep = (event) => {
+    const stepIndex = event.target.dataset.id;
+    this.process.splice(stepIndex, 1);
+    this.unsavedChanges = true;
+
+    if (this.saveTimeout !== null) {
+      clearTimeout(this.saveTimeout);
+    }
+
+    this.saveChanges();
+    this.renderProcess();
+  }
+
   saveChanges = () => {
-    // Replace with your function to save changes to the server
     return fetch(`/api/user/processes/${this.processName}`, {
-      method: 'PUT', // or 'POST'
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -390,6 +403,22 @@ class ProcessEditor {
     });
   }
 
+  addStep = () => {
+    this.process.push({
+      title: 'New Step',
+      description: 'Step Description'
+    });
+
+    this.unsavedChanges = true;
+
+    if (this.saveTimeout !== null) {
+      clearTimeout(this.saveTimeout);
+    }
+
+    this.saveChanges();
+    this.renderProcess();
+  }
+
   warnBeforeClosing = (event) => {
     if (this.unsavedChanges) {
       event.preventDefault();
@@ -398,68 +427,58 @@ class ProcessEditor {
   }
 }
 
-
-// New functions to add
 async function saveProcess(processEditor) {
-if (!processEditor.unsavedChanges) {
-  return;
-}
+  if (!processEditor.unsavedChanges) {
+    return;
+  }
 
-showToast('Saving...', 2000);
-const saveSuccess = await processEditor.saveChanges();
-if (saveSuccess) {
-  showToast('Process saved!', 2000);
-} else {
-  showToast('Error saving process. Please try again.', 2000);
+  showToast('Saving...', 2000);
+  const saveSuccess = await processEditor.saveChanges();
+  if (saveSuccess) {
+    showToast('Process saved!', 2000);
+  } else {
+    showToast('Error saving process. Please try again.', 2000);
+  }
 }
-}
-
 
 async function loadProcess(processName) {
-const processEditor = new ProcessEditor(processName);
-await processEditor.fetchProcess();
-return processEditor;
+  const processEditor = new ProcessEditor(processName);
+  await processEditor.fetchProcess();
+  return processEditor;
 }
 
-// Initial message when no process is selected
 const mainSection = document.querySelector('.main-section .steps-container');
 mainSection.innerHTML = '<p>Select a process or business topic to get started.</p>';
-
-
-
-// Warn the user before closing the window
-window.addEventListener('beforeunload', function(event) {
-if (currentProcessEditor) {
-  currentProcessEditor.warnBeforeClosing(event);
-}
-});
-
 
 let currentProcessEditor = null;
 
 window.addEventListener('beforeunload', (event) => {
-if (currentProcessEditor && currentProcessEditor.unsavedChanges) {
-  event.preventDefault();
-  event.returnValue = 'You have unsaved changes. Do you want to leave?';
-  saveProcess(currentProcessEditor);
-}
-});
-// Select all process links using their class
-document.querySelectorAll('#processes_div .text-button').forEach((link) => {
-link.addEventListener('click', async (event) => {
-  // Prevent the link from doing its default action (in this case, navigating to "#")
-  event.preventDefault();
-
-  // If there's an editor with unsaved changes, save before loading a new process
   if (currentProcessEditor && currentProcessEditor.unsavedChanges) {
-    await saveProcess(currentProcessEditor);
+    event.preventDefault();
+    event.returnValue = 'You have unsaved changes. Do you want to leave?';
+    saveProcess(currentProcessEditor);
   }
+});
 
-  // Create a new editor instance for the clicked process
-  currentProcessEditor = new ProcessEditor(event.target.id);
-  currentProcessEditor.fetchProcess();
+document.querySelectorAll('#processes_div .text-button').forEach((link) => {
+  link.addEventListener('click', async (event) => {
+    event.preventDefault();
+    if (currentProcessEditor && currentProcessEditor.unsavedChanges) {
+      await saveProcess(currentProcessEditor);
+    }
+    currentProcessEditor = new ProcessEditor(event.target.id);
+    currentProcessEditor.fetchProcess();
+  });
 });
+
+document.querySelector('.click-button').addEventListener('click', () => {
+  if (currentProcessEditor) {
+    currentProcessEditor.addStep();
+  } else {
+    showToast('Please select a process first.', 2000);
+  }
 });
+
 
 
 //ANALYSIS FORM SUBMISSION AND RETRIEVAL
@@ -481,6 +500,7 @@ document.getElementById("analysisForm").addEventListener("submit", async (event)
   });
 
   if (userResponse.ok) {
+    document.getElementById("analysisPane").innerText = "Generating Analysis...";
     let userInfo = await userResponse.json();
     let userId = userInfo.user._id; // Assuming the user info includes _id
 

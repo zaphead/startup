@@ -131,7 +131,11 @@ app.post('/api/signup', async (req, res) => {
       email,
       password: hashedPassword, // Store the hashed password
       name,
-      processes: [],
+      processes: {
+        "client-acquisition": [],
+        "marketing-strategy": [],
+        "service-process": []
+      },
       businessInfo: {
         business_name: "",
         target_market: "",
