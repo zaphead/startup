@@ -405,3 +405,77 @@ app.post('/api/analysis', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ message: 'An error occurred while processing your request.' });
   }
 });
+
+
+//CREATING AND DELETING PROCESSES ROUTES
+//Creating process
+app.post('/api/user/processes/create', ensureAuthenticated, async (req, res) => {
+  const { processName, processSteps } = req.body;
+
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    // Use $set to update the specific field in the document.
+    const result = await collection.updateOne(
+      { _id: new ObjectId(req.user._id) },
+      { $set: { [`processes.${processName}`]: processSteps } }
+    );
+
+    if(result.modifiedCount === 1) {
+      res.status(200).json({ message: "Process added successfully." });
+    } else {
+      res.status(400).json({ message: "Process creation failed." });
+    }
+  } catch (error) {
+    console.error('Error in /api/user/processes/create:', error);
+    res.status(500).json({ error: 'An error occurred while creating the process.' });
+  }
+});
+
+//Get request API
+app.get('/api/user/processes', ensureAuthenticated, async (req, res) => {
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    // Find the document for the current user
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) });
+
+    if (user) {
+      res.status(200).json({ processes: user.processes });
+    } else {
+      res.status(404).json({ message: "User not found." });
+    }
+  } catch (error) {
+    console.error('Error in /api/user/processes:', error);
+    res.status(500).json({ error: 'An error occurred while fetching the processes.' });
+  }
+});
+
+
+//Deleting process
+app.delete('/api/user/processes/delete', ensureAuthenticated, async (req, res) => {
+  const { processName } = req.body;
+
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    // Use $unset to remove the specific field from the document.
+    const result = await collection.updateOne(
+      { _id: new ObjectId(req.user._id) },
+      { $unset: { [`processes.${processName}`]: "" } }
+    );
+
+    if(result.modifiedCount === 1) {
+      res.status(200).json({ message: "Process deleted successfully." });
+    } else {
+      res.status(400).json({ message: "Process deletion failed." });
+    }
+  } catch (error) {
+    console.error('Error in /api/user/processes/delete:', error);
+    res.status(500).json({ error: 'An error occurred while deleting the process.' });
+  }
+});
+

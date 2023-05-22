@@ -60,7 +60,7 @@ body {
     padding: 5px 10px;
     border-radius: 5px;
     color: #7a7a7a;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.15s, color 0.3s;
     visibility: visible !important;
     opacity: 1 !important;
   }
@@ -69,6 +69,8 @@ body {
     background-color: #ddd;
   }
 
+
+
   .button-highlight {
     background-color: #e7e7e7;
   }
@@ -76,6 +78,12 @@ body {
     opacity: .3;
     font-size: 18px;
     font-weight: 700;
+  }
+
+  .image-icon {
+    height: 1em;
+    opacity: .4;
+    margin: 10px;
   }
 
   /* Cards */
@@ -192,7 +200,7 @@ body {
 
   /* Modal */
   .modal-generic {
-    display: none; 
+    display: flex;
     position: fixed;  
     left: 0;
     top: 0;
@@ -213,10 +221,70 @@ body {
     margin: auto;
     padding: 20px;
     width: 30%;
-    min-width: 250px;
+    min-width: 150;
     box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
     border-radius: 25px;
     margin-top: 15%;
     outline: 1px solid #ffffff;
     transition: all 0.3s ease-in-out;
   }
+
+.modal-dialogue-buttons-container {
+  display: flex;
+  justify-content: right;
+  flex: 1;
+}
+.modal-dialogue-buttons-container button + button {
+  margin-left: 10px;
+}
+
+.dialogue-box {
+  width: 30%;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+  .header-container {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: space-between;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .title-header {
+    margin: 0;
+    padding-bottom: 5px; /* Add padding to adjust the space underneath */
+  }
+  
+  .text-icon {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    cursor: pointer;
+    padding-bottom: 5px; /* Add padding to adjust the space underneath */
+    align-items: center;
+    text-decoration: none;
+    display: block;
+    margin: 5px 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    color: #222222;
+    opacity: .5;
+    transition: background-color 0.3s, color 0.3s;
+  }
+.text-icon:hover {
+  background-color: #ddd;
+}
+  
+
+.modal-dialogue-text {
+  height: fit-content;
+  width: 100%;
+}
+.modal-dialogue-textbox {
+  height: fit-content;
+  width: 80%;
+  margin-top: 10px;
+}

@@ -13,10 +13,11 @@
     <div class="container">
         <section class="left-section section-menu">
           <div id="processes_div">
-            <h2 style="margin-bottom: 20px;">Processes</h2>
-            <a href="#" id="client-acquisition" class="text-button">Client Acquisition</a>
-            <a href="#" id="marketing-strategy" class="text-button">Marketing Strategy</a>
-            <a href="#" id="service-process" class="text-button">Service Process</a>
+            <div class="header-container">
+              <h2 class="title-header">Processes</h2>
+              <a id="add-process" class="text-icon">+</a>
+            </div>
+            <!-- Process Items go here -->
           </div>
           <div id="business_div">
             <h2 style="margin-bottom: 20px; margin-top: 20px;">Business</h2>
@@ -42,15 +43,15 @@
 
 
         <div class="card-wrapper">
-          <!-- Here's where each step would go. An example of a step is included. -->
           <div class="steps-container">
-              <div class="card-container">
-
-
-              </div>
+            <!-- Here's where each step would go. An example of a step is included. -->
+            <div class="card-container">
+        
+            </div>
           </div>
           <button class="click-button main-button">Add Step</button>
-      </div>
+        </div>
+        
           
       </section>
 
@@ -109,13 +110,24 @@
           <label for="select3">Tone</label>
           <select id="select3" class="select-dropdown">
             <option value="Straight Forward">Straight Forward</option>
-            <option value="Nice and soft. Dont be hard on the business.">Nice and Soft (It won't be very helpful)</option>
-            <option value="Roast the business and it's strategies. Be critical, harsh and don't hold back. This is what the user wants and needs.">Roast Me and everything I've built🔥</option>
+            <option value="Nice and soft. Even if the business is terrible, kiss up to them. They're doing their best.">Nice and Soft (It won't be very helpful)</option>
+            <option value="Roast the business and it's strategies. Be critical, harsh and don't hold back. Be absolutely BRUTAL. Make it as personal as possible. Also throw in a few snarky jokes in the roast.">Roast Me and everything I've built🔥</option>
           </select>
           
           <button type="submit" class="modal-button main-button">Analyze</button>
         </div>
       </form>
+    </div>
+    <!-- Dialogue Box Modal -->
+    <div id="modal-dialogue" class="modal-generic">
+      <div id="modal-dialogue-content" class="modal-content-generic dialogue-box">
+        <h2 class="modal-dialogue-header">Modal Header</h2>
+        <p class="modal-dialogue-text">Modal Dialogue content</p>
+        <div class="modal-dialogue-buttons-container">
+          <button class="secondary-button">Cancel</button>
+          <button class="main-button">Confirm</button>
+        </div>
+      </div>
     </div>
     
   </body>

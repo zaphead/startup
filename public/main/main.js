@@ -37,6 +37,21 @@ closeButton.addEventListener('click', function() {
   analyzeModal.style.display = 'none';
 });
 
+//DIALOGUE MODAL
+// Get the necessary elements
+const addProcessBtn = document.getElementById('add-process');
+const modalDialogue = document.getElementById('modal-dialogue');
+
+// Add click event listener to the modal dialogue to close it when clicked outside
+modalDialogue.addEventListener('click', (event) => {
+  // Check if the clicked element is the modal content itself
+  if (event.target === modalDialogue) {
+    // Hide the modal dialogue
+    modalDialogue.style.display = 'none';
+  }
+});
+
+
 
 //NAME PLACEHOLDER & AUTHORIZER
 async function fetchAuthenticatedUser() {
@@ -138,8 +153,6 @@ async function fetchBusinessInfo() {
       businessInfoMap['stage'] = businessInfo.stage;
       businessInfoMap['hours'] = businessInfo.hours;
       businessInfoMap['experience'] = businessInfo.experience;
-
-      console.log('Business info fetched:', businessInfoMap);
     } else {
       console.error('Error retrieving business info:', data.error);
     }
@@ -291,30 +304,35 @@ function showNewToast(message, duration, resolve) {
 //RENDERING FLOWCHART
 class ProcessEditor {
   constructor(processName) {
+    console.log("ProcessEditor is being instantiated with processName: ", processName); // Log when a new instance of the class is created
     this.processName = processName;
-    this.unsavedChanges = false;
-    this.saveTimeout = null;
     this.process = null;
+    this.fetchProcess();
   }
 
   fetchProcess = () => {
+    console.log("fetchProcess is being called with processName: ", this.processName); // Log when fetchProcess method is called
     fetch(`/api/user/processes/${this.processName}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(json => {
-        this.process = json.process;
-        this.renderProcess();
-      })
-      .catch(e => {
-        console.error('An error occurred fetching the process data:', e);
-      });
+    .then(response => {
+      console.log('Fetch Process Response:', response.status, response.body); // Log the fetch response
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(json => {
+      console.log('Received process:', json.process); // Log the fetched process
+      this.process = json.process;
+      this.renderProcess();
+    })
+    .catch(e => {
+      console.error('An error occurred fetching the process data:', e);
+      throw e;
+    });
   }
 
   renderProcess = () => {
+    console.log('Rendering process:', this.process); // Log when rendering begins
     const mainSection = document.querySelector('.main-section .steps-container');
     mainSection.innerHTML = '';
 
@@ -399,10 +417,9 @@ class ProcessEditor {
     })
     .catch(e => {
       console.error('An error occurred saving the process data:', e);
-      return false;
+      throw e;
     });
   }
-
   addStep = () => {
     this.process.push({
       title: 'New Step',
@@ -441,11 +458,7 @@ async function saveProcess(processEditor) {
   }
 }
 
-async function loadProcess(processName) {
-  const processEditor = new ProcessEditor(processName);
-  await processEditor.fetchProcess();
-  return processEditor;
-}
+
 //Initial load of page
 const mainSection = document.querySelector('.main-section .steps-container');
 const addButton = document.querySelector('.click-button');
@@ -461,8 +474,10 @@ window.addEventListener('beforeunload', (event) => {
   }
 });
 
+
 document.querySelectorAll('#processes_div .text-button').forEach((link) => {
   link.addEventListener('click', async (event) => {
+    console.log('text-button clicked'); // Log when a button is clicked
     event.preventDefault();
     if (currentProcessEditor && currentProcessEditor.unsavedChanges) {
       await saveProcess(currentProcessEditor);
@@ -470,7 +485,7 @@ document.querySelectorAll('#processes_div .text-button').forEach((link) => {
     currentProcessEditor = new ProcessEditor(event.target.id);
     currentProcessEditor.fetchProcess();
     addButton.style.display = 'block';
-    introSplash.style.display = 'none'; // This should work now
+    introSplash.style.display = 'none';
 
     // Remove 'button-highlight' from all buttons
     document.querySelectorAll('#processes_div .text-button').forEach(button => {
@@ -482,6 +497,7 @@ document.querySelectorAll('#processes_div .text-button').forEach((link) => {
   });
 });
 
+
 document.querySelector('.click-button').addEventListener('click', () => {
   if (currentProcessEditor) {
     currentProcessEditor.addStep();
@@ -489,6 +505,7 @@ document.querySelector('.click-button').addEventListener('click', () => {
     showToast('Please select a process first.', 2000);
   }
 });
+
 
 
 
@@ -537,4 +554,162 @@ document.getElementById("analysisForm").addEventListener("submit", async (event)
   } else {
     console.error('Failed to fetch user info:', userResponse.status, userResponse.statusText);
   }
+});
+
+
+
+//ADDING AND DELETING PROCESSES
+document.addEventListener("DOMContentLoaded", function() {
+  fetch("/api/user/processes")
+    .then(response => response.json())
+    .then(data => {
+      for(let processName in data.processes) {
+        let displayProcessName = processName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        let processItem = generateProcessItemHTML(displayProcessName, processName);
+        document.querySelector('#processes_div').insertAdjacentHTML('beforeend', processItem);
+      }
+
+      attachDeleteProcessClickEvent();
+      attachProcessEditorEvent(); // attach processEditor function as click event for process buttons
+    }).catch(error => {
+      console.log("Error loading processes:", error); // log the error if the GET request fails
+    });
+});
+
+function generateProcessItemHTML(displayProcessName, processName) {
+  return `
+    <div class="processes-item">
+      <div class="processes-item-left">
+        <a href="#" id="${processName}" class="text-button menu-text-buttons">${displayProcessName}</a>
+      </div>
+      <div class="processes-item-right">
+        <a id="delete-process" data-process-name="${processName}"><img class="image-icon icon-button" src="../Images/icons/trash.svg"></a>
+      </div>
+    </div>`;
+}
+
+function attachDeleteProcessClickEvent() {
+  document.querySelectorAll("[id=delete-process]").forEach(item => {
+    item.addEventListener("click", function() {
+      const processName = this.getAttribute("data-process-name");
+      showDeleteProcessModal(processName);
+    });
+  });
+}
+
+function attachProcessEditorEvent() {
+  document.querySelectorAll(".text-button").forEach(item => {
+    item.addEventListener("click", function() {
+      const id = this.id;
+      new ProcessEditor(id);
+
+      // Remove 'button-highlight' from all buttons
+      document.querySelectorAll('#processes_div .text-button').forEach(button => {
+        button.classList.remove('button-highlight');
+      });
+
+      // Add 'button-highlight' to the clicked button
+      this.classList.add('button-highlight');
+    });
+  });
+}
+
+
+// ADDING A PROCESS
+document.getElementById("add-process").addEventListener("click", function() {
+  showAddProcessModal();
+});
+
+function showAddProcessModal() {
+  let modal = document.getElementById("modal-dialogue");
+  if (!modal) {
+    console.log("Modal element not found"); // add log if modal element is not found
+    return;
+  }
+
+  let modalHeader = modal.querySelector(".modal-dialogue-header");
+  let modalText = modal.querySelector(".modal-dialogue-text");
+
+  // Change the header and text
+  modalHeader.textContent = "Add Process";
+  modalText.innerHTML = "Give your new process a name: <input type='text' required class='modal-dialogue-textbox' id='new-process-name'>";
+
+  // Show the modal
+  modal.style.display = "block";
+}
+
+function showDeleteProcessModal(processName) {
+  let modal = document.getElementById("modal-dialogue");
+  if (!modal) {
+    console.log("Modal element not found"); // add log if modal element is not found
+    return;
+  }
+
+  let modalHeader = modal.querySelector(".modal-dialogue-header");
+  let modalText = modal.querySelector(".modal-dialogue-text");
+
+  // Change the header and text
+  modalHeader.textContent = "Delete Process";
+  modalText.textContent = "Do you want to delete " + processName + "?";
+
+  // Show the modal
+  modal.style.display = "block";
+}
+
+document.querySelector("#modal-dialogue .main-button").addEventListener("click", function() {
+  let modal = document.getElementById("modal-dialogue");
+  let modalHeader = modal.querySelector(".modal-dialogue-header");
+  let modalText = modal.querySelector(".modal-dialogue-text");
+
+  if(modalHeader.textContent === "Add Process") {
+    // Create a new process
+    let processName = modal.querySelector("#new-process-name").value.toLowerCase().replace(/\s/g, '-');
+
+    fetch('/api/user/processes/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ processName: processName, processSteps: [] }),  // assuming empty steps when creating a new process
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.message === 'Process added successfully.') {
+        showToast('Process added successfully', 2000);
+        location.reload(); // reload the page to reflect the change
+      } else {
+        showToast('Process creation failed', 2000);
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+
+  } else if(modalHeader.textContent === "Delete Process") {
+    // Delete the process
+    let processName = modalText.textContent.replace('Do you want to delete ', '').replace('?', '');
+
+    fetch('/api/user/processes/delete', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ processName: processName }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      if(data.message === 'Process deleted successfully.') {
+        showToast('Process deleted successfully', 2000);
+        location.reload(); // reload the page to reflect the change
+      } else {
+        showToast('Process deletion failed', 2000);
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
+
+  // Hide the modal
+  modal.style.display = "none";
 });

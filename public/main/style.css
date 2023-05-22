@@ -21,6 +21,23 @@ h5, h4 {
     color: #8d8d83;
 }
 
+#processes_div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.processes-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.processes-item-left,
+.processes-item-right {
+  display: flex;
+  align-items: center;
+}
 
 
 
@@ -92,10 +109,22 @@ section.right-section .logo {
   font-weight: bold;
   margin: 0;
   margin-bottom: 10px;
+  
 }
 
-.process-content {
+.process-item {
   text-align: left;
+  width: 100%;
+}
+
+.process-item-left {
+  width: 90%;
+}
+.process-item-right {
+  width: 10%;
+}
+.menu-text-buttons {
+  width: 100%;
 }
 
 .business-title {
@@ -186,6 +215,16 @@ section.right-section .logo {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+#delete-process {
+  transition: all 0.2s ease-in-out;
+  border-radius: 5px;
+}
+#delete-process:hover {
+  background-color: #e7e7e7;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 
