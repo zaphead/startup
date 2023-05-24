@@ -26,7 +26,7 @@ const closeButton = document.querySelector('.modal-button');
 const overlayButton = document.getElementById('modal-analyze')
 
 analyzeButton.addEventListener('click', function() {
-  analyzeModal.style.display = 'block';
+  analyzeModal.style.display = 'flex';
 });
 
 closeButton.addEventListener('click', function() {
@@ -106,7 +106,7 @@ function openModal(title, content, id) {
   // Update this line to render fetched content
   document.getElementById('modal-content').textContent = businessInfoMap[id] || '';
   
-  document.getElementById('myModal').style.display = 'block';
+  document.getElementById('myModal').style.display = 'flex';
 }
 
 
@@ -686,7 +686,7 @@ function showAddProcessModal() {
   modalText.innerHTML = "Process Name: <input type='text' required class='modal-dialogue-textbox' id='new-process-name'>";
 
   // Show the modal
-  modal.style.display = "block";
+  modal.style.display = "flex";
 }
 
 function showDeleteProcessModal(processName) {
@@ -704,7 +704,7 @@ function showDeleteProcessModal(processName) {
   modalText.textContent = "Do you want to delete " + processName + "?";
 
   // Show the modal
-  modal.style.display = "block";
+  modal.style.display = "flex";
 }
 
 document.querySelector("#modal-dialogue .main-button").addEventListener("click", function() {
@@ -886,9 +886,7 @@ function importProcessFromText(text) {
       };
       processData.push(step);
     } else {
-      // If no title and description format is found, check if processData already has steps
-      // If so, add stepText as description to the last step
-      // If not, create a new step with stepText as title
+
       if (processData.length > 0) {
         processData[processData.length - 1].description += "\n" + stepText;
       } else {
@@ -978,7 +976,7 @@ importButton.addEventListener('click', () => {
   // Create the textarea element
   const textarea = document.createElement('textarea');
   textarea.classList.add('modal-dialogue-textbox', 'large-textbox');
-  textarea.placeholder = 'Enter the process steps as a list:\n\n1. Step 1: Description of Step 1\n2. Step 2: Description of Step 2\n...';
+  textarea.placeholder = 'Enter your process steps as a list:\n\nStep Title: Step Description. Separate each step with a new line.';
   modalTextContent.appendChild(textarea);
 
   // Create the button container
@@ -1042,7 +1040,7 @@ importButton.addEventListener('click', () => {
   });
 
   // Show the modal
-  modalText.style.display = 'block';
+  modalText.style.display = 'flex';
 });
 
 

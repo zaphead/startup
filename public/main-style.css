@@ -1,19 +1,4 @@
-/* *:not(.modal-generic):not(.modal-content-generic):not(.analyze-modal):not(.dialogue-box) {
-  transition: all 0.25s ease-in-out;
-}
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-*:not(.modal-generic):not(.modal-content-generic):not(.analyze-modal):not(.dialogue-box) {
-  animation: fadeIn 0.2s ease-in;
-}
 a,
 .main-button,
 .secondary-button {
@@ -24,7 +9,7 @@ a,
 .secondary-button:hover {
   transform: scale(1.05);
 }
- */
+
 
 
 /* Body */
@@ -242,7 +227,6 @@ body {
 
   /* Modal */
 .modal-generic {
-  display: flex;
   position: fixed;
   left: 0;
   top: 0;
@@ -262,10 +246,9 @@ body {
   background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(40px);
   margin: auto;
-  padding: 20px;
+  padding: 30px;
   width: 60%;
   min-width: 300px;
-  max-height: 80vh; /* Set maximum height to 80% of viewport height */
   overflow-y: auto; /* Enable vertical scroll if content exceeds height */
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
   border-radius: 25px;
@@ -342,6 +325,13 @@ body {
 .image-icon-button {
   height: 17px;
   opacity: .4;
+
+}
+
+.icon-button {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 2px;
 }
 
 .large-textbox {
@@ -419,3 +409,25 @@ body {
   background-color: transparent;
 }
 
+.password-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.password-button {
+height: fit-content;
+}
+
+.all-settings-content {
+  display: flex;
+
+}
+
+.main-settings-content {
+  width: 50%;
+}
+.update-notes {
+  width: 50%;
+  text-align: left;
+}

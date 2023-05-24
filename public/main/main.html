@@ -31,13 +31,14 @@
           
           <div class="user-control">
             <h4 id="authenticated-user"></h4>
-            <a href="../splash/splash.html"><button class="logout-button main-button" style="margin-left: 10px;">🔒</button></a>
+            <a id="settingsButton"><button class="icon-button main-button" style="margin-left: 10px;">⚙️</button></a>
+            <a href="../splash/splash.html"><button class="icon-button main-button" style="margin-left: 10px;">🔒</button></a>
           </div>
           </section>
           
       <section class="section-menu main-section">
         <div id="toolbar" class="toolbar">
-          <div id="toolbarTitle" class="toolbar-title">Process Title</div>
+          <div id="toolbarTitle" class="toolbar-title">Flow Chart</div>
           <div class="toolbar-items">
             <button id="importButton" class="secondary-button openModalBtn">Import</button>
             <button id="exportButton" class="secondary-button openModalBtn">Export</button>
@@ -97,9 +98,9 @@
     </div>
 
     <!-- Form Modal for submitting analysis stuff -->
-    <div id="modal-analyze" class="modal-generic analyze-modal">
+    <div id="modal-analyze" class="modal-generic">
       <form id="analysisForm">
-        <div class="analyze-modal-content modal-content-generic">
+        <div class="modal-content-generic">
           <h3>Select Analysis Parameters</h3>
           <label for="select1">Length of Response</label>
           <select id="select1" class="select-dropdown">
@@ -148,11 +149,33 @@
         </div>
       </div>
     </div>
-    
+
+    <!-- Settings Panel -->
+    <div id="settingsModal" class="modal-generic settingsModalYo">
+      <div id="settings-modal-content" class="modal-content-generic settings-modal">
+        <h2 class="title-header">Settings</h2>
+          <div class="all-settings-content">
+            <div class="main-settings-content">
+              <h3 class="settings-header">Account</h3>
+              <p id="authenticated-user">Account Holder Name</p>
+              <p id="authenticated-user-email">Account Holder email</p>
+              <div class="password-div">
+                <p>Password Management</p>
+                <button class="main-button password-button">Change Password</button>
+              </div>
+            </div>
+            <div class="update-notes">
+              <h3 class="settings-header">Update Notes</h3>
+            </div>
+          </div>
+      </div>
+    </div>
+
   </body>
   <script src="/dist/bundle.js"></script>
   <script src="./jsonImportExport.js"></script>
   <script src="./main.js"></script>
   <script src="../global-js-animations.js"></script>
+  <script src="./settings.js"></script>
   
 </html>
