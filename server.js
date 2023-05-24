@@ -453,6 +453,59 @@ app.get('/api/user/processes', ensureAuthenticated, async (req, res) => {
   }
 });
 
+// Append process data to the existing process
+app.post('/api/user/process/append', ensureAuthenticated, async (req, res) => {
+  try {
+    const { processName, processData } = req.body;
+
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) });
+
+    if (user) {
+      const process = user.processes[processName];
+
+      if (process && Array.isArray(process)) {
+        process.push(...processData);
+        await collection.updateOne({ _id: new ObjectId(req.user._id) }, { $set: { processes: user.processes } });
+        res.status(200).json({ message: 'Process data appended successfully.' });
+      } else {
+        res.status(404).json({ message: 'Process not found.' });
+      }
+    } else {
+      res.status(404).json({ message: 'User not found.' });
+    }
+  } catch (error) {
+    console.error('Error appending process data:', error);
+    res.status(500).json({ error: 'An error occurred while appending process data.' });
+  }
+});
+
+// Replace the existing process data with new process data
+app.post('/api/user/process/replace', ensureAuthenticated, async (req, res) => {
+  try {
+    const { processName, processData } = req.body;
+
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) });
+
+    if (user) {
+      user.processes[processName] = processData;
+      await collection.updateOne({ _id: new ObjectId(req.user._id) }, { $set: { processes: user.processes } });
+      res.status(200).json({ message: 'Process data replaced successfully.' });
+    } else {
+      res.status(404).json({ message: 'User not found.' });
+    }
+  } catch (error) {
+    console.error('Error replacing process data:', error);
+    res.status(500).json({ error: 'An error occurred while replacing process data.' });
+  }
+});
+
+
 // Get Process Route for parsing JSON to regular format
 app.get('/api/user/process', ensureAuthenticated, async (req, res) => {
   try {
@@ -478,6 +531,7 @@ app.get('/api/user/process', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching the process.' });
   }
 });
+
 
 
 

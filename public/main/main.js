@@ -263,16 +263,25 @@ document.getElementById('modal-content').addEventListener('input', (event) => {
 });
 
 let currentToast = null;
+let processEditor = null;
+
 
 //RENDERING FLOWCHART
 class ProcessEditor {
   constructor(processName) {
-    console.log("ProcessEditor is being instantiated with processName: ", processName); // Log when a new instance of the class is created
+    if (processEditor) {
+      processEditor.processName = processName;
+      processEditor.fetchProcess();
+      return processEditor;
+    }
+    
+    console.log("ProcessEditor is being instantiated with processName: ", processName);
     this.processName = processName;
     this.process = null;
     this.fetchProcess();
+    
+    processEditor = this;
   }
-
   fetchProcess = () => {
     console.log("fetchProcess is being called with processName: ", this.processName); // Log when fetchProcess method is called
     fetch(`/api/user/processes/${this.processName}`)
@@ -294,6 +303,42 @@ class ProcessEditor {
       });
   }
 
+  handleMoveStepUp = (event) => {
+    const stepIndex = Number(event.target.dataset.id);
+    if (stepIndex === 0) {
+      // If it's the first step, it cannot move up
+      return;
+    }
+    [this.process[stepIndex - 1], this.process[stepIndex]] = [this.process[stepIndex], this.process[stepIndex - 1]];
+    
+    this.unsavedChanges = true;
+    if (this.saveTimeout !== null) {
+      clearTimeout(this.saveTimeout);
+    }
+    this.saveTimeout = setTimeout(() => this.saveChanges(), 1500);
+  
+    this.renderProcess();
+  }
+  
+  handleMoveStepDown = (event) => {
+    const stepIndex = Number(event.target.dataset.id);
+    if (stepIndex === this.process.length - 1) {
+      // If it's the last step, it cannot move down
+      return;
+    }
+    [this.process[stepIndex + 1], this.process[stepIndex]] = [this.process[stepIndex], this.process[stepIndex + 1]];
+    
+    this.unsavedChanges = true;
+    if (this.saveTimeout !== null) {
+      clearTimeout(this.saveTimeout);
+    }
+    this.saveTimeout = setTimeout(() => this.saveChanges(), 1500);
+  
+    this.renderProcess();
+  }
+  
+  
+
   renderProcess = () => {
     console.log('Rendering process:', this.process); // Log when rendering begins
     const mainSection = document.querySelector('.main-section .steps-container');
@@ -312,14 +357,21 @@ class ProcessEditor {
             <div class="process-content" contenteditable="true" data-id="${index}">${step.description}</div>
           </div>
           <div class="arrow-buttons">
-            <button class="up-button main-button">&#8593;</button>
-            <button class="down-button main-button">&#8595;</button>
-          </div>
+          <button class="up-button main-button" data-id="${index}">&#8593;</button>
+          <button class="down-button main-button" data-id="${index}">&#8595;</button>
+        </div>
         </div>
         <div class="arrow-image-container">
           <img class="arrowimg" height="30" src="../Images/down_arrow.png" />
         </div>
       `;
+      if (index === 0) {
+        card.querySelector('.up-button').style.display = 'none';
+      }
+      if (index === this.process.length - 1) {
+        card.querySelector('.down-button').style.display = 'none';
+      }
+      
       card.querySelector('.up-button').addEventListener('click', this.handleMoveStepUp);
       card.querySelector('.down-button').addEventListener('click', this.handleMoveStepDown);
 
@@ -353,17 +405,23 @@ class ProcessEditor {
   }
 
   handleDeleteStep = (event) => {
-    const stepIndex = event.target.dataset.id;
+    let stepIndex;
+    if (event.target.tagName === 'IMG') {
+      stepIndex = event.target.parentNode.dataset.id;
+    } else {
+      stepIndex = event.target.dataset.id;
+    }
     this.process.splice(stepIndex, 1);
     this.unsavedChanges = true;
-
+  
     if (this.saveTimeout !== null) {
       clearTimeout(this.saveTimeout);
     }
-
+  
     this.saveChanges();
     this.renderProcess();
   }
+  
 
   saveChanges = () => {
     return fetch(`/api/user/processes/${this.processName}`, {
@@ -430,6 +488,9 @@ function showProcessEditor(processName) {
   if (button) {
     button.classList.add('button-highlight');
   }
+
+  //Set the toolbar title to the process name
+
 
   // Store the selected process in sessionStorage
   sessionStorage.setItem('selectedProcess', processName);
@@ -797,3 +858,191 @@ document.getElementById('analysisForm').addEventListener('submit', async (event)
     console.error('Failed to fetch user info:', userResponse.status, userResponse.statusText);
   }
 });
+
+
+
+
+//IMPORTING TEXT AS FLOW CHART
+
+// Parse the imported text into process data
+function importProcessFromText(text) {
+  const trimmedText = text.trim();
+  const lines = trimmedText.split('\n');
+  const processData = [];
+
+  lines.forEach((line) => {
+    let stepText = line.trim();
+    stepText = stepText.replace(/\*\*(.*)\*\*/, '$1'); // remove markdown notation
+
+    const firstColonIndex = stepText.indexOf(':');
+
+    if (firstColonIndex !== -1) {
+      const title = stepText.slice(0, firstColonIndex).trim();
+      const description = stepText.slice(firstColonIndex + 1).trim();
+
+      const step = {
+        title,
+        description
+      };
+      processData.push(step);
+    } else {
+      // If no title and description format is found, check if processData already has steps
+      // If so, add stepText as description to the last step
+      // If not, create a new step with stepText as title
+      if (processData.length > 0) {
+        processData[processData.length - 1].description += "\n" + stepText;
+      } else {
+        const step = {
+          title: stepText,
+          description: ''
+        };
+        processData.push(step);
+      }
+    }
+  });
+
+  return processData;
+}
+
+
+
+
+
+
+// Append process data to the existing process
+async function appendProcessData(processName, processData) {
+  try {
+    const response = await fetch('/api/user/process/append', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ processName, processData })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error appending process data:', error);
+    throw error;
+  }
+}
+
+// Replace the existing process data with new process data
+async function replaceProcessData(processName, processData) {
+  try {
+    const response = await fetch('/api/user/process/replace', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ processName, processData })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error replacing process data:', error);
+    throw error;
+  }
+}
+
+
+// Get a reference to the import button
+const importButton = document.getElementById('importButton');
+
+// Add an event listener to the import button click
+importButton.addEventListener('click', () => {
+  // Set the modal header
+  modalHeaderText.textContent = 'Import Process as Text';
+
+  // Clear any existing content
+  modalTextContent.innerHTML = '';
+
+  // Create the <h1> element
+  const headingElement = document.createElement('h2');
+  headingElement.className = 'title-header';
+  headingElement.textContent = 'Import a List';
+
+  // Append the heading element to the modal content
+  modalTextContent.appendChild(headingElement);
+
+  // Create the textarea element
+  const textarea = document.createElement('textarea');
+  textarea.classList.add('modal-dialogue-textbox', 'large-textbox');
+  textarea.placeholder = 'Enter the process steps as a list:\n\n1. Step 1: Description of Step 1\n2. Step 2: Description of Step 2\n...';
+  modalTextContent.appendChild(textarea);
+
+  // Create the button container
+  const buttonContainer = document.createElement('div');
+  buttonContainer.classList.add('modal-dialogue-buttons-container');
+
+  // Create the append button
+  const appendButton = document.createElement('button');
+  appendButton.classList.add('main-button');
+  appendButton.textContent = 'Append';
+  buttonContainer.appendChild(appendButton);
+
+  // Create the replace button
+  const replaceButton = document.createElement('button');
+  replaceButton.classList.add('main-button');
+  replaceButton.textContent = 'Replace';
+  buttonContainer.appendChild(replaceButton);
+
+  // Append the button container to the modal content
+  modalTextContent.appendChild(buttonContainer);
+
+  // Add an event listener to the append button click
+  appendButton.addEventListener('click', async () => {
+    const text = textarea.value;
+    console.log(text);
+    const processData = importProcessFromText(text);
+    console.log(processData);
+
+    try {
+      const selectedProcessName = sessionStorage.getItem('selectedProcess');
+      await appendProcessData(selectedProcessName, processData);
+      console.log('Process data appended:', processData);
+      new ProcessEditor(selectedProcessName);
+      modalText.style.display = 'none';
+      showToast('Process data appended successfully!', 2000);
+    } catch (error) {
+      console.error('Error appending process data:', error);
+      showToast('An error occurred while appending process data. Please try again.', 2000);
+    }
+  });
+
+  // Add an event listener to the replace button click
+  replaceButton.addEventListener('click', async () => {
+    const text = textarea.value;
+    console.log(text);
+    const processData = importProcessFromText(text);
+    console.log(processData);
+
+    try {
+      const selectedProcessName = sessionStorage.getItem('selectedProcess');
+      await replaceProcessData(selectedProcessName, processData);
+      console.log('Process data replaced:', processData);
+      new ProcessEditor(selectedProcessName);
+      modalText.style.display = 'none';
+      showToast('Process data replaced successfully!', 2000);
+      
+    } catch (error) {
+      console.error('Error replacing process data:', error);
+      showToast('An error occurred while replacing process data. Please try again.', 2000);
+    }
+  });
+
+  // Show the modal
+  modalText.style.display = 'block';
+});
+
+

@@ -63,9 +63,10 @@ h5, h4 {
   flex-grow: 1;
   height: 100vh;
   padding: 20px;
+  padding-bottom: 200px;
   box-sizing: border-box;
   position: relative;
-  overflow-y: auto;
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
 }
@@ -101,7 +102,7 @@ section.right-section .logo {
 
 .toolbar {
   height: 40px;
-  background-color: rgba(255, 255, 255, 0);
+  /* background-color: rgba(255, 255, 255, 0); */
   backdrop-filter: blur(20px);
   text-align: center;
   outline: 1px solid #ffffff;
@@ -132,9 +133,7 @@ section.right-section .logo {
 }
 
 .card {
-  width: 50%;
-  min-width: 300px;
-  max-width: 600px;
+  width: 500px;
   margin-right: 10px;
 }
 
@@ -221,6 +220,7 @@ section.right-section .logo {
 .click-button {
   display: none;
   margin: 0 auto;
+  margin-top: 20px;
   padding: 10px 20px;
 }
 
@@ -372,3 +372,6 @@ section.right-section .logo {
 #analysisPane {
   text-align: left;
 }
+
+
+

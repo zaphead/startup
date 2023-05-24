@@ -37,13 +37,12 @@
           
       <section class="section-menu main-section">
         <div id="toolbar" class="toolbar">
-          <div class="toolbar-title">Process Title</div>
+          <div id="toolbarTitle" class="toolbar-title">Process Title</div>
           <div class="toolbar-items">
-            <button id="importButton" class="secondary-button">Import</button>
-            <button id="exportButton" class="secondary-button">Export</button>
+            <button id="importButton" class="secondary-button openModalBtn">Import</button>
+            <button id="exportButton" class="secondary-button openModalBtn">Export</button>
           </div>
         </div>
-        <div class="toolbar-spacer"></div>
         <div id="introSplash" class="intro-splash">
           <p class="hint-text">Select a process or business topic to get started.</p>
           <img src="../Images/StrataMind-S.svg" class="svg-splash">
@@ -72,7 +71,7 @@
             </div>
             <div class="analysis-info">
               <div class="analyze-container">
-                <button class="analyze main-button">Analyze</button>
+                <button class="analyze main-button ">Analyze</button>
               </div>
               <h5 id="analysisCurrent">This analysis is up to date ☑️</h5>
           </div>
@@ -151,6 +150,9 @@
     </div>
     
   </body>
+  <script src="/dist/bundle.js"></script>
   <script src="./jsonImportExport.js"></script>
   <script src="./main.js"></script>
+  <script src="../global-js-animations.js"></script>
+  
 </html>

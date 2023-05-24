@@ -1,32 +1,41 @@
-function showToast(message, duration = 3000) {
-  return new Promise((resolve) => {
-    if (currentToast) {
-      currentToast.classList.add('slide-out');
-      setTimeout(() => {
-        currentToast.remove();
-        showNewToast(message, duration, resolve); // Show the new toast after removing the previous one
-      }, 1000);
-    } else {
-      showNewToast(message, duration, resolve); // Show the new toast directly if there is no previous one
+function importProcessFromText(text) {
+  const trimmedText = text.trim();
+  const lines = trimmedText.split('\n');
+  const processData = [];
+
+  lines.forEach((line) => {
+    const [stepNumber, stepText] = line.split('. ');
+
+    if (stepNumber && stepText) {
+      const title = stepText
+        .replace(/^\*\*(.*)\*\*:.*/, '$1') // Remove markdown notation from the title
+        .trim();
+      const description = stepText
+        .replace(/^\*\*.*\*\*:\s*/, '') // Remove markdown notation from the description
+        .trim();
+
+      const step = {
+        title,
+        description
+      };
+      processData.push(step);
     }
   });
+
+  return processData;
 }
 
-function showNewToast(message, duration, resolve) {
-  const toast = document.createElement('div');
-  toast.classList.add('toast');
-  toast.textContent = message;
-  document.body.appendChild(toast);
 
-  currentToast = toast;
 
-  setTimeout(() => {
-    toast.classList.remove('slide-out');
-  }, 1000);
 
-  setTimeout(() => {
-    toast.remove(); // Remove the toast after the specified duration
-    currentToast = null; // Reset the current toast
-    resolve(); // Resolve the promise
-  }, duration);
-}
+
+const data = `
+2. **Run a Business Analysis on the concept**: Establish how the concept will benefit the business's target market. (Small business owners) Further determine how much time, money, and resources the product or feature will take to implement
+3. **Concept**: Brainstorm the idea and create a concept on paper in Notion.dd
+4. **Product passes business analysis & Timeline setting**: Develop a game plan for how the product will make it into the main StrataMind suite. Determine timeline, and set goals
+5. **Product Beta Testing**: When the product enters MVP stage, use the Product Testing flow process until the product has been approved.
+
+`;
+
+const processedData = importProcessFromText(data);
+console.log('Processed Data:', processedData);
