@@ -36,6 +36,14 @@
           </section>
           
       <section class="section-menu main-section">
+        <div id="toolbar" class="toolbar">
+          <div class="toolbar-title">Process Title</div>
+          <div class="toolbar-items">
+            <button id="importButton" class="secondary-button">Import</button>
+            <button id="exportButton" class="secondary-button">Export</button>
+          </div>
+        </div>
+        <div class="toolbar-spacer"></div>
         <div id="introSplash" class="intro-splash">
           <p class="hint-text">Select a process or business topic to get started.</p>
           <img src="../Images/StrataMind-S.svg" class="svg-splash">
@@ -49,7 +57,7 @@
         
             </div>
           </div>
-          <button class="click-button main-button">Add Step</button>
+          <button id="add-process" class="click-button main-button">Add Step</button>
         </div>
         
           
@@ -88,23 +96,22 @@
         <div id="modal-content" contenteditable="true" class="business-content" data-placeholder=""></div>
       </div>
     </div>
+
+    <!-- Form Modal for submitting analysis stuff -->
     <div id="modal-analyze" class="modal-generic analyze-modal">
       <form id="analysisForm">
         <div class="analyze-modal-content modal-content-generic">
           <h3>Select Analysis Parameters</h3>
           <label for="select1">Length of Response</label>
           <select id="select1" class="select-dropdown">
-            <option value="Short (Under 150 words)">Short</option>
-            <option value="Medium(150-300 words)">Medium</option>
+            <option value="Short (Under 150 words)">Normal</option>
+            <option value="Very Short. Less than 3 sentences.">Very Short</option>
             <option value="Long (As much as you need)">Long</option>
           </select>
           
           <label for="select2">Analysis Scope</label>
           <select id="select2" class="select-dropdown">
             <option value="whole business">Whole Business</option>
-            <option value="client-acquisition">Client Acquisition process</option>
-            <option value="marketing-strategy">Marketing Strategy process</option>
-            <option value="service-process">Service Process process</option>
           </select>
           
           <label for="select3">Tone</label>
@@ -118,6 +125,7 @@
         </div>
       </form>
     </div>
+
     <!-- Dialogue Box Modal -->
     <div id="modal-dialogue" class="modal-generic">
       <div id="modal-dialogue-content" class="modal-content-generic dialogue-box">
@@ -129,7 +137,20 @@
         </div>
       </div>
     </div>
+
+    <!-- Text Modal -->
+    <div id="modal-text" class="modal-generic">
+      <div id="modal-text-content" class="modal-content-generic dialogue-box">
+        <h2 id="modal-dialogue-header" class="modal-dialogue-header">Modal Header</h2>
+        <p class="modal-dialogue-text">Modal Dialogue content</p>
+        <div class="modal-dialogue-buttons-container">
+          <button class="secondary-button">Cancel</button>
+          <button class="main-button">Confirm</button>
+        </div>
+      </div>
+    </div>
     
   </body>
+  <script src="./jsonImportExport.js"></script>
   <script src="./main.js"></script>
 </html>

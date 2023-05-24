@@ -18,7 +18,8 @@
 }
   
 h5, h4 {
-    color: #8d8d83;
+    color: black;
+    opacity: .5;
 }
 
 #processes_div {
@@ -47,7 +48,7 @@ h5, h4 {
   flex-direction: row;
 }
 
-section.left-section {
+.left-section {
   width: calc(20vw);
   min-width: 200px;
   max-width: 250px;
@@ -58,7 +59,7 @@ section.left-section {
   position: relative;
 }
 
-section.main-section {
+.main-section {
   flex-grow: 1;
   height: 100vh;
   padding: 20px;
@@ -69,7 +70,7 @@ section.main-section {
   flex-direction: column;
 }
 
-section.right-section {
+.right-section {
   width: calc(30vw);
   min-width: 300px;
   max-width: 500px;
@@ -98,9 +99,42 @@ section.right-section .logo {
   transform: translateX(-50%);
 }
 
+.toolbar {
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(20px);
+  text-align: center;
+  outline: 1px solid #ffffff;
+  transition: all .2s ease-in-out;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(48, 48, 48, 0.1);
+
+  position: sticky;
+  top: 0;
+  display: none;
+  align-items: center;
+  padding: 10px;
+  justify-content: space-between;
+  z-index: 200;
+}
+
+.toolbar:hover {
+  box-shadow: 0px 10px 30px rgba(48, 48, 48, 0.1);
+
+}
+.toolbar-spacer {
+  height: 100px;
+}
+
+.toolbar-title {
+  opacity: .7;
+  font-weight: 600;
+}
 
 .card {
-  width: 500px;
+  width: 50%;
+  min-width: 300px;
+  max-width: 600px;
   margin-right: 10px;
 }
 
@@ -117,8 +151,8 @@ section.right-section .logo {
   width: 100%;
 }
 
-.process-item-left {
-  width: 90%;
+.processes-item-left {
+  flex-grow: 1;
 }
 .process-item-right {
   width: 10%;
@@ -168,6 +202,7 @@ section.right-section .logo {
   justify-content: center;
   align-items: center;
   padding: 20px;
+  padding-bottom: 0;
 }
 
 .svg-splash {
@@ -213,7 +248,7 @@ section.right-section .logo {
 .content-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
@@ -230,13 +265,14 @@ section.right-section .logo {
 
 .analysis-output {
   line-height: 1.6;
-  overflow: scroll;
+  overflow: auto;
   height: 60%;
   margin-top: 18px;
   border: 1px solid #ddd;
   border-radius: 15px;
   padding: 20px;
   transition: box-shadow 0.3s ease-in-out;
+  backdrop-filter: blur(1px);
 }
 .analysis-output:hover {
   box-shadow: 0 0 20px 5px rgba(41, 41, 41, 0.1);

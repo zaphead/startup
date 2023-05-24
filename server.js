@@ -261,7 +261,7 @@ app.put('/api/user/processes/:processName', ensureAuthenticated, async (req, res
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 
 // Update the business info data API
@@ -433,7 +433,7 @@ app.post('/api/user/processes/create', ensureAuthenticated, async (req, res) => 
   }
 });
 
-//Get request API
+//Get Processes Route
 app.get('/api/user/processes', ensureAuthenticated, async (req, res) => {
   try {
     const database = client.db('users');
@@ -452,6 +452,35 @@ app.get('/api/user/processes', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching the processes.' });
   }
 });
+
+// Get Process Route for parsing JSON to regular format
+app.get('/api/user/process', ensureAuthenticated, async (req, res) => {
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) });
+
+    if (user) {
+      const { processName } = req.query;
+      const process = user.processes[processName];
+
+      if (process && Array.isArray(process)) {
+        res.status(200).json(process);
+      } else {
+        res.status(404).json({ message: 'Process not found.' });
+      }
+    } else {
+      res.status(404).json({ message: 'User not found.' });
+    }
+  } catch (error) {
+    console.error('Error in /api/user/process:', error);
+    res.status(500).json({ error: 'An error occurred while fetching the process.' });
+  }
+});
+
+
+
 
 
 //Deleting process

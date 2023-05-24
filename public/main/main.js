@@ -1,7 +1,3 @@
-//User Redirect
-
-
-//MODAL POPUP SCRIPTS
 
 var modal = document.getElementById("myModal");
 var buttons = document.querySelectorAll('.text-button[business="yes"]');
@@ -210,7 +206,7 @@ document.getElementById('myModal').addEventListener('click', async (event) => {
     let content = businessInfoMap[currentId] || ''; // Use an empty string if the content is null
     const saveSuccess = await saveBusinessInfo(currentId, content); // Get the save success status
     if (saveSuccess) {
-      await showToast('Saved!', 3000); // Wait for the 'Saved!' toast to finish
+      await showToast('Saved!', 1000); // Wait for the 'Saved!' toast to finish
       closeModal();
       savingInProgress = false;
       contentChanged = false;
@@ -268,39 +264,6 @@ document.getElementById('modal-content').addEventListener('input', (event) => {
 
 let currentToast = null;
 
-function showToast(message, duration = 3000) {
-  return new Promise((resolve) => {
-    if (currentToast) {
-      currentToast.classList.add('slide-out');
-      setTimeout(() => {
-        currentToast.remove();
-        showNewToast(message, duration, resolve); // Show the new toast after removing the previous one
-      }, 1000);
-    } else {
-      showNewToast(message, duration, resolve); // Show the new toast directly if there is no previous one
-    }
-  });
-}
-
-function showNewToast(message, duration, resolve) {
-  const toast = document.createElement('div');
-  toast.classList.add('toast');
-  toast.textContent = message;
-  document.body.appendChild(toast);
-
-  currentToast = toast;
-
-  setTimeout(() => {
-    toast.classList.remove('slide-out');
-  }, 1000);
-
-  setTimeout(() => {
-    toast.remove(); // Remove the toast after the specified duration
-    currentToast = null; // Reset the current toast
-    resolve(); // Resolve the promise
-  }, duration);
-}
-
 //RENDERING FLOWCHART
 class ProcessEditor {
   constructor(processName) {
@@ -313,22 +276,22 @@ class ProcessEditor {
   fetchProcess = () => {
     console.log("fetchProcess is being called with processName: ", this.processName); // Log when fetchProcess method is called
     fetch(`/api/user/processes/${this.processName}`)
-    .then(response => {
-      console.log('Fetch Process Response:', response.status, response.body); // Log the fetch response
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(json => {
-      console.log('Received process:', json.process); // Log the fetched process
-      this.process = json.process;
-      this.renderProcess();
-    })
-    .catch(e => {
-      console.error('An error occurred fetching the process data:', e);
-      throw e;
-    });
+      .then(response => {
+        console.log('Fetch Process Response:', response.status, response.body); // Log the fetch response
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(json => {
+        console.log('Received process:', json.process); // Log the fetched process
+        this.process = json.process;
+        this.renderProcess();
+      })
+      .catch(e => {
+        console.error('An error occurred fetching the process data:', e);
+        throw e;
+      });
   }
 
   renderProcess = () => {
@@ -342,7 +305,7 @@ class ProcessEditor {
       card.innerHTML = `
         <div class="content-container">
           <div class="delete-process secondary-button" data-id="${index}">
-            🗑️
+            <img class="image-icon-button" src="../Images/icons/trash.svg">
           </div>
           <div class="card card-outlined">
             <div class="process-title" contenteditable="true" data-id="${index}">${step.title}</div>
@@ -357,6 +320,8 @@ class ProcessEditor {
           <img class="arrowimg" height="30" src="../Images/down_arrow.png" />
         </div>
       `;
+      card.querySelector('.up-button').addEventListener('click', this.handleMoveStepUp);
+      card.querySelector('.down-button').addEventListener('click', this.handleMoveStepDown);
 
       mainSection.appendChild(card);
     });
@@ -408,18 +373,19 @@ class ProcessEditor {
       },
       body: JSON.stringify(this.process),
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      this.unsavedChanges = false;
-      return true;
-    })
-    .catch(e => {
-      console.error('An error occurred saving the process data:', e);
-      throw e;
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        this.unsavedChanges = false;
+        return true;
+      })
+      .catch(e => {
+        console.error('An error occurred saving the process data:', e);
+        throw e;
+      });
   }
+
   addStep = () => {
     this.process.push({
       title: 'New Step',
@@ -444,12 +410,37 @@ class ProcessEditor {
   }
 }
 
+function showProcessEditor(processName) {
+  if (currentProcessEditor && currentProcessEditor.unsavedChanges) {
+    saveProcess(currentProcessEditor);
+  }
+
+  currentProcessEditor = new ProcessEditor(processName);
+  addButton.style.display = 'block';
+  introSplash.style.display = 'none';
+  toolbar.style.display = 'flex';
+
+  // Remove 'button-highlight' from all buttons
+  document.querySelectorAll('#processes_div .text-button').forEach(button => {
+    button.classList.remove('button-highlight');
+  });
+
+  // Add 'button-highlight' to the clicked button
+  const button = document.getElementById(processName);
+  if (button) {
+    button.classList.add('button-highlight');
+  }
+
+  // Store the selected process in sessionStorage
+  sessionStorage.setItem('selectedProcess', processName);
+}
+
 async function saveProcess(processEditor) {
   if (!processEditor.unsavedChanges) {
     return;
   }
 
-  showToast('Saving...', 2000);
+  // showToast('Saving...', 2000);
   const saveSuccess = await processEditor.saveChanges();
   if (saveSuccess) {
     showToast('Process saved!', 2000);
@@ -458,11 +449,10 @@ async function saveProcess(processEditor) {
   }
 }
 
-
-//Initial load of page
-const mainSection = document.querySelector('.main-section .steps-container');
+// Initial load of page
 const addButton = document.querySelector('.click-button');
-const introSplash = document.getElementById('introSplash'); // Corrected this line
+const introSplash = document.getElementById('introSplash');
+const toolbar = document.getElementById('toolbar')
 
 let currentProcessEditor = null;
 
@@ -474,13 +464,12 @@ window.addEventListener('beforeunload', (event) => {
   }
 });
 
-
 document.querySelectorAll('#processes_div .text-button').forEach((link) => {
-  link.addEventListener('click', async (event) => {
+  link.addEventListener('click', (event) => {
     console.log('text-button clicked'); // Log when a button is clicked
     event.preventDefault();
     if (currentProcessEditor && currentProcessEditor.unsavedChanges) {
-      await saveProcess(currentProcessEditor);
+      saveProcess(currentProcessEditor);
     }
     currentProcessEditor = new ProcessEditor(event.target.id);
     currentProcessEditor.fetchProcess();
@@ -497,7 +486,6 @@ document.querySelectorAll('#processes_div .text-button').forEach((link) => {
   });
 });
 
-
 document.querySelector('.click-button').addEventListener('click', () => {
   if (currentProcessEditor) {
     currentProcessEditor.addStep();
@@ -507,63 +495,52 @@ document.querySelector('.click-button').addEventListener('click', () => {
 });
 
 
-
-
-//ANALYSIS FORM SUBMISSION AND RETRIEVAL
-document.getElementById("analysisForm").addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  // Get form data
-  const lengthOfResponse = document.getElementById("select1").value;
-  const analysisScope = document.getElementById("select2").value;
-  const tone = document.getElementById("select3").value;
-
-  // Fetch user info
-  let userResponse = await fetch('/api/user', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    credentials: 'same-origin'
-  });
-
-  if (userResponse.ok) {
-    document.getElementById("analysisPane").innerText = "Generating Analysis...";
-    let userInfo = await userResponse.json();
-    let userId = userInfo.user._id; // Assuming the user info includes _id
-
-    // Post analysis data
-    let response = await fetch('/api/analysis', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId, lengthOfResponse, analysisScope, tone }),
-      credentials: 'same-origin'
-    });
-
-    if (response.ok) {
-      let result = await response.json();
-
-      // Assuming the returned result is a string containing the analysis
-      document.getElementById("analysisPane").innerText = result.message;
+function showToast(message, duration = 3000) {
+  return new Promise((resolve) => {
+    if (currentToast) {
+      currentToast.classList.add('slide-out');
+      setTimeout(() => {
+        currentToast.remove();
+        showNewToast(message, duration, resolve); // Show the new toast after removing the previous one
+      }, 500);
     } else {
-      console.error('Error:', response.status, response.statusText);
+      showNewToast(message, duration, resolve); // Show the new toast directly if there is no previous one
     }
+  });
+}
 
-  } else {
-    console.error('Failed to fetch user info:', userResponse.status, userResponse.statusText);
-  }
-});
+function showNewToast(message, duration, resolve) {
+  const toast = document.createElement('div');
+  toast.classList.add('toast');
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  currentToast = toast;
+
+  setTimeout(() => {
+    toast.classList.remove('slide-out');
+  }, 10);
+
+  setTimeout(() => {
+    toast.classList.add('slide-out');
+    setTimeout(() => {
+      toast.remove(); // Remove the toast after the specified duration
+      currentToast = null; // Reset the current toast
+      resolve(); // Resolve the promise
+    }, 500);
+  }, duration);
+}
+
 
 
 
 //ADDING AND DELETING PROCESSES
+
 document.addEventListener("DOMContentLoaded", function() {
   fetch("/api/user/processes")
     .then(response => response.json())
     .then(data => {
-      for(let processName in data.processes) {
+      for (let processName in data.processes) {
         let displayProcessName = processName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
         let processItem = generateProcessItemHTML(displayProcessName, processName);
         document.querySelector('#processes_div').insertAdjacentHTML('beforeend', processItem);
@@ -571,16 +548,27 @@ document.addEventListener("DOMContentLoaded", function() {
 
       attachDeleteProcessClickEvent();
       attachProcessEditorEvent(); // attach processEditor function as click event for process buttons
-    }).catch(error => {
-      console.log("Error loading processes:", error); // log the error if the GET request fails
+    })
+    .catch(error => {
+      console.log("Error loading processes:", error);
     });
 });
+
+function attachProcessEditorEvent() {
+  document.querySelectorAll('.text-button[business="no"').forEach(item => {
+    item.addEventListener("click", function(event) {
+      event.preventDefault();
+      const id = this.id;
+      showProcessEditor(id);
+    });
+  });
+}
 
 function generateProcessItemHTML(displayProcessName, processName) {
   return `
     <div class="processes-item">
       <div class="processes-item-left">
-        <a href="#" id="${processName}" class="text-button menu-text-buttons">${displayProcessName}</a>
+        <a href="#" business="no" id="${processName}" class="text-button menu-text-buttons">${displayProcessName}</a>
       </div>
       <div class="processes-item-right">
         <a id="delete-process" data-process-name="${processName}"><img class="image-icon icon-button" src="../Images/icons/trash.svg"></a>
@@ -598,13 +586,14 @@ function attachDeleteProcessClickEvent() {
 }
 
 function attachProcessEditorEvent() {
-  document.querySelectorAll(".text-button").forEach(item => {
-    item.addEventListener("click", function() {
+  document.querySelectorAll('.text-button[business="no"').forEach(item => {
+    item.addEventListener("click", function(event) {
+      event.preventDefault();
       const id = this.id;
-      new ProcessEditor(id);
+      showProcessEditor(id);
 
       // Remove 'button-highlight' from all buttons
-      document.querySelectorAll('#processes_div .text-button').forEach(button => {
+      document.querySelectorAll('#processes_div .text-button[business="no"').forEach(button => {
         button.classList.remove('button-highlight');
       });
 
@@ -613,6 +602,7 @@ function attachProcessEditorEvent() {
     });
   });
 }
+
 
 
 // ADDING A PROCESS
@@ -632,7 +622,7 @@ function showAddProcessModal() {
 
   // Change the header and text
   modalHeader.textContent = "Add Process";
-  modalText.innerHTML = "Give your new process a name: <input type='text' required class='modal-dialogue-textbox' id='new-process-name'>";
+  modalText.innerHTML = "Process Name: <input type='text' required class='modal-dialogue-textbox' id='new-process-name'>";
 
   // Show the modal
   modal.style.display = "block";
@@ -712,4 +702,98 @@ document.querySelector("#modal-dialogue .main-button").addEventListener("click",
 
   // Hide the modal
   modal.style.display = "none";
+});
+
+// Fetch process names from the backend
+async function fetchProcessNames() {
+  try {
+    const response = await fetch('/api/user/processes');
+    if (response.ok) {
+      const data = await response.json();
+      const processNames = Object.keys(data.processes);
+      return processNames;
+    } else {
+      console.error('Error:', response.status, response.statusText);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+  return [];
+}
+
+
+// Update Analysis Scope options
+async function updateAnalysisScopeOptions() {
+  const select2 = document.getElementById('select2');
+
+  // Fetch process names
+  console.log('Updating Analysis Scope options...');
+  const processNames = await fetchProcessNames();
+  console.log('Process names:', processNames);
+
+  // Append new options to the existing options
+  processNames.forEach((processName) => {
+    const option = document.createElement('option');
+    option.value = processName;
+    option.textContent = processName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    select2.appendChild(option);
+  });
+}
+
+// Populate Analysis Scope options on page load
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('Document loaded. Updating Analysis Scope...');
+  updateAnalysisScopeOptions();
+});
+
+// Handle Analysis Form submission
+document.getElementById('analysisForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  // Get form data
+  const lengthOfResponse = document.getElementById('select1').value;
+  const analysisScope = document.getElementById('select2').value;
+  const tone = document.getElementById('select3').value;
+  console.log('Form data:', { lengthOfResponse, analysisScope, tone });
+
+  // Fetch user info
+  console.log('Fetching user info...');
+  let userResponse = await fetch('/api/user', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin'
+  });
+
+  if (userResponse.ok) {
+    document.getElementById("analysisPane").innerText = "Generating Analysis...";
+    let userInfo = await userResponse.json();
+    console.log('User info received:', userInfo);
+    let userId = userInfo.user._id; // Assuming the user info includes _id
+
+    // Post analysis data
+    console.log('Posting analysis data...');
+    let response = await fetch('/api/analysis', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId, lengthOfResponse, analysisScope, tone }),
+      credentials: 'same-origin'
+    });
+
+    if (response.ok) {
+      let result = await response.json();
+      console.log('Analysis result:', result);
+
+      // Assuming the returned result is a string containing the analysis
+      document.getElementById("analysisPane").innerText = result.message;
+    } else {
+      console.error('Error posting analysis data:', response.status, response.statusText);
+    }
+
+  } else {
+    console.error('Failed to fetch user info:', userResponse.status, userResponse.statusText);
+  }
 });
