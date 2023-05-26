@@ -24,6 +24,7 @@ body {
 
 
 header {
+  position: relative;
   background-color: #ffffff;
   color: #fff;
   display: flex;
@@ -37,7 +38,7 @@ header {
   border: 1px solid #ddd;
   transition: all 0.3s ease-in-out;
   z-index: 1;
-
+  height: auto; /* Add the initial height value */
 }
 
 
@@ -94,6 +95,29 @@ background-color: #ddd;
   height: 100vh;
 }
 
+.secondary-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,68,1) 29%, rgba(44,6,73,1) 68%, rgba(0,15,57,1) 100%);}
+.tertiary-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: fit-content;
+  padding: 50px;
+  min-height: fit-content;
+  height: fit-content
+}
+.section-image {
+  width: 100%;
+}
+
 .section-content {
   position: relative;
   width: 90%;
@@ -104,9 +128,23 @@ background-color: #ddd;
   justify-content: center;
 }
 
+.image-showcase {
+  width: fit-content;
+  width: 80%;
+  border-radius: 35px;
+}
+.large-image {
+  margin-top: 50px;
+  height: 100%;
+  width: 65%;
+  border-radius: 35px;
+}
+
+
+
 #section0content {
   position: relative;
-  border-radius: 100px;
+  border-radius: 50px;
   color: white;
   padding: 1em;
   display: flex;
@@ -192,9 +230,18 @@ background-color: #ddd;
 }
 
 .big-header2 {
+  font-size: 5vw;
+  margin: 0;
+  margin-bottom: 25px;
+  margin-top: 20px;
+}
+.big-header3 {
+  width: 100%;
   font-size: 90px;
   margin: 0;
-  margin-bottom: 25px;;
+  margin-bottom: -100px;
+  position: absolute;
+  text-align: center;
 }
 .medium-header {
   font-size: 30px;
@@ -210,6 +257,18 @@ background-color: #ddd;
   width: 70%;
   text-align: left;
 }
+.centered-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: auto;
+  margin: 0 auto;
+  max-width: 700px; /* Adjust the value to your desired width */
+  font-weight: 500;
+  font-size: 1.2em;
+}
+
 
 .text-items {
   line-height: 200%;
@@ -218,6 +277,11 @@ background-color: #ddd;
 .caller-button {
   margin-top: 25px;
 }
+
+.caller-button3 {
+margin-top: 50px;
+}
+
 
 
 .image-backplate {
@@ -233,7 +297,7 @@ background-color: #ddd;
 
 
 .image-concept {
-  width: 90%;
+  width: 80%;
 
 }
 
@@ -248,3 +312,8 @@ footer {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.sharp-corners {
+  border-radius: 0px;
+}
+

@@ -13,7 +13,7 @@ window.addEventListener('scroll', function() {
       header.style.width = 'calc(100% - 50px)';
       header.style.borderRadius = '25px';
       header.style.border = "1px solid #ddd";
-      header.style.backgroundColor = 'white'
+      header.style.backgroundColor = 'white';
     }
   });
 
@@ -118,3 +118,19 @@ if ($textSwitcher.length) {
 }
 }
 })(); // Text Switcher
+
+
+
+//Scrolling to anchors
+document.getElementById("toSection2").addEventListener("click", function() {
+  document.getElementById("section2").scrollIntoView({ behavior: 'smooth' });
+});
+
+document.getElementById("toSection3").addEventListener("click", function() {
+  document.getElementById("section3").scrollIntoView({ behavior: 'smooth' });
+});
+
+document.getElementById("toSection4").addEventListener("click", function() {
+  document.getElementById("section4").scrollIntoView({ behavior: 'smooth' });
+});
+
