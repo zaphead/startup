@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="../Images/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../main-style.css">
+  <link rel="stylesheet" href="./pricing.css">
+  <title>StrataMind</title>
+  <style>
+    /* Add your custom CSS styles here */
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo" src="../Images/Processeon Logo.png">
+    <nav>
+      <ul>
+        <li><a class="nav-items" href="../splash/splash.html">Home</a></li>
+        <li><a class="nav-items" href="#">Pricing</a></li>
+        <li><a class="nav-items" href="../index.html">Sign In</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="section1" class="main-section">
+      <div class="pricing-container">
+        <div class="pricing-option">
+          <h2>Free. Forever.</h2>
+          <p class="price">$0</p>
+          <ul class="features-list">
+            <li>Unlimited Flow Charts</li>
+            <li>Business Info Organizations</li>
+            <li>15 Free StrataMind Analyses</li>
+          </ul>
+          <a href="../signup/signup.html"><button class="main-button get-button">Get Started</button></a>
+        </div>
+        <div class="pricing-option pro-option">
+          <h2>StrataMind Pro</h2>
+          <p class="price">$6.95/month</p>
+          <ul class="features-list">
+            <li>Unlimited Flow Charts</li>
+            <li>Priority Support</li>
+            <li>Unlimited StrataMind Analyses</li>
+            <li>Advanced Analytics</li>
+          </ul>
+          <a href="https://buy.stripe.com/test_aEU8y5b0YgMRcX6dQR"><button class="main-button white-button">Upgrade</button></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 StrataMind. All rights reserved.</p>
+  </footer>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="https://js.stripe.com/v3/elements.js"></script>
+  <script src="https://js.stripe.com/v3/payment.js"></script>  
+  <script src="./pricing.js"></script>
+</body>
+</html>

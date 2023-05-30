@@ -5,7 +5,13 @@
 
 
 .analyze-container {
-  margin-right: 10px;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+
+.upgrade-button {
+  display: none;
 }
 
 .analysis-info {

@@ -20,7 +20,8 @@
     "mutationobserver-shim": "^0.3.7",
     "openai": "^3.2.1",
     "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "stripe": "^12.7.0"
   },
   "devDependencies": {
     "webpack": "^5.84.0",

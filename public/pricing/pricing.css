@@ -1,0 +1,143 @@
+@font-face {
+  font-family: 'merriweather';
+  src: url('../Fonts/Merriweather/Merriweather-Black.ttf') format('truetype');
+}
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  justify-content: center;
+}
+
+header {
+  position: relative;
+  background-color: #ffffff;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 25px;
+  margin: 25px;
+  position: fixed;
+  width: calc(100% - 50px);
+  padding: 0px;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease-in-out;
+  z-index: 1;
+  height: auto;
+}
+
+header:hover {
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+  border: 1px solid white;
+}
+
+.logo {
+  width: 325px;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+nav {
+  margin-left: 10px;
+  margin-right: 25px;
+}
+
+.nav-items {
+  color: #333333;
+  text-decoration: none;
+  padding: 25px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-items:hover {
+  background-color: #ddd;
+}
+
+.main-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: fit-content;
+  padding: 50px;
+  min-height: fit-content;
+  height: 100vh;
+}
+
+footer {
+  position: relative;
+  bottom: 0;
+  text-align: center;
+}
+/* Add your custom CSS styles here */
+
+.pricing-container {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 100px;
+}
+
+.pricing-option {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 25px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pricing-option:hover {
+
+  cursor: pointer;
+}
+
+.pricing-option h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.pro-option {
+  background-color: black;
+  color: white;
+}
+
+.price {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.features-list {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.features-list li {
+  margin-bottom: 10px;
+}
+
+.main-button {
+  padding: 10px 30px;
+  font-size: 16px;
+  font-weight: bold;
+}

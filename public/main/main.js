@@ -3,6 +3,11 @@ var modal = document.getElementById("myModal");
 var buttons = document.querySelectorAll('.text-button[business="yes"]');
 var businessContent = document.querySelector(".business-content");
 
+const TEST_PUBLISHABLE_KEY = 'pk_test_51NC96zIMorCkqLBZJhKJxgPJwsODTXaNccmfsr3Sk7sXwmg4AkTezs4mu5ZbJzYCJRuFIolLWuNq91utRL3fzF9C00aQHJ9ulq';
+
+
+const stripePublishableKey = TEST_PUBLISHABLE_KEY;
+
 for (var i = 0; i < buttons.length; i++) {
   buttons[i].addEventListener("click", function() {
     modal.style.display = "flex";
@@ -801,11 +806,16 @@ async function updateAnalysisScopeOptions() {
   });
 }
 
+
 // Populate Analysis Scope options on page load
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Document loaded. Updating Analysis Scope...');
   updateAnalysisScopeOptions();
 });
+
+
+
+
 
 // Handle Analysis Form submission
 document.getElementById('analysisForm').addEventListener('submit', async (event) => {
@@ -833,6 +843,13 @@ document.getElementById('analysisForm').addEventListener('submit', async (event)
     console.log('User info received:', userInfo);
     let userId = userInfo.user._id; // Assuming the user info includes _id
 
+    // Check if the user is at the analysis limit for the free tier
+    if (userInfo.user.tier === 'free' && userInfo.user.analysisCount >= 15) {
+      // Show modal dialogue with upgrade message
+      showModalDialogue('Analysis Limit Reached', 'You have used all your analyses for StrataMind Free. Upgrade to StrataMind Pro to continue.', 'Upgrade');
+      return;
+    }
+
     // Post analysis data
     console.log('Posting analysis data...');
     let response = await fetch('/api/analysis', {
@@ -858,6 +875,187 @@ document.getElementById('analysisForm').addEventListener('submit', async (event)
     console.error('Failed to fetch user info:', userResponse.status, userResponse.statusText);
   }
 });
+
+
+// Function to create the modal HTML
+function createModalHTML(header, content, confirmText) {
+  const modalHTML = `
+    <div id="confirmation-modal" class="modal-generic">
+      <div class="modal-content-generic dialogue-box">
+        <h2 id="confirmation-modal-header" class="modal-dialogue-header">${header}</h2>
+        <p class="modal-dialogue-text">${content}</p>
+        <div class="modal-dialogue-buttons-container">
+          <button id="confirmation-modal-cancel-button" class="secondary-button">Cancel</button>
+          <button id="confirmation-modal-confirm-button" class="main-button">${confirmText}</button>
+        </div>
+      </div>
+    </div>
+  `;
+  return modalHTML;
+}
+
+// Function to show the modal dialogue
+function showModalDialogue(header, content, confirmText) {
+  // Create the modal HTML
+  const modalHTML = createModalHTML(header, content, confirmText);
+
+  // Check if the container element exists
+  let modalContainer = document.getElementById('modal-container');
+  if (!modalContainer) {
+    // Create the container element and append it to the document body
+    modalContainer = document.createElement('div');
+    modalContainer.id = 'modal-container';
+    document.body.appendChild(modalContainer);
+  }
+
+  // Append the modal HTML to the container element
+  modalContainer.innerHTML = modalHTML;
+
+  // Add event listener to the Confirm button
+  const confirmButton = document.getElementById('confirmation-modal-confirm-button');
+  if (confirmButton) {
+    confirmButton.addEventListener('click', handleConfirmUpgrade);
+  }
+
+  // Add event listener to the Cancel button
+  const cancelButton = document.getElementById('confirmation-modal-cancel-button');
+  if (cancelButton) {
+    cancelButton.addEventListener('click', closeModal);
+  }
+
+  // Add event listener to the modal container
+  modalContainer.addEventListener('click', closeModal);
+
+  // Stop the propagation of click events within the modal content
+  const modalContent = document.querySelector('.modal-content-generic');
+  if (modalContent) {
+    modalContent.addEventListener('click', (event) => {
+      event.stopPropagation();
+    });
+  }
+
+  // Display the modal
+  const modal = document.getElementById('confirmation-modal');
+  if (modal) {
+    modal.style.display = 'block';
+  }
+}
+
+// Function to close the modal
+function closeModal() {
+  const modalContainer = document.getElementById('modal-container');
+  if (modalContainer) {
+    modalContainer.remove();
+  }
+}
+
+// Function to handle the upgrade confirmation
+function handleConfirmUpgrade() {
+  // Redirect to the upgrade page
+  window.location.href = 'https://buy.stripe.com/test_aEU8y5b0YgMRcX6dQR';
+}
+
+
+
+
+//UPGRADE BUTTON DISPLAY
+async function checkUserTier() {
+  try {
+    // Fetch user info
+    console.log('Fetching user info...');
+    let userResponse = await fetch('/api/user', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'same-origin'
+    });
+
+    if (userResponse.ok) {
+      let userInfo = await userResponse.json();
+      console.log('User info received:', userInfo);
+
+      // Check the user's tier parameter
+      const upgradeButton = document.getElementById('upgrade-button');
+      if (userInfo.user.tier === 'free') {
+        // Show the upgrade button
+        upgradeButton.style.display = 'inline';
+      } else {
+        // Hide the upgrade button
+        upgradeButton.style.display = 'none';
+      }
+
+      // Rest of your code...
+    } else {
+      console.error('Failed to fetch user info:', userResponse.status, userResponse.statusText);
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+}
+
+// Call the function when needed
+checkUserTier();
+
+
+
+//STRIPE CHECKOUT INTEGRATION
+// Function to handle the upgrade button click
+async function handleUpgradeButtonClick() {
+  try {
+    // Make an AJAX request to the backend to retrieve the publishable key
+    const keyResponse = await fetch('/api/publishable-key', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    });
+
+    if (keyResponse.ok) {
+      const { publishableKey } = await keyResponse.json();
+
+      // Make an AJAX request to the backend to initiate the upgrade process
+      const response = await fetch('/api/checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${publishableKey}`,
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({ priceId: 'price_1NDEM6IMorCkqLBZp4Nf1iW2' }), // Replace with the actual price ID
+      });
+
+      if (response.ok) {
+        const { sessionId } = await response.json();
+
+        // Create an instance of Stripe
+        const stripe = Stripe(publishableKey);
+
+        // Redirect the user to the Stripe Checkout page
+        stripe.redirectToCheckout({ sessionId: sessionId }).then(function (result) {
+          if (result.error) {
+            console.error('Error redirecting to checkout:', result.error.message);
+          }
+        });
+        
+      } else {
+        console.error('Error initiating checkout session:', response.status, response.statusText);
+      }
+    } else {
+      console.error('Error retrieving publishable key:', keyResponse.status, keyResponse.statusText);
+    }
+  } catch (error) {
+    console.error('Error initiating checkout session:', error);
+  }
+}
+
+// Attach event listener to the upgrade button
+document.getElementById('upgrade-button').addEventListener('click', handleUpgradeButtonClick);
+
+
+
+
 
 
 

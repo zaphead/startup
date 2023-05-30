@@ -9,6 +9,14 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
 import session from 'express-session';
 import { Configuration, OpenAIApi } from 'openai';
+import { Stripe } from 'stripe';
+
+
+// const stripeSecretKey = process.env.TEST_SECRET_KEY;
+const stripeSecretKey = 'sk_test_51NC96zIMorCkqLBZ5Gs1J46Zbl7SY79q8jyXc47IvBjGRC6OFmYeSOiuAn2O19U6lQ0hMBYhNKZhjqytwFERr7GJ001O2AIJ9c';
+const stripeClient = new Stripe(stripeSecretKey);
+
+
 
 dotenv.config();
 
@@ -131,6 +139,10 @@ app.post('/api/signup', async (req, res) => {
         hours: '',
         experience: '',
       },
+      analysisCount: 0, // Add analysisCount parameter with value 0
+      firstLogin: 1,
+      seenUpdate: 1,
+      tier: 'free' //Tier is the version the account is running. free or pro.
     };
 
     const result = await collection.insertOne(newUser);
@@ -142,6 +154,7 @@ app.post('/api/signup', async (req, res) => {
       .json({ error: 'An error occurred while processing your request.', details: error.message });
   }
 });
+
 
 // Setup route
 app.post('/api/setup', ensureAuthenticated, async (req, res) => {
@@ -301,6 +314,7 @@ app.post('/api/update-business-info', ensureAuthenticated, async (req, res) => {
   }
 });
 
+
 // Analysis backend API
 const openai = new OpenAIApi(new Configuration({
   apiKey: process.env.API_KEY,
@@ -394,10 +408,32 @@ async function getAnalyzed(userId, tone, maxWords, analysisScope) {
   }
 }
 
+async function incrementAnalysisCount(userId) {
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    await collection.updateOne({ _id: new ObjectId(userId) }, { $inc: { analysisCount: 1 } });
+  } catch (error) {
+    console.error('Error incrementing analysisCount:', error);
+    throw error;
+  }
+}
+
 app.post('/api/analysis', ensureAuthenticated, async (req, res) => {
   const { userId, lengthOfResponse, analysisScope, tone } = req.body;
 
   try {
+    // Check if the user has reached the analysis limit for the free tier
+    const user = await getUser(userId);
+    if (user.tier === 'free' && user.analysisCount >= 15) {
+      res.status(400).json({ message: 'You have reached the analysis limit for the free tier. Upgrade to continue.' });
+      return;
+    }
+
+    // Increment the analysisCount
+    await incrementAnalysisCount(userId);
+
     const analysisResult = await getAnalyzed(userId, tone, lengthOfResponse, analysisScope);
     res.status(200).json({ message: analysisResult });
   } catch (error) {
@@ -405,6 +441,8 @@ app.post('/api/analysis', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ message: 'An error occurred while processing your request.' });
   }
 });
+
+
 
 
 //CREATING AND DELETING PROCESSES ROUTES
@@ -562,3 +600,130 @@ app.delete('/api/user/processes/delete', ensureAuthenticated, async (req, res) =
   }
 });
 
+
+const endpointSecret = 'whsec_11020ceba14867c47dc7d5c571fff515b121ec8777ed3aa92b0ce32beaa2abf8';
+
+
+//STRIPE CHECKOUT ROUTE
+app.post('/api/checkout-session', ensureAuthenticated, async (req, res) => {
+  const { priceId } = req.body;
+
+  try {
+    const session = await stripeClient.checkout.sessions.create({
+      mode: 'subscription',
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      success_url: 'http://localhost:4000/main/main.html', // Replace with your success URL
+      cancel_url: 'http://localhost:4000/main/main.html', // Replace with your cancel URL
+    });
+
+    // Retrieve the user from the database using req.user or any other method you use for authentication
+    const user = await client.db('users').collection('users').findOne({ _id: new ObjectId(req.user._id) });
+
+    // Update the user's tier based on the subscription status
+    if (session.mode === 'subscription' && session.payment_status === 'paid') {
+      user.tier = 'pro';
+    } else {
+      user.tier = 'free';
+    }
+
+    // Save the updated user in the database
+    await client.db('users').collection('users').updateOne(
+      { _id: new ObjectId(req.user._id) },
+      { $set: { tier: user.tier } }
+    );
+
+    res.status(200).json({ sessionId: session.id });
+  } catch (error) {
+    console.error('Error creating checkout session:', error);
+    res.status(500).json({ error: 'An error occurred while creating the checkout session.' });
+  }
+});
+
+
+app.use(bodyParser.json({
+  verify: (req, _, buf) => {
+    req.rawBody = buf;
+  }
+}));
+
+
+app.post('/webhook', bodyParser.raw({type: 'application/json'}), async (request, response) => {
+  console.log('Raw request body:', request.rawBody);
+  console.log('Request headers:', request.headers);
+
+  let event;
+
+  try {
+    event = stripeClient.webhooks.constructEvent(request.rawBody, request.headers['stripe-signature'], endpointSecret);
+  } catch (err) {
+    return response.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Handle the checkout.session.completed event
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+
+    // Retrieve the customer from Stripe
+    const customer = await stripeClient.customers.retrieve(session.customer);
+
+    // Retrieve the user from the database using the customer email
+    const user = await client.db('users').collection('users').findOne({ email: customer.email });
+
+    // Update the user's tier to 'pro'
+    user.tier = 'pro';
+
+    // Save the updated user in the database
+    await client.db('users').collection('users').updateOne(
+      { email: customer.email },
+      { $set: { tier: user.tier } }
+    );
+  }
+
+  // Handle the customer.subscription.deleted event
+  if (event.type === 'customer.subscription.deleted') {
+    const subscription = event.data.object;
+
+    // Retrieve the customer from Stripe
+    const customer = await stripeClient.customers.retrieve(subscription.customer);
+
+    // Retrieve the user from the database using the customer email
+    const user = await client.db('users').collection('users').findOne({ email: customer.email });
+
+    // Update the user's tier to 'free'
+    user.tier = 'free';
+
+    // Save the updated user in the database
+    await client.db('users').collection('users').updateOne(
+      { email: customer.email },
+      { $set: { tier: user.tier } }
+    );
+  }
+
+  // Return a response to acknowledge receipt of the event
+  response.json({received: true});
+});
+
+
+
+
+
+
+
+// Get publishable key
+app.get('/api/publishable-key', (req, res) => {
+  // const publishableKey = process.env.TEST_PUBLISHABLE_KEY; // Replace with your actual publishable key
+  const publishableKey = 'pk_test_51NC96zIMorCkqLBZJhKJxgPJwsODTXaNccmfsr3Sk7sXwmg4AkTezs4mu5ZbJzYCJRuFIolLWuNq91utRL3fzF9C00aQHJ9ulq'; // Replace with your actual publishable key
+
+
+  if (publishableKey) {
+    res.status(200).json({ publishableKey });
+  } else {
+    res.status(500).json({ error: 'Publishable key not found.' });
+  }
+});
