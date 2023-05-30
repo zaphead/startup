@@ -1055,11 +1055,6 @@ document.getElementById('upgrade-button').addEventListener('click', handleUpgrad
 
 
 
-
-
-
-
-
 //IMPORTING TEXT AS FLOW CHART
 
 // Parse the imported text into process data

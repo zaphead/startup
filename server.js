@@ -9,7 +9,19 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
 import session from 'express-session';
 import { Configuration, OpenAIApi } from 'openai';
-import { Stripe } from 'stripe';
+import Stripe from 'stripe';
+
+const app = express();
+const router = express.Router(); // Create a new router
+
+// Apply the middleware to all routes handled by the router
+router.use(bodyParser.json());
+
+
+// app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+
 
 
 // const stripeSecretKey = process.env.TEST_SECRET_KEY;
@@ -22,9 +34,6 @@ dotenv.config();
 
 const uri = process.env.MONGODB_URL;
 const passport_key = process.env.PASSPORT_KEY;
-
-const app = express();
-app.use(bodyParser.json());
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -45,6 +54,57 @@ const connectToMongo = async () => {
 };
 
 connectToMongo();
+
+const endpointSecret = 'whsec_r1Ewj9iZtYQ1LW3vRU44VtmRt36p9zfI';
+
+
+
+// WEBHOOK ISH
+app.post('/webhook', express.raw({type: 'application/json'}), async (request, response) => {
+  const sig = request.headers['stripe-signature'];
+
+  let event;
+
+  try {
+    event = stripeClient.webhooks.constructEvent(request.body, sig, endpointSecret);
+  } catch (err) {
+    response.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+
+  // Handle the event
+  switch (event.type) {
+    case 'charge.succeeded':
+      const chargeSucceeded = event.data.object;
+      // Then define and call a function to handle the event charge.succeeded
+      // Get the user's email from the charge event
+      const userEmail = chargeSucceeded.billing_details.email;
+
+      // Update the user's tier in MongoDB
+      const database = client.db('users');
+      const collection = database.collection('users');
+      await collection.updateOne({ email: userEmail }, { $set: { tier: 'pro' } });
+      break;
+    case 'charge.failed':
+      const chargeFailed = event.data.object;
+      // Then define and call a function to handle the event charge.failed
+      // Get the user's email from the charge event
+      const userEmailFailed = chargeFailed.billing_details.email;
+
+      // Update the user's tier in MongoDB
+      await collection.updateOne({ email: userEmailFailed }, { $set: { tier: 'free' } });
+      break;
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  // Return a 200 response to acknowledge receipt of the event
+  response.send();
+});
+
+
+
 
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
@@ -92,16 +152,16 @@ passport.deserializeUser(async (id, done) => {
 });
 
 // Authentication routes
-app.post('/api/login', passport.authenticate('local'), (req, res) => {
+router.post('/api/login', passport.authenticate('local'), (req, res) => {
   res.status(200).json({ message: 'Login successful.' });
 });
 
-app.get('/api/logout', (req, res) => {
+router.get('/api/logout', (req, res) => {
   req.logout();
   res.status(200).json({ message: 'Logout successful.' });
 });
 
-app.get('/api/user', ensureAuthenticated, (req, res) => {
+router.get('/api/user', ensureAuthenticated, (req, res) => {
   res.status(200).json({ user: req.user });
 });
 
@@ -113,7 +173,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 // Signup route
-app.post('/api/signup', async (req, res) => {
+router.post('/api/signup', async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
@@ -157,7 +217,7 @@ app.post('/api/signup', async (req, res) => {
 
 
 // Setup route
-app.post('/api/setup', ensureAuthenticated, async (req, res) => {
+router.post('/api/setup', ensureAuthenticated, async (req, res) => {
   const { question1, question2, question3, question4, question5, question6 } = req.body;
 
   try {
@@ -190,7 +250,7 @@ app.post('/api/setup', ensureAuthenticated, async (req, res) => {
 });
 
 // Get user's name Route
-app.get('/api/user/name', ensureAuthenticated, async (req, res) => {
+router.get('/api/user/name', ensureAuthenticated, async (req, res) => {
   try {
     const { name } = req.user;
     res.status(200).json({ name });
@@ -201,7 +261,7 @@ app.get('/api/user/name', ensureAuthenticated, async (req, res) => {
 });
 
 // Get all business info Route. Separate it out in the client code.
-app.get('/api/user/business-info', ensureAuthenticated, async (req, res) => {
+router.get('/api/user/business-info', ensureAuthenticated, async (req, res) => {
   try {
     const database = client.db('users');
     const collection = database.collection('users');
@@ -221,7 +281,7 @@ app.get('/api/user/business-info', ensureAuthenticated, async (req, res) => {
 });
 
 // Get a specific user's process Route
-app.get('/api/user/processes/:processName', ensureAuthenticated, async (req, res) => {
+router.get('/api/user/processes/:processName', ensureAuthenticated, async (req, res) => {
   const processName = req.params.processName;
 
   try {
@@ -246,7 +306,7 @@ app.get('/api/user/processes/:processName', ensureAuthenticated, async (req, res
 });
 
 // Update a specific user's process Route
-app.put('/api/user/processes/:processName', ensureAuthenticated, async (req, res) => {
+router.put('/api/user/processes/:processName', ensureAuthenticated, async (req, res) => {
   const processName = req.params.processName;
   const updatedProcess = req.body;
 
@@ -301,7 +361,7 @@ async function updateBusinessInfo(userId, key, content) {
   }
 }
 
-app.post('/api/update-business-info', ensureAuthenticated, async (req, res) => {
+router.post('/api/update-business-info', ensureAuthenticated, async (req, res) => {
   try {
     const { key, content } = req.body;
 
@@ -420,7 +480,7 @@ async function incrementAnalysisCount(userId) {
   }
 }
 
-app.post('/api/analysis', ensureAuthenticated, async (req, res) => {
+router.post('/api/analysis', ensureAuthenticated, async (req, res) => {
   const { userId, lengthOfResponse, analysisScope, tone } = req.body;
 
   try {
@@ -447,7 +507,7 @@ app.post('/api/analysis', ensureAuthenticated, async (req, res) => {
 
 //CREATING AND DELETING PROCESSES ROUTES
 //Creating process
-app.post('/api/user/processes/create', ensureAuthenticated, async (req, res) => {
+router.post('/api/user/processes/create', ensureAuthenticated, async (req, res) => {
   const { processName, processSteps } = req.body;
 
   try {
@@ -472,7 +532,7 @@ app.post('/api/user/processes/create', ensureAuthenticated, async (req, res) => 
 });
 
 //Get Processes Route
-app.get('/api/user/processes', ensureAuthenticated, async (req, res) => {
+router.get('/api/user/processes', ensureAuthenticated, async (req, res) => {
   try {
     const database = client.db('users');
     const collection = database.collection('users');
@@ -492,7 +552,7 @@ app.get('/api/user/processes', ensureAuthenticated, async (req, res) => {
 });
 
 // Append process data to the existing process
-app.post('/api/user/process/append', ensureAuthenticated, async (req, res) => {
+router.post('/api/user/process/append', ensureAuthenticated, async (req, res) => {
   try {
     const { processName, processData } = req.body;
 
@@ -521,7 +581,7 @@ app.post('/api/user/process/append', ensureAuthenticated, async (req, res) => {
 });
 
 // Replace the existing process data with new process data
-app.post('/api/user/process/replace', ensureAuthenticated, async (req, res) => {
+router.post('/api/user/process/replace', ensureAuthenticated, async (req, res) => {
   try {
     const { processName, processData } = req.body;
 
@@ -545,7 +605,7 @@ app.post('/api/user/process/replace', ensureAuthenticated, async (req, res) => {
 
 
 // Get Process Route for parsing JSON to regular format
-app.get('/api/user/process', ensureAuthenticated, async (req, res) => {
+router.get('/api/user/process', ensureAuthenticated, async (req, res) => {
   try {
     const database = client.db('users');
     const collection = database.collection('users');
@@ -576,7 +636,7 @@ app.get('/api/user/process', ensureAuthenticated, async (req, res) => {
 
 
 //Deleting process
-app.delete('/api/user/processes/delete', ensureAuthenticated, async (req, res) => {
+router.delete('/api/user/processes/delete', ensureAuthenticated, async (req, res) => {
   const { processName } = req.body;
 
   try {
@@ -601,11 +661,24 @@ app.delete('/api/user/processes/delete', ensureAuthenticated, async (req, res) =
 });
 
 
-const endpointSecret = 'whsec_11020ceba14867c47dc7d5c571fff515b121ec8777ed3aa92b0ce32beaa2abf8';
 
 
-//STRIPE CHECKOUT ROUTE
-app.post('/api/checkout-session', ensureAuthenticated, async (req, res) => {
+//STRIPE CHECKOUT
+
+// Parsing for Stripe Integration
+app.use(express.json({
+  verify: function(req, res, buf) {
+    if (req.originalUrl.startsWith('/webhook')) {
+      req.rawBody = buf.toString();
+    } else {
+      req.body = JSON.parse(buf.toString());
+    }
+  }
+}));
+
+
+
+router.post('/api/checkout-session', ensureAuthenticated, async (req, res) => {
   const { priceId } = req.body;
 
   try {
@@ -622,22 +695,6 @@ app.post('/api/checkout-session', ensureAuthenticated, async (req, res) => {
       cancel_url: 'http://localhost:4000/main/main.html', // Replace with your cancel URL
     });
 
-    // Retrieve the user from the database using req.user or any other method you use for authentication
-    const user = await client.db('users').collection('users').findOne({ _id: new ObjectId(req.user._id) });
-
-    // Update the user's tier based on the subscription status
-    if (session.mode === 'subscription' && session.payment_status === 'paid') {
-      user.tier = 'pro';
-    } else {
-      user.tier = 'free';
-    }
-
-    // Save the updated user in the database
-    await client.db('users').collection('users').updateOne(
-      { _id: new ObjectId(req.user._id) },
-      { $set: { tier: user.tier } }
-    );
-
     res.status(200).json({ sessionId: session.id });
   } catch (error) {
     console.error('Error creating checkout session:', error);
@@ -646,68 +703,6 @@ app.post('/api/checkout-session', ensureAuthenticated, async (req, res) => {
 });
 
 
-app.use(bodyParser.json({
-  verify: (req, _, buf) => {
-    req.rawBody = buf;
-  }
-}));
-
-
-app.post('/webhook', bodyParser.raw({type: 'application/json'}), async (request, response) => {
-  console.log('Raw request body:', request.rawBody);
-  console.log('Request headers:', request.headers);
-
-  let event;
-
-  try {
-    event = stripeClient.webhooks.constructEvent(request.rawBody, request.headers['stripe-signature'], endpointSecret);
-  } catch (err) {
-    return response.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  // Handle the checkout.session.completed event
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-
-    // Retrieve the customer from Stripe
-    const customer = await stripeClient.customers.retrieve(session.customer);
-
-    // Retrieve the user from the database using the customer email
-    const user = await client.db('users').collection('users').findOne({ email: customer.email });
-
-    // Update the user's tier to 'pro'
-    user.tier = 'pro';
-
-    // Save the updated user in the database
-    await client.db('users').collection('users').updateOne(
-      { email: customer.email },
-      { $set: { tier: user.tier } }
-    );
-  }
-
-  // Handle the customer.subscription.deleted event
-  if (event.type === 'customer.subscription.deleted') {
-    const subscription = event.data.object;
-
-    // Retrieve the customer from Stripe
-    const customer = await stripeClient.customers.retrieve(subscription.customer);
-
-    // Retrieve the user from the database using the customer email
-    const user = await client.db('users').collection('users').findOne({ email: customer.email });
-
-    // Update the user's tier to 'free'
-    user.tier = 'free';
-
-    // Save the updated user in the database
-    await client.db('users').collection('users').updateOne(
-      { email: customer.email },
-      { $set: { tier: user.tier } }
-    );
-  }
-
-  // Return a response to acknowledge receipt of the event
-  response.json({received: true});
-});
 
 
 
@@ -727,3 +722,7 @@ app.get('/api/publishable-key', (req, res) => {
     res.status(500).json({ error: 'Publishable key not found.' });
   }
 });
+
+
+
+app.use(router);
