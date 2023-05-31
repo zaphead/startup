@@ -1052,6 +1052,93 @@ async function handleUpgradeButtonClick() {
 
 // Attach event listener to the upgrade button
 document.getElementById('upgrade-button').addEventListener('click', handleUpgradeButtonClick);
+document.getElementById('upgrade-subscription').addEventListener('click', handleUpgradeButtonClick);
+
+
+//CANCEL STRIPE SUBSCRIPTION
+
+document.getElementById('cancel-subscription').addEventListener('click', async () => {
+  // Fetch user info
+  let userResponse = await fetch('/api/user', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin'
+  });
+
+  if (userResponse.ok) {
+    let userInfo = await userResponse.json();
+    console.log('User info received:', userInfo);
+
+    const customerId = userInfo.user.stripeCustomerId; // Assuming the user info includes stripeCustomerId
+    const subscriptionId = userInfo.user.stripeSubscriptionId; // Assuming the user info includes stripeSubscriptionId
+
+    if (!customerId || !subscriptionId) {
+      console.error('Missing customerId or subscriptionId in user info:', userInfo);
+      return;
+    }
+
+    // Create cancellation session
+    let response = await fetch('/create-cancellation-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ customerId, subscriptionId }),
+      credentials: 'same-origin'
+    });
+
+    if (response.ok) {
+      let result = await response.json();
+      console.log('Cancellation session created:', result);
+      window.location.href = result.url;
+    } else {
+      console.error('Failed to create cancellation session:', response.status, response.statusText);
+    }
+  } else {
+    console.error('Failed to fetch user info:', userResponse.status, userResponse.statusText);
+  }
+});
+
+
+
+//HIDE SETTINGS BUTTONS BASED ON SUBSCRIPTION
+
+// Fetch user info
+fetch('/api/user', {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  credentials: 'same-origin'
+})
+.then(response => response.json())
+.then(data => {
+  const userTier = data.user.tier; // Assuming the user info includes 'tier'
+
+  // Get the buttons
+  const upgradeButton = document.getElementById('upgrade-subscription');
+  const manageButton = document.getElementById('cancel-subscription');
+  const editionTitle = document.getElementById('edition-title');
+
+  // Hide or show the buttons based on the user's tier
+  if (userTier === 'pro') {
+    upgradeButton.style.display = 'none';
+    manageButton.style.display = 'block';
+    editionTitle.textContent = 'StrataMind Pro'
+  } else if (userTier === 'free') {
+    upgradeButton.style.display = 'block';
+    manageButton.style.display = 'none';
+    editionTitle.textContent = 'StrataMind'
+  }
+})
+.catch(error => console.error('Error:', error));
+
+
+
+
+
 
 
 

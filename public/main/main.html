@@ -65,7 +65,7 @@
 
       <section class="right-section section-menu">
 
-          <h2 style="text-align: center;">Analysis</h2>
+          <h2 id="edition-title" style="text-align: center;">StrataMind</h2>
             <div class="analysis-output">
             <!--In the paragraph below will go the analysis return from the LLM-->
                 <p id="analysisPane">Analysis will appear here.</p>
@@ -160,9 +160,14 @@
               <p id="authenticated-user">Account Holder Name</p>
               <p id="authenticated-user-email">Account Holder email</p>
               <div class="password-div">
-                <p>Password Management</p>
-                <button class="main-button password-button">Change Password</button>
+                <button id="change-password" class="main-button password-button">Change Password</button>
               </div>
+              <h3 class="settings-header">Subscription</h3>
+              <button id="cancel-subscription" class="main-button password-button">Manage Subscription</button>
+              <button id="upgrade-subscription" class="main-button password-button">Upgrade</button>
+
+              <h3 class="settings-header">Danger Zone</h3>
+              <button id="delete-account" class="main-button password-button">Delete Account</button>
             </div>
             <div class="update-notes">
               <h3 class="settings-header">Update Notes</h3>

@@ -21,16 +21,14 @@ router.use(bodyParser.json());
 // app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+//Config Dotenv
+dotenv.config();
 
-
-
-// const stripeSecretKey = process.env.TEST_SECRET_KEY;
-const stripeSecretKey = 'sk_test_51NC96zIMorCkqLBZ5Gs1J46Zbl7SY79q8jyXc47IvBjGRC6OFmYeSOiuAn2O19U6lQ0hMBYhNKZhjqytwFERr7GJ001O2AIJ9c';
+//STRIPE VARIABLES
+const stripeSecretKey = process.env.TEST_SECRET_KEY;
+const stripePublishableKey = process.env.TEST_PUBLISHABLE_KEY;
 const stripeClient = new Stripe(stripeSecretKey);
 
-
-
-dotenv.config();
 
 const uri = process.env.MONGODB_URL;
 const passport_key = process.env.PASSPORT_KEY;
@@ -68,33 +66,47 @@ app.post('/webhook', express.raw({type: 'application/json'}), async (request, re
   try {
     event = stripeClient.webhooks.constructEvent(request.body, sig, endpointSecret);
   } catch (err) {
+    console.error(`Webhook Error: ${err.message}`);
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
 
   // Handle the event
+  const database = client.db('users');
+  const collection = database.collection('users');
   switch (event.type) {
     case 'charge.succeeded':
-      const chargeSucceeded = event.data.object;
-      // Then define and call a function to handle the event charge.succeeded
-      // Get the user's email from the charge event
-      const userEmail = chargeSucceeded.billing_details.email;
-
-      // Update the user's tier in MongoDB
-      const database = client.db('users');
-      const collection = database.collection('users');
-      await collection.updateOne({ email: userEmail }, { $set: { tier: 'pro' } });
+    case 'invoice.paid':
+      const userEmail = event.data.object.customer_email;
+      const updateResult = await collection.updateOne({ email: userEmail }, { $set: { tier: 'pro' } });
+      console.log(`Updated ${updateResult.modifiedCount} document(s) for ${event.type} event.`);
       break;
     case 'charge.failed':
-      const chargeFailed = event.data.object;
-      // Then define and call a function to handle the event charge.failed
-      // Get the user's email from the charge event
-      const userEmailFailed = chargeFailed.billing_details.email;
-
-      // Update the user's tier in MongoDB
-      await collection.updateOne({ email: userEmailFailed }, { $set: { tier: 'free' } });
+    case 'invoice.payment_failed':
+    case 'customer.subscription.deleted':
+      const userEmailFailed = event.data.object.customer_email;
+      const updateResultFailed = await collection.updateOne({ email: userEmailFailed }, { $set: { tier: 'free' } });
+      console.log(`Updated ${updateResultFailed.modifiedCount} document(s) for ${event.type} event.`);
       break;
-    // ... handle other event types
+    case 'customer.subscription.updated':
+      const userEmailUpdated = event.data.object.customer_email;
+      const status = event.data.object.status;
+      const updateResultUpdated = await collection.updateOne({ email: userEmailUpdated }, { $set: { tier: status === 'active' ? 'pro' : 'free' } });
+      console.log(`Updated ${updateResultUpdated.modifiedCount} document(s) for customer.subscription.updated event.`);
+      break;
+    case 'checkout.session.completed':
+      const userEmailSession = event.data.object.customer_email;
+      const updateResultSession = await collection.updateOne({ email: userEmailSession }, { $set: { stripeSubscriptionId: event.data.object.subscription } });
+      console.log(`Updated ${updateResultSession.modifiedCount} document(s) for checkout.session.completed event.`);
+      break;
+    case 'customer.updated':
+      const userEmailCustomerUpdated = event.data.object.email;
+      const updateResultCustomerUpdated = await collection.updateOne({ email: userEmailCustomerUpdated }, { $set: { stripeCustomerId: event.data.object.id } });
+      console.log(`Updated ${updateResultCustomerUpdated.modifiedCount} document(s) for customer.updated event.`);
+      break;
+    case 'checkout.session.expired':
+      console.log(`Checkout session expired for customer: ${event.data.object.customer_email}`);
+      break;
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
@@ -102,6 +114,55 @@ app.post('/webhook', express.raw({type: 'application/json'}), async (request, re
   // Return a 200 response to acknowledge receipt of the event
   response.send();
 });
+
+
+
+
+//CANCEL STRIPE SUBSCRIPTION
+router.post('/create-cancellation-session', async (req, res) => {
+  const { customerId } = req.body;
+
+  try {
+    const session = await stripeClient.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: 'http://localhost:4000/'
+    });
+
+    res.send({ url: session.url });
+  } catch (error) {
+    console.error('Failed to create cancellation session:', error);
+    res.status(500).send('Failed to create cancellation session');
+  }
+});
+
+
+
+
+
+//GET STRIPE USER DATA
+router.get('/get-user-data', async (req, res) => {
+  // Assuming you have a way to get the current user's ID
+  const userId = getCurrentUserId(req);
+
+  // Fetch the user's data from the database
+  const database = client.db('users');
+  const collection = database.collection('users');
+  const user = await collection.findOne({ _id: userId });
+
+  if (!user) {
+    res.status(404).send('User not found');
+    return;
+  }
+
+  // Send the user's data to the client
+  res.json({
+    stripeCustomerId: user.stripeCustomerId,
+    stripeSubscriptionId: user.stripeSubscriptionId
+  });
+});
+
+
+
 
 
 
@@ -126,6 +187,21 @@ passport.use(
         return done(null, false, { message: 'Incorrect email or password.' });
       }
 
+      // Check the user's subscription status with Stripe
+      if (user.stripeSubscriptionId) {
+        const subscription = await stripeClient.subscriptions.retrieve(user.stripeSubscriptionId);
+
+        // Update the user's tier based on the subscription status
+        let tier;
+        if (subscription.status === 'active') {
+          tier = 'pro';
+        } else {
+          tier = 'free';
+        }
+
+        await collection.updateOne({ _id: new ObjectId(user._id) }, { $set: { tier } });
+      }
+
       return done(null, user);
     } catch (error) {
       console.error('Error in passport LocalStrategy:', error);
@@ -133,6 +209,7 @@ passport.use(
     }
   })
 );
+
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
@@ -415,13 +492,16 @@ async function generatePrompt(userId, tone, maxWords, analysisScope) {
     let prompt = `**General**
 
     You are BusinessAnalystGPT, a guide for small businesses to make wise choices for success. You'll receive JSON data with two categories: general information and processes. Analyze and suggest changes using the following criteria:
-    
+    Additionally, even though you're being given JSON data, you should interpret it as regular text, so in your response don't mention that it's JSON and don't include any syntax such as hyphens or underscores. For example say "Business name" instead of business_name.
+
     1. Improve process requirements.
     2. Remove unnecessary parts or entire processes.
     3. Simplify and optimize.
     4. Accelerate time cycle.
     5. Automate tasks.
     
+
+
     Let's get started.
     
     **Business Information:**
@@ -693,7 +773,13 @@ router.post('/api/checkout-session', ensureAuthenticated, async (req, res) => {
       ],
       success_url: 'http://localhost:4000/main/main.html', // Replace with your success URL
       cancel_url: 'http://localhost:4000/main/main.html', // Replace with your cancel URL
+      customer_email: req.user.email, // Pass the user's email to Stripe
     });
+
+    // Store the Stripe subscription ID in MongoDB
+    const database = client.db('users');
+    const collection = database.collection('users');
+    await collection.updateOne({ _id: new ObjectId(req.user._id) }, { $set: { stripeSubscriptionId: session.subscription } });
 
     res.status(200).json({ sessionId: session.id });
   } catch (error) {
@@ -713,7 +799,7 @@ router.post('/api/checkout-session', ensureAuthenticated, async (req, res) => {
 // Get publishable key
 app.get('/api/publishable-key', (req, res) => {
   // const publishableKey = process.env.TEST_PUBLISHABLE_KEY; // Replace with your actual publishable key
-  const publishableKey = 'pk_test_51NC96zIMorCkqLBZJhKJxgPJwsODTXaNccmfsr3Sk7sXwmg4AkTezs4mu5ZbJzYCJRuFIolLWuNq91utRL3fzF9C00aQHJ9ulq'; // Replace with your actual publishable key
+  const publishableKey = stripePublishableKey; // Replace with your actual publishable key
 
 
   if (publishableKey) {
