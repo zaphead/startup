@@ -79,3 +79,14 @@ h3 {
   gap: 10px;
 }
 
+.card {
+  width: fit-content;
+  padding: 0px;
+  padding-right: 20px;
+}
+
+.login-card {
+  padding: 20px;
+  width: 300px;
+  height: auto;
+}

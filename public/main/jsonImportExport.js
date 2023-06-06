@@ -1,3 +1,7 @@
+let currentToast = null;
+let processEditor = null;
+
+
 function showToast(message, duration = 2000) {
     return new Promise((resolve) => {
       if (currentToast) {
@@ -34,9 +38,8 @@ function showNewToast(message, duration, resolve) {
   }, duration);
 }
 
-
 //INTERPRETING JSON AND RETURNING TEXT
-function interpretJSON(jsonData) {
+export function interpretJSON(jsonData) {
   if (Array.isArray(jsonData)) {
     return jsonData
       .map(
@@ -59,16 +62,14 @@ function interpretJSON(jsonData) {
   return '';
 }
 
-
-
 // Get a reference to the export button, the modal text, and the modal text content
-const exportButton = document.getElementById('exportButton');
-const modalHeaderText = document.getElementById('modal-dialogue-header');
-const modalTextContent = document.getElementById('modal-text-content');
-const modalText = document.getElementById('modal-text');
+export const exportButton = document.getElementById('exportButton');
+export const modalHeaderText = document.getElementById('modal-dialogue-header');
+export const modalTextContent = document.getElementById('modal-text-content');
+export const modalText = document.getElementById('modal-text');
 
 // Add a function to fetch the process data
-async function fetchProcessData(processName) {
+export async function fetchProcessData(processName) {
   try {
     const response = await fetch(`/api/user/process?processName=${processName}`);
 
@@ -97,7 +98,20 @@ exportButton.addEventListener('click', async () => {
 
     modalHeaderText.textContent = `Process Name: ${selectedProcessName}`;
 
-    
+    // Create the <h1> element
+    const headingElement = document.createElement('h2');
+    headingElement.className = 'title-header';
+    // Find the position of each hyphen in the selectedProcessName and capitalize the following character
+    const formattedProcessName = selectedProcessName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+    // Assign the formatted process name to the heading element's text content
+    headingElement.textContent = `Export ${formattedProcessName}`;
+
+
+
+    // Append the heading element to the modal content
+    modalTextContent.appendChild(headingElement);
+
 
     // Loop through the process data and create elements for each step
     processData.forEach((step, index) => {

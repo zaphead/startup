@@ -1,3 +1,8 @@
+import { loadingPhrases } from './loadingSequence.js';
+import { interpretJSON, exportButton, modalHeaderText, modalTextContent, modalText, fetchProcessData } from './jsonImportExport.js';
+
+
+
 
 var modal = document.getElementById("myModal");
 var buttons = document.querySelectorAll('.text-button[business="yes"]');
@@ -24,6 +29,8 @@ modal.addEventListener("click", function(event) {
   }
 });
 
+
+
 //ANALYZE MODAL
 const analyzeButton = document.querySelector('.analyze');
 const analyzeModal = document.getElementById('modal-analyze');
@@ -38,10 +45,42 @@ closeButton.addEventListener('click', function() {
   analyzeModal.style.display = 'none';
 });
 
+
+//ANALYZE MODAL IMAGE SWITCHER
+// get the select dropdown
+let personaSelect = document.getElementById('persona-select');
+
+personaSelect.addEventListener('change', function() {
+  let selectedValue = this.value;
+  let imageFileName = selectedValue.replace(' ', '') + '.png';
+  let imagePath = `../Images/people/${imageFileName}`;
+  let personaTip = document.getElementById('persona-info');
+
+  let personaImage = document.getElementById('persona-image');
+
+  // add the fade-out class to start the animation
+  personaImage.classList.add('fade-out');
+
+  // after the transition ends, update the image source and remove the fade-out class
+  personaImage.addEventListener('transitionend', function handler() {
+    personaImage.src = imagePath;
+    personaImage.classList.remove('fade-out');
+
+    // remove the event handler after it runs once, to prevent it from running multiple times
+    personaImage.removeEventListener('transitionend', handler);
+  });
+});
+
+
+
+
+
 //DIALOGUE MODAL
 // Get the necessary elements
 const addProcessBtn = document.getElementById('add-process');
 const modalDialogue = document.getElementById('modal-dialogue');
+const addObjectBtn = document.getElementById('add-object');
+
 
 // Add click event listener to the modal dialogue to close it when clicked outside
 modalDialogue.addEventListener('click', (event) => {
@@ -357,9 +396,9 @@ class ProcessEditor {
           <div class="delete-process secondary-button" data-id="${index}">
             <img class="image-icon-button" src="../Images/icons/trash.svg">
           </div>
-          <div class="card card-outlined">
-            <div class="process-title" contenteditable="true" data-id="${index}">${step.title}</div>
-            <div class="process-content" contenteditable="true" data-id="${index}">${step.description}</div>
+          <div class="card">
+            <div class="process-title" contenteditable="true" data-placeholder="Step Title" data-id="${index}">${step.title}</div>
+            <div class="process-content" contenteditable="true" data-placeholder="Step Description" data-id="${index}">${step.description}</div>
           </div>
           <div class="arrow-buttons">
           <button class="up-button main-button" data-id="${index}">&#8593;</button>
@@ -451,8 +490,8 @@ class ProcessEditor {
 
   addStep = () => {
     this.process.push({
-      title: 'New Step',
-      description: 'Step Description'
+      title: '',
+      description: ''
     });
 
     this.unsavedChanges = true;
@@ -561,6 +600,8 @@ document.querySelector('.click-button').addEventListener('click', () => {
 });
 
 
+//TOAST FUNCTIONS
+
 function showToast(message, duration = 3000) {
   return new Promise((resolve) => {
     if (currentToast) {
@@ -598,6 +639,35 @@ function showNewToast(message, duration, resolve) {
 }
 
 
+//TOOLTIPS
+window.onload = function() {
+  let tooltipElements = document.querySelectorAll('[tooltip]');
+
+  tooltipElements.forEach(function(element) {
+    let tooltipText = element.getAttribute('tooltip');
+    let tooltipDiv = document.createElement('div');
+    tooltipDiv.classList.add('tooltip-text');
+    tooltipDiv.innerText = tooltipText;
+
+    // Add position relative if necessary
+    let position = getComputedStyle(element).position;
+    if (position !== 'absolute' && position !== 'relative' && position !== 'fixed') {
+      element.style.position = 'relative';
+    }
+
+    element.classList.add('tooltip');
+    element.appendChild(tooltipDiv);
+
+    // Check if the element is near the top of the page
+    if (element.getBoundingClientRect().top < tooltipDiv.offsetHeight) {
+      tooltipDiv.style.bottom = 'auto'; // Reset bottom position
+      tooltipDiv.style.top = 'calc(100% + 15px)'; // Position tooltip below the element
+    }
+  });
+};
+
+
+
 
 
 //ADDING AND DELETING PROCESSES
@@ -620,15 +690,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function attachProcessEditorEvent() {
-  document.querySelectorAll('.text-button[business="no"').forEach(item => {
-    item.addEventListener("click", function(event) {
-      event.preventDefault();
-      const id = this.id;
-      showProcessEditor(id);
-    });
-  });
-}
+
 
 function generateProcessItemHTML(displayProcessName, processName) {
   return `
@@ -817,6 +879,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+// Add a global variable to control loading sequence and completion
+let loading = true;
+let doneLoading = false;
+
 // Handle Analysis Form submission
 document.getElementById('analysisForm').addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -826,6 +892,10 @@ document.getElementById('analysisForm').addEventListener('submit', async (event)
   const analysisScope = document.getElementById('select2').value;
   const tone = document.getElementById('select3').value;
   console.log('Form data:', { lengthOfResponse, analysisScope, tone });
+
+  // Reset loading and doneLoading flags
+  loading = true;
+  doneLoading = false;
 
   // Fetch user info
   console.log('Fetching user info...');
@@ -838,18 +908,20 @@ document.getElementById('analysisForm').addEventListener('submit', async (event)
   });
 
   if (userResponse.ok) {
-    document.getElementById("analysisPane").innerText = "Generating Analysis...";
+    // Call the loading sequence function
+    runLoadingSequence();
+  
     let userInfo = await userResponse.json();
     console.log('User info received:', userInfo);
     let userId = userInfo.user._id; // Assuming the user info includes _id
-
+  
     // Check if the user is at the analysis limit for the free tier
     if (userInfo.user.tier === 'free' && userInfo.user.analysisCount >= 15) {
       // Show modal dialogue with upgrade message
       showModalDialogue('Analysis Limit Reached', 'You have used all your analyses for StrataMind Free. Upgrade to StrataMind Pro to continue.', 'Upgrade');
       return;
     }
-
+  
     // Post analysis data
     console.log('Posting analysis data...');
     let response = await fetch('/api/analysis', {
@@ -865,8 +937,24 @@ document.getElementById('analysisForm').addEventListener('submit', async (event)
       let result = await response.json();
       console.log('Analysis result:', result);
 
+      // Stop the loading sequence
+      loading = false;
+
+      // Wait until the loading sequence has finished backspacing
+      while (!doneLoading) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+
       // Assuming the returned result is a string containing the analysis
-      document.getElementById("analysisPane").innerText = result.message;
+      const analysisPane = document.getElementById("analysisPane");
+      analysisPane.innerText = result.message;
+      // Add fade-in class to the analysisPane
+      analysisPane.classList.add('fade-in');
+
+      // Remove the fade-in class after animation finishes to reset the state for next time
+      setTimeout(() => {
+        analysisPane.classList.remove('fade-in');
+      }, 1000); // Assuming your animation duration is 1s as in your CSS
     } else {
       console.error('Error posting analysis data:', response.status, response.statusText);
     }
@@ -875,6 +963,71 @@ document.getElementById('analysisForm').addEventListener('submit', async (event)
     console.error('Failed to fetch user info:', userResponse.status, userResponse.statusText);
   }
 });
+
+
+
+
+//LOADING SEQUENCE FUNCTION
+async function runLoadingSequence() {
+
+  const analysisPane = document.getElementById("analysisPane");
+  analysisPane.innerHTML = '<div class="loading-sequence"></div>';
+
+  const loadingSequence = analysisPane.querySelector(".loading-sequence");
+
+  // This will keep running until we manually break the loop
+  while (loading) {
+    const randomIndex = Math.floor(Math.random() * loadingPhrases.length);
+    const currentPhrase = loadingPhrases[randomIndex];
+    const randomDelay = Math.floor(Math.random() * 500) + 500; // Random delay between 500ms and 1000ms
+
+    loadingSequence.textContent = "";
+
+    // Await the typing and backspacing animations
+    await typePhrase(currentPhrase);
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Pause for 1 second
+    await backspacePhrase();
+
+    await new Promise(resolve => setTimeout(resolve, randomDelay));
+  }
+
+  // After the loading sequence finishes, set doneLoading to true
+  doneLoading = true;
+
+  function typePhrase(phrase) {
+    return new Promise(resolve => {
+      let i = 0;
+      const typingInterval = setInterval(() => {
+        loadingSequence.textContent += phrase[i];
+        i++;
+
+        if (i === phrase.length) {
+          clearInterval(typingInterval);
+          resolve();
+        }
+      }, 100);
+    });
+  }
+
+  function backspacePhrase() {
+    return new Promise(resolve => {
+      const backspaceInterval = setInterval(() => {
+        loadingSequence.textContent = loadingSequence.textContent.slice(0, -1);
+
+        if (loadingSequence.textContent === "") {
+          clearInterval(backspaceInterval);
+          resolve();
+        }
+      }, 25);
+    });
+  }
+  
+  // After the loading sequence finishes, set doneLoading to true
+  if (!loading) doneLoading = true;
+}
+
+
+
 
 
 // Function to create the modal HTML
@@ -941,13 +1094,7 @@ function showModalDialogue(header, content, confirmText) {
   }
 }
 
-// Function to close the modal
-function closeModal() {
-  const modalContainer = document.getElementById('modal-container');
-  if (modalContainer) {
-    modalContainer.remove();
-  }
-}
+
 
 // Function to handle the upgrade confirmation
 function handleConfirmUpgrade() {

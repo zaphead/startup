@@ -10,176 +10,255 @@
 
   </head>
   <body>
-    <div class="container">
-        <section class="left-section section-menu">
-          <div id="processes_div">
-            <div class="header-container">
-              <h2 class="title-header">Processes</h2>
-              <a id="add-process" class="text-icon">+</a>
-            </div>
-            <!-- Process Items go here -->
-          </div>
-          <div id="business_div">
-            <h2 style="margin-bottom: 20px; margin-top: 20px;">Business</h2>
-            <a href="#" business="yes" data-title="Business Name" id="business_name" class="text-button">Business Name</a>
-            <a href="#" business="yes" data-title="Target Market" id="target_market" class="text-button">Target Market</a>
-            <a href="#" business="yes" data-title="Product" id="product" class="text-button">Product</a>
-            <a href="#" business="yes" data-title="Stage" id="stage" class="text-button">Stage</a>
-            <a href="#" business="yes" data-title="Work Time" id="hours" class="text-button">Work Time</a>
-            <a href="#" business="yes" data-title="Experience" id="experience" class="text-button">Experience</a>
-          </div>
-          
-          <div class="user-control">
-            <h4 id="authenticated-user"></h4>
-            <a id="settingsButton"><button class="icon-button main-button" style="margin-left: 10px;">⚙️</button></a>
-            <a href="../splash/splash.html"><button class="icon-button main-button" style="margin-left: 10px;">🔒</button></a>
-          </div>
-          </section>
-          
-      <section class="section-menu main-section">
-        <div id="toolbar" class="toolbar">
-          <div id="toolbarTitle" class="toolbar-title">Flow Chart</div>
-          <div class="toolbar-items">
-            <button id="importButton" class="secondary-button openModalBtn">Import</button>
-            <button id="exportButton" class="secondary-button openModalBtn">Export</button>
-          </div>
-        </div>
-        <div id="introSplash" class="intro-splash">
-          <p class="hint-text">Select a process or business topic to get started.</p>
-          <img src="../Images/StrataMind-S.svg" class="svg-splash">
-        </div>
-
-
-        <div class="card-wrapper">
-          <div class="steps-container">
-            <!-- Here's where each step would go. An example of a step is included. -->
-            <div class="card-container">
-        
-            </div>
-          </div>
-          <button id="add-process" class="click-button main-button">Add Step</button>
-        </div>
-        
-          
-      </section>
-
-      <section class="right-section section-menu">
-
-          <h2 id="edition-title" style="text-align: center;">StrataMind</h2>
-            <div class="analysis-output">
-            <!--In the paragraph below will go the analysis return from the LLM-->
-                <p id="analysisPane">Analysis will appear here.</p>
-            </div>
-            <div class="analysis-info">
-              <div class="analyze-container">
-                <button class="analyze main-button ">Analyze</button>
-                <button id="upgrade-button" class="main-button upgrade-button">Upgrade</button>
+    <div class="video-bg">
+      <video width="320" height="240" autoplay loop muted>
+       <source src="../Images/backgrounds/playback.mp4" type="video/mp4">
+     Your browser does not support the video tag.
+     </video>
+    </div>
+    <div class="section-container">
+      <div class="container">
+          <section class="left-section section-menu">
+            <div id="processes_div">
+              <div class="header-container">
+                <h2 class="title-header">Objects</h2>
+                <a id="add-process" class="text-icon">+</a>
+                <a id="add-object" class="text-icon">~</a>
               </div>
+              <!-- Object Items go here -->
+                  <a id="load-more-objects" class="text-button menu-text-buttons">All Objects</a>
+
+            </div>
+            <div id="business_div">
+              <h2 style="margin-bottom: 20px; margin-top: 20px;">Business Info</h2>
+              <a href="#" business="yes" data-title="Business Name" id="business_name" class="text-button">Business Name</a>
+              <a href="#" business="yes" data-title="Target Market" id="target_market" class="text-button">Target Market</a>
+              <a href="#" business="yes" data-title="Product" id="product" class="text-button">Product</a>
+              <a href="#" business="yes" data-title="Stage" id="stage" class="text-button">Stage</a>
+              <a href="#" business="yes" data-title="Work Time" id="hours" class="text-button">Work Time</a>
+              <a href="#" business="yes" data-title="Experience" id="experience" class="text-button">Experience</a>
+            </div>
+            
+            <div class="user-control">
+              <h4 id="authenticated-user"></h4>
+              <a id="settingsButton"><button class="icon-button main-button" style="margin-left: 10px;">⚙️</button></a>
+              <a href="../splash/splash.html"><button class="icon-button main-button" style="margin-left: 10px;">🔒</button></a>
+            </div>
+            </section>
+            
+        <section class="section-menu main-section">
+          <div id="toolbar" class="toolbar">
+            <div id="toolbarTitle" class="toolbar-title">Flow Chart</div>
+            <div class="toolbar-items">
+              <button id="importButton" class="secondary-button openModalBtn">Import</button>
+              <button id="exportButton" class="secondary-button openModalBtn">Export</button>
+            </div>
+          </div>
+          <div id="introSplash" class="intro-splash">
+            <p class="hint-text">Select a process or business topic to get started.</p>
+            <img src="../Images/StrataMind-S.svg" class="svg-splash">
           </div>
 
 
-        <footer>
-          <div class="logo">
-            <div class="divider"></div>
-              <img width="100%" src="../Images/Processeon Logo.png" alt="Logo">
-              <a target="_blank" href="https://github.com/zaphead/startup" class="text-button" style="text-align: center;">Spencer Terry | GitHub</a>
+          <div class="card-wrapper">
+            <div class="steps-container">
+              <!-- Here's where each step would go. An example of a step is included. -->
+              <div class="card-container">
+          
+              </div>
+            </div>
+            <button id="add-process" class="click-button main-button">Add Step</button>
           </div>
           
-        </footer>      
-      </section>
-    </div>
+            
+        </section>
 
-    <!--Text editor modal for editing business information-->
-    <div id="myModal" class="modal modal-generic">
-      <div class="modal-content-generic">
-        <div id="modal-title" contenteditable="false" class="business-title"></div>
-        <div id="modal-content" contenteditable="true" class="business-content" data-placeholder=""></div>
+        <section class="right-section section-menu">
+
+            <h2 id="edition-title" style="text-align: center;">StrataMind</h2>
+              <div class="analysis-output">
+              <!--In the paragraph below will go the analysis return from the LLM-->
+                  <p id="analysisPane">Analysis will appear here.</p>
+              </div>
+              <div class="analysis-info">
+                <div class="analyze-container">
+                  <button class="analyze main-button ">Analyze</button>
+                  <button id="upgrade-button" class="main-button upgrade-button">Upgrade</button>
+                </div>
+            </div>
+
+
+          <footer>
+            <div class="logo">
+              <div class="divider"></div>
+                <img width="100%" src="../Images/Processeon Logo.png" alt="Logo">
+                <a target="_blank" href="https://github.com/zaphead/startup" class="text-button" style="text-align: center;">Spencer Terry | GitHub</a>
+            </div>
+            
+          </footer>      
+        </section>
       </div>
-    </div>
 
-    <!-- Form Modal for submitting analysis stuff -->
-    <div id="modal-analyze" class="modal-generic">
-      <form id="analysisForm">
+      <!--Text editor modal for editing business information-->
+      <div id="myModal" class="modal modal-generic">
         <div class="modal-content-generic">
-          <h3>Select Analysis Parameters</h3>
-          <label for="select1">Length of Response</label>
-          <select id="select1" class="select-dropdown">
-            <option value="Short (Under 150 words)">Normal</option>
-            <option value="Very Short. Less than 3 sentences.">Very Short</option>
-            <option value="Long (As much as you need)">Long</option>
-          </select>
-          
-          <label for="select2">Analysis Scope</label>
-          <select id="select2" class="select-dropdown">
-            <option value="whole business">Whole Business</option>
-          </select>
-          
-          <label for="select3">Tone</label>
-          <select id="select3" class="select-dropdown">
-            <option value="Straight Forward">Straight Forward</option>
-            <option value="Nice and soft. Even if the business is terrible, kiss up to them. They're doing their best.">Nice and Soft (It won't be very helpful)</option>
-            <option value="Roast the business and it's strategies. Be critical, harsh and don't hold back. Be absolutely BRUTAL. Make it as personal as possible. Also throw in a few snarky jokes in the roast.">Roast Me and everything I've built🔥</option>
-          </select>
-          
-          <button type="submit" class="modal-button main-button">Analyze</button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Dialogue Box Modal -->
-    <div id="modal-dialogue" class="modal-generic">
-      <div id="modal-dialogue-content" class="modal-content-generic dialogue-box">
-        <h2 class="modal-dialogue-header">Modal Header</h2>
-        <p class="modal-dialogue-text">Modal Dialogue content</p>
-        <div class="modal-dialogue-buttons-container">
-          <button class="secondary-button">Cancel</button>
-          <button class="main-button">Confirm</button>
+          <div id="modal-title" contenteditable="false" class="business-title"></div>
+          <div id="modal-content" contenteditable="true" class="business-content" data-placeholder=""></div>
         </div>
       </div>
-    </div>
 
-    <!-- Text Modal -->
-    <div id="modal-text" class="modal-generic">
-      <div id="modal-text-content" class="modal-content-generic dialogue-box">
-        <h2 id="modal-dialogue-header" class="modal-dialogue-header">Modal Header</h2>
-        <p class="modal-dialogue-text">Modal Dialogue content</p>
-        <div class="modal-dialogue-buttons-container">
-          <button class="secondary-button">Cancel</button>
-          <button class="main-button">Confirm</button>
-        </div>
-      </div>
-    </div>
+      <!-- Form Modal for submitting analysis stuff -->
+      <div id="modal-analyze" class="modal-generic">
+        <div class="modal-content-generic">
+          <h2 class="title-header">StrataMind Analysis Details</h2>
+          <form id="analysisForm" class="analysis-form">
+            <div class="analysis-container">
+              <div class="analysis-param">
+                <h3 class="center-header">Analysis Parameters</h3>
+                <label for="select1">Length of Response</label>
+                <select id="select1" class="select-dropdown">
+                  <option value="Short (Under 150 words)">Normal</option>
+                  <option value="Very Short. Less than 3 sentences.">Short</option>
+                  <option value="Long (As much as you need)">Long</option>
+                </select>
 
-    <!-- Settings Panel -->
-    <div id="settingsModal" class="modal-generic settingsModalYo">
-      <div id="settings-modal-content" class="modal-content-generic settings-modal">
-        <h2 class="title-header">Settings</h2>
-          <div class="all-settings-content">
-            <div class="main-settings-content">
-              <h3 class="settings-header">Account</h3>
-              <p id="authenticated-user">Account Holder Name</p>
-              <p id="authenticated-user-email">Account Holder email</p>
-              <div class="password-div">
-                <button id="change-password" class="main-button password-button">Change Password</button>
+                <label for="select2">Analysis Scope</label>
+                <select id="select2" class="select-dropdown">
+                  <option value="whole business">Whole Business</option>
+                </select>
+
+                <label for="select3">Tone</label>
+                <select id="select3" class="select-dropdown">
+                  <option value="Straight Forward">Straight Forward</option>
+                  <option value="Nice and soft. Even if the business is terrible, kiss up to them. They're doing their best.">Nice and Soft (It won't be very helpful)</option>
+                  <option value="Roast the business and it's strategies. Be critical, harsh and don't hold back. Be absolutely BRUTAL. Make it as personal as possible. Also throw in a few snarky jokes in the roast.">Roast Me and everything I've built🔥</option>
+                </select>
               </div>
-              <h3 class="settings-header">Subscription</h3>
-              <button id="cancel-subscription" class="main-button password-button">Manage Subscription</button>
-              <button id="upgrade-subscription" class="main-button password-button">Upgrade</button>
 
-              <h3 class="settings-header">Danger Zone</h3>
-              <button id="delete-account" class="main-button password-button">Delete Account</button>
+              <div class="analysis-persona">
+                <h3 class="center-header">Analysis Persona</h3>
+                <div class="persona-container">
+                  <div class="persona-image-container">
+                    <img id="persona-image" class="persona-image" src="../Images/people/StrataMind.png">
+                  </div>
+                  <div class="select-persona-container">
+                    <select id="persona-select" class="select-dropdown small-dropdown">
+                      <option value="StrataMind">StrataMind</option>
+                      <option value="Warren Buffet">Warren Buffet</option>
+                      <option value="Elon Musk">Elon Musk</option>
+                      <option value="Jeff Bezos">Jeff Bezos</option>.
+                      <option value="Debbie Fields">Debbie Fields</option>
+
+                    </select>
+                    <div id="persona-info" class="info-tooltip" tooltip="Deeznuts">ℹ</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="update-notes">
-              <h3 class="settings-header">Update Notes</h3>
+            <div class="divider"></div>
+            <div class="center-content">
+              <button type="submit" class="modal-button main-button">Analyze</button>
             </div>
+          </form>
+        </div>
+      </div>
+
+
+      <!-- Add object modal -->
+      <div id="new-object-modal" class="modal-generic">
+        <div id="new-object-modal-content" class="modal-content-generic">
+          <h2 class="title-header">Add New Object</h2>
+          <div class="objects-container">
+            <a id="object-option-process">
+              <div class="object-option">
+                <img class="object-icon" src="../Images/imagery/Arrow.svg">
+                <h3 class="object-header">Process</h3>
+                <p class="object-tip">Good for creating marketing strategies, client acquisition steps, or anything with staged events.
+                </p>
+              </div>
+            </a>
+            <a id="object-option-calendar">
+              <div class="object-option">
+                <img class="object-icon" src="../Images/imagery/calendar.svg">
+                <h3 class="object-header">Calendar</h3>
+                <p class="object-tip">Import your cloud calendar from Google or Outlook. Allows StrataMind to analyze your schedule.
+                </p>
+              </div>
+            </a>
+            <a id="object-option-list">
+              <div class="object-option">
+                <img class="object-icon" src="../Images/imagery/list.svg">
+                <h3 class="object-header">List</h3>
+                <p class="object-tip">Good for unsorted information such as information about your market.
+                </p>
+              </div>
+            </a>
+            <a id="object-option-table">
+              <div class="object-option">
+                <img class="object-icon" src="../Images/imagery/table.svg">
+                <h3 class="object-header">Table</h3>
+                <p class="object-tip">Good for sorted or organized information that needs to be correlated. Think of product lists, markets, etc...
+                </p>
+              </div>
+            </a>
           </div>
+        </div>
+      </div>
+
+      <!-- Dialogue Box Modal -->
+      <div id="modal-dialogue" class="modal-generic">
+        <div id="modal-dialogue-content" class="modal-content-generic dialogue-box">
+          <h2 class="modal-dialogue-header">Modal Header</h2>
+          <p class="modal-dialogue-text">Modal Dialogue content</p>
+          <div class="modal-dialogue-buttons-container">
+            <button class="secondary-button">Cancel</button>
+            <button class="main-button">Confirm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text Modal -->
+      <div id="modal-text" class="modal-generic">
+        <div id="modal-text-content" class="modal-content-generic dialogue-box">
+          <h2 id="modal-dialogue-header" class="modal-dialogue-header">Modal Header</h2>
+          <p class="modal-dialogue-text">Modal Dialogue content</p>
+          <div class="modal-dialogue-buttons-container">
+            <button class="secondary-button">Cancel</button>
+            <button class="main-button">Confirm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Panel -->
+      <div id="settingsModal" class="modal-generic settingsModalYo">
+        <div id="settings-modal-content" class="modal-content-generic settings-modal">
+          <h2 class="title-header">Settings</h2>
+            <div class="all-settings-content">
+              <div class="main-settings-content">
+                <h3 class="settings-header">Account</h3>
+                <p id="authenticated-user">Account Holder Name</p>
+                <p id="authenticated-user-email">Account Holder email</p>
+                <div class="password-div">
+                  <button id="change-password" class="main-button password-button">Change Password</button>
+                </div>
+                <h3 class="settings-header">Subscription</h3>
+                <button id="cancel-subscription" class="main-button password-button">Manage Subscription</button>
+                <button id="upgrade-subscription" class="main-button password-button">Upgrade</button>
+
+                <h3 class="settings-header">Danger Zone</h3>
+                <button id="delete-account" class="main-button password-button">Delete Account</button>
+              </div>
+              <div class="update-notes">
+                <h3 class="settings-header">Update Notes</h3>
+              </div>
+            </div>
+        </div>
       </div>
     </div>
-
   </body>
+  <script src="./objects.js"></script>
   <script src="/dist/bundle.js"></script>
-  <script src="./jsonImportExport.js"></script>
-  <script src="./main.js"></script>
+  <script type="module" src="./main.js"></script>
   <script src="../global-js-animations.js"></script>
   <script src="./settings.js"></script>
   <script src="https://js.stripe.com/v3/"></script>

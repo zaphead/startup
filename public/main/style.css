@@ -2,6 +2,20 @@
     font-family: SerifFont;
     src: url('./Fonts/Merriweather/Merriweather-Regular.ttf');
   }
+body {
+  height: 100%;
+  background-image: none;
+}
+
+
+
+
+.section-container {
+  margin: 20px;
+  border-radius: 25px;
+  height: calc(100vh - 40px); /* Subtract the top and bottom margin */
+  overflow: hidden;
+}
 
 
 .analyze-container {
@@ -52,13 +66,13 @@ h5, h4 {
   display: flex;
   width: 100%;
   flex-direction: row;
-}
+  height: 100%;}
 
 .left-section {
   width: calc(20vw);
   min-width: 200px;
   max-width: 250px;
-  height: 100vh;
+  height: 100%;
   padding: 20px;
   box-sizing: border-box;
   text-align: left;
@@ -67,7 +81,7 @@ h5, h4 {
 
 .main-section {
   flex-grow: 1;
-  height: 100vh;
+  height: 100%;
   padding: 20px;
   padding-bottom: 200px;
   box-sizing: border-box;
@@ -81,7 +95,7 @@ h5, h4 {
   width: calc(30vw);
   min-width: 300px;
   max-width: 500px;
-  height: 100vh;
+  height: 100%;
   padding: 30px;
   box-sizing: border-box;
   position: relative;
@@ -109,13 +123,13 @@ section.right-section .logo {
 .toolbar {
   height: 40px;
   /* background-color: rgba(255, 255, 255, 0); */
-  backdrop-filter: blur(20px);
   text-align: center;
   outline: 1px solid #ffffff;
   transition: all .2s ease-in-out;
   border-radius: 10px;
   box-shadow: 0px 0px 15px rgba(48, 48, 48, 0.1);
-
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(15px);
   position: sticky;
   top: 0;
   display: none;
@@ -274,8 +288,8 @@ section.right-section .logo {
   overflow: auto;
   height: 60%;
   margin-top: 18px;
-  border: 1px solid #ddd;
-  border-radius: 15px;
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 25px;
   padding: 20px;
   transition: box-shadow 0.3s ease-in-out;
   backdrop-filter: blur(1px);
@@ -289,19 +303,19 @@ section.right-section .logo {
   background-color: #fefefe;
   margin: auto;
   padding: 20px;
-  border: 1px solid #888;
+  border: 2px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
   height: 70vh;
   border-radius: 25px;
 }
 
-.divider {
-  height: 1px;
-  background-color: #ccc;
+
+.show-modal {
+  display: flex;
 }
 
 .analyze-modal {
-  display: none;
+  display: flex;
   position: fixed;
   left: 0;
   top: 0;
@@ -315,10 +329,88 @@ section.right-section .logo {
 .analyze-modal-content {
   margin: auto;
   padding: 20px;
-  width: 30%;
+  width: 60%;
   min-width: 250px;
   margin-top: 15%;
+}
 
+.analysis-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.analysis-form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+.personality-section {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.persona-image {
+  width: 100%;
+}
+
+.persona-image-container {
+  width:80%;
+  display: flex;
+  justify-content: center;
+}
+.select-persona-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+}
+
+.persona-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#persona-select {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+
+
+#persona-image {
+  transition: opacity 0.5s, transform 0.5s; /* change duration as needed */
+  opacity: 1;
+  transform: translateX(0);
+}
+
+#persona-image.fade-out {
+  opacity: 0;
+  transform: translateX(-50px); /* change distance as needed */
+}
+
+
+
+
+.center-header {
+  text-align: center;
+  top: 0;
+}
+
+.header-descriptor {
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: .9em;
+  font-weight: 500;
+  width: 70%;
+  
 }
 
 .modal-content h3 {
@@ -336,29 +428,7 @@ section.right-section .logo {
   margin: 0 auto;
 }
 
-.select-dropdown {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: 1px solid #888;
-  font-size: 15px;
-}
 
-.select-dropdown:focus {
-  outline: none;
-  border-color: #555;
-}
-
-.select-dropdown option {
-  padding: 5px;
-}
-
-
-.label-spacing {
-  margin-bottom: 10px;
-}
 
 .user-control {
   position: absolute;
@@ -372,12 +442,80 @@ section.right-section .logo {
   margin: 10px;
 }
 
-.card-outlined {
-  border: 1px solid #ddd;
-}
 #analysisPane {
   text-align: left;
 }
 
 
+.objects-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  margin: 20px;
+  margin-top: 50px;
+  gap: 20px;
+  flex-basis: calc(50% - 40px); /* Set the width of each option */
+
+}
+
+
+.object-option {
+  border-radius: 25px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+  height: max-content;
+  box-shadow: 0px 10px 30px rgba(48, 48, 48, 0.05);
+
+}
+
+.object-option:hover {
+  box-shadow: 0px 10px 30px rgba(48, 48, 48, 0.1);
+  background-color: rgba(255, 255, 255, 0.8);
+
+}
+
+.object-icon {
+  width: 60%;
+}
+
+.object-header {
+  margin: 0;
+  margin-top: -20px;
+}
+
+.object-tip {
+  margin-right: 20px;
+  margin-left: 20px;
+  text-align: center;
+  font-size: 0.9em;
+  font-weight: 400;
+}
+
+ 
+.analysis-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.analysis-param, .analysis-persona {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+}
+.analysis-param {
+  height: 100%;
+}
 
