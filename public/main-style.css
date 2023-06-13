@@ -7,7 +7,8 @@ a,
 }
 
 .main-button:hover,
-.secondary-button:hover {
+.secondary-button:hover,
+.close-button:hover {
   transform: scale(1.05);
 }
 
@@ -61,6 +62,7 @@ body {
     background-color: white;
     overflow: hidden; /* this will ensure the pseudo-element does not extend beyond the video */
     z-index: -2;
+    display: none;
   }
   
   .video-bg::before {
@@ -106,8 +108,11 @@ body {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(30px);
   }
-  .main-button:focus {
-    border-bottom: 0px solid white;
+  .main-button:active {
+    transform: scale(.95);
+    background-color: #3a3a3a;
+    color: white;
+    box-shadow: 0px 2px 15px rgba(80, 80, 80, 0.5);
   }
   
   .secondary-button {
@@ -150,7 +155,7 @@ body {
     border-radius: 5px;
     color: black;
     opacity: .6;
-    
+    cursor: pointer;
     transition: background-color 0.15s, color 0.3s;
   }
   
@@ -217,12 +222,27 @@ body {
     margin-bottom: 15px;
     outline: 1px solid #ddd;
     transition: all 0.3s;
+    font-size: 1em;
   }
   
   input:hover {
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
     background-color: rgba(255, 255, 255, 0.6);
   
+  }
+
+  .search-bar {
+    width: 70%;
+    height: 2em;
+    font-size: 1em;
+    box-shadow: 0px 3px 10px rgba(42, 42, 42, 0.1);
+
+  }
+
+  .modal-dialogue-input {
+    width: 100%;
+    height: 1em;
+    font-size: 1em;
   }
 
 /* Toast */
@@ -337,6 +357,20 @@ body {
 
 
 
+.close-button {
+  height: 25px;
+  width: 25px;
+  opacity: .5;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.close-button:hover {
+  opacity: .7;
+}
+.close-button:active {
+  transform: scale(.95);
+  opacity: .8;
+}
 
 
   
@@ -346,12 +380,11 @@ body {
   /* Modal */
 .modal-generic {
   position: fixed;
-  left: 0;
-  top: 0;
+  left: 0px;
+  top: 0px;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.0);
+  background-color: rgba(0, 0, 0, 0);
   justify-content: center;
   align-items: center;
   display: none;
@@ -360,6 +393,26 @@ body {
   backdrop-filter: blur(50px);
 }
 
+.modal-content-generic-full {
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(500px);
+  margin: auto;
+  padding: 30px;
+  width: 90%;
+  min-width: 300px;
+  overflow-y: auto;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease-in-out;
+  height: 85%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
 .modal-content-generic {
   background-color: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(500px);
@@ -367,11 +420,11 @@ body {
   padding: 30px;
   width: 60%;
   min-width: 300px;
-  overflow-y: auto; /* Enable vertical scroll if content exceeds height */
+  overflow-y: auto;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
   border-radius: 25px;
   margin-top: 5vh;
-  margin-bottom: 10vh; /* Add margin at the bottom to center the modal vertically */
+  margin-bottom: 10vh;
   outline: 2px solid rgba(255, 255, 255, 0.7);
   transition: all 0.3s ease-in-out;
 }
@@ -409,6 +462,10 @@ body {
   padding-bottom: 5px; /* Add padding to adjust the space underneath */
   margin-bottom: 10px;
 }
+.full-modal-header {
+  margin: 0;
+  padding-bottom: 0;
+}
 
 .text-icon {
   font-size: 24px;
@@ -445,7 +502,6 @@ body {
 .image-icon-button {
   height: 17px;
   opacity: .4;
-
 }
 
 .select-dropdown {
@@ -480,10 +536,17 @@ body {
 }
 
 .icon-button {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 5px;
   margin: 2px;
+  border-radius: 10px;
+
 }
+.icon-button:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+}
+
+
 
 .vertical-div {
   display: flex;
@@ -614,4 +677,22 @@ height: fit-content;
   cursor:context-menu;
 }
 
-/* Mobile navigation */
+.object-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.object-item-left {
+  flex: 1;
+  margin-right: 8px;
+}
+
+.object-item-right {
+  display: flex;
+  align-items: center;
+}
+
+.add-step {
+  margin-top: 20px;
+}

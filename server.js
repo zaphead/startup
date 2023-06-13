@@ -486,6 +486,20 @@ async function generatePrompt(userId, tone, maxWords, analysisScope) {
       processScope = `constrained to the ${analysisScope}`;
     }
 
+    //Replace input with actual prompt variables
+    if (tone === 'Roast') {
+      tone = "Roast the business and it's strategies. Be critical, harsh and don't hold back. Be absolutely BRUTAL. Make it as personal as possible. Also throw in a few snarky jokes in the roast."
+    }
+    if (tone === 'anger') {
+      tone = "Anger. AlTeRnAtE bEtWeEn CaPiTaL aNd LoWeRcAsE lEtTeRs WiThIn A wOrD, mAiNtAiNiNg ThE oRiGiNaL lEtTeR oRdEr. 'tHiS iS aN aNgRy tExT'. AlWaYs UsE aLtErNaTiNg CaPiTaLs. uSe AlTeRnAtInG cApItAlS."
+    }
+    if (tone === 'straightForward') {
+      tone = "straight forward"
+    }
+    if (tone === 'soft') {
+      tone = "Be soft and gentle with the analysis"
+    }
+
     const businessInfo = JSON.stringify(userData.businessInfo, null, 2);
     const processInfo = JSON.stringify(userData.processes, null, 2);
 
@@ -581,6 +595,214 @@ router.post('/api/analysis', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ message: 'An error occurred while processing your request.' });
   }
 });
+
+
+
+
+//====================================================================================//
+//==============================MODIFYING OBJECTS ROUTES==============================//
+//====================================================================================//
+
+
+
+//CREATING OBJECTS ROUTES
+// Route for creating a new object
+router.post('/api/user/objects', ensureAuthenticated, async (req, res) => {
+  const { objectType, name } = req.body;
+
+  // Check if the required fields are provided
+  if (!objectType || !name) {
+    return res.status(400).json({ error: 'Missing objectType or name in the request body' });
+  }
+
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    // Find the document for the current user
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) });
+
+    if (user) {
+      let updatedObject;
+
+      switch (objectType) {
+        case 'process':
+          if (!user.processes) {
+            user.processes = {};
+          }
+          user.processes[name] = [];
+          updatedObject = { processes: user.processes };
+          break;
+        case 'list':
+          if (!user.lists) {
+            user.lists = {};
+          }
+          user.lists[name] = [];
+          updatedObject = { lists: user.lists };
+          break;
+        case 'table':
+          if (!user.tables) {
+            user.tables = {};
+          }
+          user.tables[name] = [];
+          updatedObject = { tables: user.tables };
+          break;
+        case 'calendar':
+          if (!user.calendars) {
+            user.calendars = {};
+          }
+          user.calendars[name] = [];
+          updatedObject = { calendars: user.calendars };
+          break;
+        default:
+          return res.status(400).json({ error: 'Invalid objectType' });
+      }
+
+      await collection.updateOne({ _id: new ObjectId(req.user._id) }, { $set: updatedObject });
+
+      res.status(200).json({ message: 'Object created successfully.' });
+    } else {
+      res.status(404).json({ message: 'User not found.' });
+    }
+  } catch (error) {
+    console.error('Error in /api/user/objects:', error);
+    res.status(500).json({ error: 'An error occurred while creating the object.' });
+  }
+});
+
+
+
+
+//====================================================================================//
+//==============================VIEWING OBJECTS ROUTES==============================//
+//====================================================================================//
+
+
+// Get all objects
+router.get('/api/user/objects', ensureAuthenticated, async (req, res) => {
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    // Find the document for the current user
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) });
+
+    if (user) {
+      // Extract all objects
+      const objects = [];
+
+      if (user.processes) {
+        Object.keys(user.processes).forEach((processName) => {
+          objects.push({ objectType: 'process', name: processName });
+        });
+      }
+
+      if (user.lists) {
+        Object.keys(user.lists).forEach((listName) => {
+          objects.push({ objectType: 'list', name: listName });
+        });
+      }
+
+      if (user.tables) {
+        Object.keys(user.tables).forEach((tableName) => {
+          objects.push({ objectType: 'table', name: tableName });
+        });
+      }
+
+      if (user.calendars) {
+        Object.keys(user.calendars).forEach((calendarName) => {
+          objects.push({ objectType: 'calendar', name: calendarName });
+        });
+      }
+
+      res.status(200).json({ objects });
+    } else {
+      res.status(404).json({ message: 'User not found.' });
+    }
+  } catch (error) {
+    console.error('Error in /api/user/objects:', error);
+    res.status(500).json({ error: 'An error occurred while fetching the objects.' });
+  }
+});
+
+
+//====================================================================================//
+//==============================DELETING OBJECTS ROUTES==============================//
+//====================================================================================//
+
+
+// Delete an object
+router.delete('/api/user/objects/:objectName', ensureAuthenticated, async (req, res) => {
+  const { objectName } = req.params;
+  console.log(`Received DELETE request for object: ${objectName}`);
+
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    // Find the document for the current user
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) });
+    console.log(`User found: ${user ? 'Yes' : 'No'}`);
+
+    if (user) {
+      let updatedObject;
+      console.log(`ObjectType from request body: ${req.body.objectType}`);
+
+      switch (req.body.objectType) {
+        case 'process':
+          if (user.processes && user.processes[objectName]) {
+            delete user.processes[objectName];
+            updatedObject = { processes: user.processes };
+          }
+          break;
+        case 'list':
+          if (user.lists && user.lists[objectName]) {
+            delete user.lists[objectName];
+            updatedObject = { lists: user.lists };
+          }
+          break;
+        case 'table':
+          if (user.tables && user.tables[objectName]) {
+            delete user.tables[objectName];
+            updatedObject = { tables: user.tables };
+          }
+          break;
+        case 'calendar':
+          if (user.calendars && user.calendars[objectName]) {
+            delete user.calendars[objectName];
+            updatedObject = { calendars: user.calendars };
+          }
+          break;
+        default:
+          console.log('Invalid objectType');
+          return res.status(400).json({ error: 'Invalid objectType' });
+      }
+
+      if (updatedObject) {
+        await collection.updateOne({ _id: new ObjectId(req.user._id) }, { $set: updatedObject });
+        console.log(`Object ${objectName} deleted successfully`);
+        res.status(200).json({ message: 'Object deleted successfully.' });
+      } else {
+        console.log(`Object ${objectName} not found.`);
+        res.status(404).json({ message: 'Object not found.' });
+      }
+    } else {
+      console.log('User not found');
+      res.status(404).json({ message: 'User not found.' });
+    }
+  } catch (error) {
+    console.error('Error in /api/user/objects/:objectName:', error);
+    res.status(500).json({ error: 'An error occurred while deleting the object.' });
+  }
+});
+
+
+
+
+
+
+
+
 
 
 

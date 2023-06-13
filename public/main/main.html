@@ -18,60 +18,40 @@
     </div>
     <div class="section-container">
       <div class="container">
-          <section class="left-section section-menu">
-            <div id="processes_div">
-              <div class="header-container">
-                <h2 class="title-header">Objects</h2>
-                <a id="add-process" class="text-icon">+</a>
-                <a id="add-object" class="text-icon">~</a>
-              </div>
-              <!-- Object Items go here -->
-                  <a id="load-more-objects" class="text-button menu-text-buttons">All Objects</a>
-
-            </div>
-            <div id="business_div">
-              <h2 style="margin-bottom: 20px; margin-top: 20px;">Business Info</h2>
-              <a href="#" business="yes" data-title="Business Name" id="business_name" class="text-button">Business Name</a>
-              <a href="#" business="yes" data-title="Target Market" id="target_market" class="text-button">Target Market</a>
-              <a href="#" business="yes" data-title="Product" id="product" class="text-button">Product</a>
-              <a href="#" business="yes" data-title="Stage" id="stage" class="text-button">Stage</a>
-              <a href="#" business="yes" data-title="Work Time" id="hours" class="text-button">Work Time</a>
-              <a href="#" business="yes" data-title="Experience" id="experience" class="text-button">Experience</a>
-            </div>
-            
-            <div class="user-control">
-              <h4 id="authenticated-user"></h4>
-              <a id="settingsButton"><button class="icon-button main-button" style="margin-left: 10px;">⚙️</button></a>
-              <a href="../splash/splash.html"><button class="icon-button main-button" style="margin-left: 10px;">🔒</button></a>
-            </div>
-            </section>
-            
-        <section class="section-menu main-section">
-          <div id="toolbar" class="toolbar">
-            <div id="toolbarTitle" class="toolbar-title">Flow Chart</div>
-            <div class="toolbar-items">
-              <button id="importButton" class="secondary-button openModalBtn">Import</button>
-              <button id="exportButton" class="secondary-button openModalBtn">Export</button>
-            </div>
+        <section class="left-section section-menu">
+          <div class="header-container">
+            <h2 class="title-header">Objects</h2>
+            <a id="add-object" class="text-icon">+</a>
           </div>
-          <div id="introSplash" class="intro-splash">
-            <p class="hint-text">Select a process or business topic to get started.</p>
-            <img src="../Images/StrataMind-S.svg" class="svg-splash">
+          <div id="left-menu-div">
+            <a id="load-all-objects" class="text-button menu-text-buttons">All Objects</a>
           </div>
+          <div id="recentItems" class="recent-tems">
 
-
-          <div class="card-wrapper">
-            <div class="steps-container">
-              <!-- Here's where each step would go. An example of a step is included. -->
-              <div class="card-container">
-          
-              </div>
-            </div>
-            <button id="add-process" class="click-button main-button">Add Step</button>
+          </div>
+          <div id="business_div">
+            <h2 style="margin-bottom: 20px; margin-top: 20px;">Business Info</h2>
+            <a href="#" business="yes" data-title="Business Name" id="business_name" class="text-button">Business Name</a>
+            <a href="#" business="yes" data-title="Target Market" id="target_market" class="text-button">Target Market</a>
+            <a href="#" business="yes" data-title="Product" id="product" class="text-button">Product</a>
+            <a href="#" business="yes" data-title="Stage" id="stage" class="text-button">Stage</a>
+            <a href="#" business="yes" data-title="Work Time" id="hours" class="text-button">Work Time</a>
+            <a href="#" business="yes" data-title="Experience" id="experience" class="text-button">Experience</a>
           </div>
           
+          <div class="user-control">
+            <h4 id="authenticated-user"></h4>
+            <a id="settingsButton"><button class="icon-button main-button" style="margin-left: 10px;">⚙️</button></a>
+            <a href="../splash/splash.html"><button class="icon-button main-button" style="margin-left: 10px;">🔒</button></a>
+          </div>
+          </section>
             
-        </section>
+          <section class="section-menu main-section">
+            <div id="introSplash" class="intro-splash">
+              <p class="hint-text">Select a process or business topic to get started.</p>
+              <img src="../Images/StrataMind-S.svg" class="svg-splash">
+            </div>
+          </section>          
 
         <section class="right-section section-menu">
 
@@ -120,6 +100,8 @@
                   <option value="Short (Under 150 words)">Normal</option>
                   <option value="Very Short. Less than 3 sentences.">Short</option>
                   <option value="Long (As much as you need)">Long</option>
+                  <option value="A single word. No more.">A Single Word</option>
+
                 </select>
 
                 <label for="select2">Analysis Scope</label>
@@ -129,9 +111,11 @@
 
                 <label for="select3">Tone</label>
                 <select id="select3" class="select-dropdown">
-                  <option value="Straight Forward">Straight Forward</option>
-                  <option value="Nice and soft. Even if the business is terrible, kiss up to them. They're doing their best.">Nice and Soft (It won't be very helpful)</option>
-                  <option value="Roast the business and it's strategies. Be critical, harsh and don't hold back. Be absolutely BRUTAL. Make it as personal as possible. Also throw in a few snarky jokes in the roast.">Roast Me and everything I've built🔥</option>
+                  <option value="straightForward">Straight Forward</option>
+                  <option value="soft">Nice and Soft (It won't be very helpful)</option>
+                  <option value="Roast">Roast Me and everything I've built🔥</option>
+                  <option value="anger">👹Absolute anger for no reason. It may hurt your feelings.</option>
+
                 </select>
               </div>
 
@@ -160,6 +144,22 @@
               <button type="submit" class="modal-button main-button">Analyze</button>
             </div>
           </form>
+        </div>
+      </div>
+
+      <!-- Full Analysis Modal -->
+      <div id="full-analysis-modal" class="modal-generic">
+        <div id="full-analysis-modal-content" class="modal-content-generic-full">
+          <div class="header-container">
+            <h2 class="title-header full-modal-header">StrataMind Analysis</h2>
+            <a id="close-analysis" class="close-button"><img class="close-button" src="../Images/icons/close.svg"></a>
+          </div>
+          <div class="analysis-content">
+            <div class="analysis-output analysis-output-large">
+              <!--In the paragraph below will go the analysis return from the LLM-->
+              <p id="analysisPaneLarge">Analysis will appear here.</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -201,6 +201,28 @@
                 </p>
               </div>
             </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Viewing All Objects Modal -->
+      <div id="all-object-modal" class="modal-generic">
+        <div id="all-object-modal-content" class="modal-content-generic">
+          <div class="header-container" style="margin-bottom: 40px;">
+            <h2 class="title-header">All Objects</h2>
+            <input class="search-bar" placeholder="Search...">
+          </div>
+          <div class="specific-object-container" id="processes-container">
+            <h3 class="object-header">Processes</h3>
+          </div>
+          <div class="specific-object-container" id="list-container">
+            <h3 class="object-header">Lists</h3>
+          </div>
+          <div class="specific-object-container" id="table-container">
+            <h3 class="object-header">Tables</h3>
+          </div>
+          <div class="specific-object-container" id="calendar-container">
+            <h3 class="object-header">Calendars</h3>
           </div>
         </div>
       </div>
@@ -256,7 +278,6 @@
       </div>
     </div>
   </body>
-  <script src="./objects.js"></script>
   <script src="/dist/bundle.js"></script>
   <script type="module" src="./main.js"></script>
   <script src="../global-js-animations.js"></script>
