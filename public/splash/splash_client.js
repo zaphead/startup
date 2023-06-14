@@ -4,16 +4,14 @@ window.addEventListener('scroll', function() {
       header.style.width = '100%';
       header.style.margin = '0px';
       header.style.borderRadius = '0px';
-      header.style.border = "0px solid #ddd";
-      header.style.borderBottom = "6px solid #ddd";
-      header.style.backgroundColor = 'rgba(255, 255, 255, 0.85)'
-      header.style.backdropFilter = 'blur(20px)'
+
+
     } else {
       header.style.margin ='25px';
       header.style.width = 'calc(100% - 50px)';
       header.style.borderRadius = '25px';
-      header.style.border = "1px solid #ddd";
-      header.style.backgroundColor = 'white';
+
+
     }
   });
 
@@ -130,7 +128,35 @@ document.getElementById("toSection3").addEventListener("click", function() {
   document.getElementById("section3").scrollIntoView({ behavior: 'smooth' });
 });
 
-document.getElementById("toSection4").addEventListener("click", function() {
-  document.getElementById("section4").scrollIntoView({ behavior: 'smooth' });
-});
 
+
+
+
+//SLIDESHOW 
+
+let images = ["woman-checklist.png", "cook.png", "man-boxes.png", "man-on-phone.png", "man-sign.png", "realtor.png", "camera-guy.png" /* List all image names here... */];
+let index = Math.floor(Math.random() * images.length);
+let imgSlideshow = document.getElementById("imgSlideshow");
+
+let lastImagesIndices = [index]; // initialize the queue with the first index
+
+function changeImage() {
+    let newIndex;
+    do {
+        newIndex = Math.floor(Math.random() * images.length);
+    } while (lastImagesIndices.includes(newIndex));
+    
+    lastImagesIndices.push(newIndex); // add the new index to the queue
+    if (lastImagesIndices.length > 3) {
+        lastImagesIndices.shift(); // remove the oldest index if the queue is full
+    }
+    
+    index = newIndex;
+    imgSlideshow.src = "../Images/owners/" + images[index];
+    imgSlideshow.style.opacity = 1;
+}
+
+setInterval(() => {
+    imgSlideshow.style.opacity = 0;
+    setTimeout(changeImage, 500); //500ms to match with the CSS transition duration
+}, 3000); //3 seconds

@@ -132,159 +132,160 @@ body {
   
 /* Buttons */
 .main-button {
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: 0;
-    background-color: rgba(255, 255, 255, 0.4);
-    color: #686868;
-    cursor: pointer;
-    font-size: 16px;
-    backdrop-filter: blur(15px);
-    opacity: 1;
-    transition: all 0.15s ease-in-out;
-    box-shadow: 0px 2px 5px rgba(0, 0, 4, 0.1);
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 0;
+  background-color: rgba(255, 255, 255, 0.4);
+  color: #686868;
+  cursor: pointer;
+  font-size: 16px;
+  backdrop-filter: blur(15px);
+  opacity: 1;
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0px 2px 5px rgba(0, 0, 4, 0.1);
 }
+
+.main-button:hover {
+  background-color: rgba(255, 255, 255, 0.7);
+  outline-style: none;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(30px);
+}
+.main-button:active {
+  transform: scale(.95);
+  background-color: #3a3a3a;
+  color: white;
+  box-shadow: 0px 2px 15px rgba(80, 80, 80, 0.5);
+}
+
+.secondary-button {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 0;
+  background-color: transparent;
+  color: #686868;
+  transition: all 0.15s ease-in-out;
+  outline: 0px solid white;
+  cursor: pointer;
+  font-size: inherit;
+  opacity: 1;
+}
+
+.secondary-button:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+  outline-style: none;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.white-button {
+  background-color: rgba(255, 255, 255, 0);
+  color: white;
+  border: 0;
+  outline: 1.5px solid white;
+}
+.white-button:hover {
+  background-color: rgba(255, 255, 255, 1);
+  color: black;
+}
+
+
+.text-button {
+  text-decoration: none;
+  display: block;
+  margin: 5px 0;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: black;
+  opacity: .6;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+
+.text-button:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+
+
+.button-highlight {
+  background-color: white;
+}
+.hint-text {
+  opacity: .3;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.image-icon {
+  height: 1em;
+  opacity: .4;
+  margin: 10px;
+}
+
+/* Cards */
+.card {
+  backdrop-filter: blur(10px);
+  text-align: left;
+  outline: 1.5px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0px 2px 5px rgba(0, 0, 4, 0.1);
+  transition: all 0.15s ease-in-out;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.card:hover {
+  box-shadow: 0px 10px 30px rgba(53, 53, 53, 0.05);
+  background-color: rgba(255, 255, 255, 0.6);
   
-  .main-button:hover {
-    background-color: rgba(255, 255, 255, 0.7);
-    outline-style: none;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(30px);
-  }
-  .main-button:active {
-    transform: scale(.95);
-    background-color: #3a3a3a;
-    color: white;
-    box-shadow: 0px 2px 15px rgba(80, 80, 80, 0.5);
-  }
-  
-  .secondary-button {
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: 0;
-    background-color: transparent;
-    color: #686868;
-    transition: all 0.15s ease-in-out;
-    outline: 0px solid white;
-    cursor: pointer;
-    font-size: inherit;
-    opacity: 1;
-  }
-  
-  .secondary-button:hover {
-    background-color: rgba(255, 255, 255, 0.6);
-    outline-style: none;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-  }
-
-  .white-button {
-    background-color: rgba(255, 255, 255, 0);
-    color: white;
-    border: 0;
-    outline: 1px solid white;
-  }
-  .white-button:hover {
-    background-color: rgba(255, 255, 255, 1);
-    color: black;
-  }
+}
 
 
-  .text-button {
-    text-decoration: none;
-    display: block;
-    margin: 5px 0;
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: black;
-    opacity: .6;
-    cursor: pointer;
-    transition: all 0.1s ease-in-out;
-  }
-  
-  .text-button:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-  }
+.section-menu {
+  background-color: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(50px);
+  text-align: center;
+  transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+.section-menu:hover {
+  box-shadow: 0px 10px 30px rgba(53, 53, 53, 0.05);
+  background-color: rgba(255, 255, 255, 0.55);
+  /* border: 1px rgba(red, green, blue, 0); */
+}
 
+/* Inputs */
+input {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  margin-bottom: 15px;
+  outline: 1px solid rgba(255, 255, 255, 0.7);
+  transition: all 0.3s;
+  font-size: 1em;
+}
 
+input:hover {
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.6);
 
-  .button-highlight {
-    background-color: white;
-  }
-  .hint-text {
-    opacity: .3;
-    font-size: 18px;
-    font-weight: 700;
-  }
+}
 
-  .image-icon {
-    height: 1em;
-    opacity: .4;
-    margin: 10px;
-  }
+.search-bar {
+  width: 70%;
+  height: 2em;
+  font-size: 1em;
+  box-shadow: 0px 3px 10px rgba(42, 42, 42, 0.1);
 
-  /* Cards */
-  .card {
-    backdrop-filter: blur(10px);
-    text-align: left;
-    outline: 1.5px solid rgba(255, 255, 255, 0.7);
-    box-shadow: 0px 2px 5px rgba(0, 0, 4, 0.1);
-    transition: all 0.15s ease-in-out;
-    border-radius: 20px;
-    padding: 20px;
-  }
-  
-  .card:hover {
-    box-shadow: 0px 10px 30px rgba(53, 53, 53, 0.05);
-    background-color: rgba(255, 255, 255, 0.6);
-    
-  }
+}
 
-
-  .section-menu {
-    background-color: rgba(255, 255, 255, 0.45);
-    backdrop-filter: blur(50px);
-    text-align: center;
-    transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
-  }
-  .section-menu:hover {
-    box-shadow: 0px 10px 30px rgba(53, 53, 53, 0.05);
-    background-color: rgba(255, 255, 255, 0.55);
-    /* border: 1px rgba(red, green, blue, 0); */
-  }
-
-  /* Inputs */
-  input {
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    margin-bottom: 15px;
-    outline: 1px solid rgba(255, 255, 255, 0.7);
-    transition: all 0.3s;
-    font-size: 1em;
-  }
-  
-  input:hover {
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-    background-color: rgba(255, 255, 255, 0.6);
-  
-  }
-
-  .search-bar {
-    width: 70%;
-    height: 2em;
-    font-size: 1em;
-    box-shadow: 0px 3px 10px rgba(42, 42, 42, 0.1);
-
-  }
-
-  .modal-dialogue-input {
-    width: 100%;
-    height: 1em;
-    font-size: 1em;
-  }
+.modal-dialogue-input {
+  width: 100%;
+  height: 1em;
+  font-size: 1em;
+}
 
 /* Toast */
 .toast {

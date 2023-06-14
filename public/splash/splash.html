@@ -13,7 +13,7 @@
     /* Add your custom CSS styles here */
   </style>
 </head>
-
+<main>
 <body>
   <header>
     <img class="logo" src="../Images/Processeon Logo.png">
@@ -27,43 +27,41 @@
       
   </header>
 
-  <main>
+
     <section id="section1" class="main-section">
-      <div class="header-spacer"></div>
+      <div class="horizontal-container">
+        <h2 class="small-header">Your jumbled business ideas ➡️ Concrete & verified plans for your </h2> 
+        
+        <span class="small-header text-switcher">Small Business</span>
+      </div>
+
       <div class="section-content" id="section0content">
-        <div class="section-content-left">
-          <h1 class="big-header">
-            Stratamind is your Copilot for Your <br>
-          </h1>
-          <span class="text-switcher big-header">Small Business</span>
-          <p class="descriptor-text">StrataMind is an intuitive, lightweight tool that utilizes your business's information and large language AI to provide proprietary feedback and empower you to take your business to the next level. <br>Built for brand-new and experienced business owners alike.</p>
+        <div class="section-left">
+          <img class="combined-images small-image" src="../Images/Notes_Card.png">
         </div>
-        <div class="section-content-right">
-          <div class="image-backplate">
-            <img class="image-concept" src="../Images/woman-checklist.png">
-          </div>
+        <div class="section-right">
+          <img class="combined-images" src="../Images/Laptop Screenshot.png" style="z-index: 100;">
         </div>
       </div>
       <button id="toSection2" class="main-button caller-button">Why we made StrataMind</button>
     </section>
     <section id="section2" class="secondary-section">
-      <p class="centered-text">StrataMind serves as your virtual business mentor, taking advantage of large language AI and data analysis to offer invaluable insights and guidance. <br><br>StrataMind enables you to make informed decisions, seize growth opportunities, and receive personalized feedback aligned with your business's specific requirements. With StrataMind as your companion, you gain the support and expertise needed to navigate challenges, achieve your goals, and drive success.</p>
-      <button id="toSection3" class="main-button caller-button3 white-button">Or in other words...</button>
+      <div class="horizontal-container slideshow-container">
+        <div class="section2-left">
+          <p class="centered-text">StrataMind serves as your virtual business mentor, taking advantage of large language AI and data analysis to offer invaluable insights and guidance. <br><br>No matter what your business is, StrataMind enables you to make informed decisions, seize growth opportunities, and receive personalized feedback aligned with your business's specific requirements. With StrataMind as your companion, you gain the support and expertise needed to navigate challenges, achieve your goals, and drive success.</p>
+          <button id="toSection3" class="main-button caller-button3 white-button" onclick="window.location.href = '../signup/signup.html'">Sign Up</button>
+        </div>
+        <div class="section2-right">
+          <img id="imgSlideshow" class="img-slideshow" src="../Images/owners/camera-guy.png">
+        </div>
+      </div>
     </section>
-    <section id="section3" class="tertiary-section">
-      <h1 class="big-header2">To Turn This</h1>
-      <img class="large-image sharp-corners" src="../Images/Notes_Card.png">
-      <button id="toSection4" class="main-button caller-button3">⬇️</button>
-    </section>
-    <section id="section4" class="tertiary-section">
-      <h1 class="big-header2">Into This</h1>
-      <img class="large-image" src="../Images/uiShowcase.png">
-    </section>
+    
+  <footer>
+    <p>&copy; 2023 StrataMind. All rights reserved. <a href="../legal/legal.html" class="text-button"> Terms and Conditions & Privacy Policy</a></p>
+  </footer>
   </main>
 
-  <footer>
-    <p>&copy; 2023 StrataMind. All rights reserved.</p>
-  </footer>
 
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="./splash_client.js"></script>

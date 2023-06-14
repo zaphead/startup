@@ -1017,9 +1017,9 @@ function showObjectNameModal(objectType) {
     <div id="modal-dialogue-content" class="modal-content-generic dialogue-box">
       <h2 class="modal-dialogue-header">${modalHeader}</h2>
       <p class="modal-dialogue-text">${modalContent}</p>
-      <input type="text" id="object-name-input" class="modal-dialogue-input" placeholder="Enter name" required>
+      <input type="text" class="modal-dialogue-input" id="object-name-input" placeholder="Enter name" required>
       <div class="modal-dialogue-buttons-container">
-        <button class="secondary-button">Cancel</button>
+        <button id="cancel-button" class="secondary-button">Cancel</button>
         <button class="main-button">Confirm</button>
       </div>
     </div>
@@ -1041,7 +1041,7 @@ modal.querySelector(".main-button").addEventListener("click", function () {
   const objectName = objectNameInput.value.trim();
 
   if (objectName === "") {
-    alert("Please enter a valid object name.");
+    showToast("Please enter a valid object name")
     return;
   }
 
@@ -1078,15 +1078,24 @@ modal.querySelector(".main-button").addEventListener("click", function () {
       // Handle any errors that occur during the request
       console.log("API request error:", error);
     });
-});
+  });
 
 
   // Add event listener to the "Cancel" button
-  const cancelButton = document.querySelector(".secondary-button");
+  const cancelButton = document.getElementById("cancel-button");
   cancelButton.addEventListener("click", function () {
     // Close the modal
     console.log("Modal closed");
     modal.style.display = "none";
+  });
+
+  const modalOuter = document.getElementById("modal-text");
+  modalOuter.addEventListener("click", function () {
+    // Close the modal
+    if (event.target === modalOuter) {
+      modal.style.display = "none";
+    }
+
   });
 }
 

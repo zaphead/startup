@@ -1,3 +1,42 @@
+//TOAST FUNCTIONS
+let currentToast;
+function showToast(message, duration = 3000) {
+  return new Promise((resolve) => {
+    if (currentToast) {
+      currentToast.classList.add('slide-out');
+      setTimeout(() => {
+        currentToast.remove();
+        showNewToast(message, duration, resolve); // Show the new toast after removing the previous one
+      }, 500);
+    } else {
+      showNewToast(message, duration, resolve); // Show the new toast directly if there is no previous one
+    }
+  });
+}
+
+function showNewToast(message, duration, resolve) {
+  const toast = document.createElement('div');
+  toast.classList.add('toast');
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  currentToast = toast;
+
+  setTimeout(() => {
+    toast.classList.remove('slide-out');
+  }, 10);
+
+  setTimeout(() => {
+    toast.classList.add('slide-out');
+    setTimeout(() => {
+      toast.remove(); // Remove the toast after the specified duration
+      currentToast = null; // Reset the current toast
+      resolve(); // Resolve the promise
+    }, 500);
+  }, duration);
+}
+
+
 async function handleFormSubmit(event) {
   event.preventDefault();
 
@@ -48,12 +87,17 @@ async function handleFormSubmit(event) {
         window.location.href = '../setup/setup.html';
       } else {
         console.error('An error occurred while logging in the user:', loginResponse.statusText);
+        showToast('Error while logging in. Please try again.');
       }
+    } else if (response.status === 409) {  // User with this email already exists
+      showToast('A user with this email already exists. Please use a different email.');
     } else {
       console.error('An error occurred while submitting the form:', response.statusText);
+      showToast('Error while signing up. Please try again.');
     }
   } catch (error) {
     console.error('An error occurred while submitting the form:', error.message);
+    showToast('Error while signing up. Please try again.');
   }
 }
 

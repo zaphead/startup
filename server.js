@@ -248,7 +248,6 @@ function ensureAuthenticated(req, res, next) {
   }
   res.status(401).json({ error: 'Unauthorized access.' });
 }
-
 // Signup route
 router.post('/api/signup', async (req, res) => {
   const { name, email, password } = req.body;
@@ -256,6 +255,13 @@ router.post('/api/signup', async (req, res) => {
   try {
     const database = client.db('users');
     const collection = database.collection('users');
+
+    // Check if user with this email already exists
+    const existingUser = await collection.findOne({ email });
+    if (existingUser) {
+      res.status(409).json({ error: 'A user with this email already exists.' });
+      return;
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -291,6 +297,7 @@ router.post('/api/signup', async (req, res) => {
       .json({ error: 'An error occurred while processing your request.', details: error.message });
   }
 });
+
 
 
 // Setup route
@@ -574,6 +581,22 @@ async function incrementAnalysisCount(userId) {
   }
 }
 
+async function saveAnalysisResult(userId, analysisResult) {
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    await collection.updateOne(
+      { _id: new ObjectId(userId) }, 
+      { $set: { analysisResult: analysisResult } }
+    );
+  } catch (error) {
+    console.error('Error saving analysis result:', error);
+    throw error;
+  }
+}
+
+
 router.post('/api/analysis', ensureAuthenticated, async (req, res) => {
   const { userId, lengthOfResponse, analysisScope, tone } = req.body;
 
@@ -589,12 +612,23 @@ router.post('/api/analysis', ensureAuthenticated, async (req, res) => {
     await incrementAnalysisCount(userId);
 
     const analysisResult = await getAnalyzed(userId, tone, lengthOfResponse, analysisScope);
+
+    // Save analysis result
+    await saveAnalysisResult(userId, analysisResult);
+    console.log('Analysis result saved to database');
+
     res.status(200).json({ message: analysisResult });
+
   } catch (error) {
     console.error('Error in /api/analysis:', error);
     res.status(500).json({ message: 'An error occurred while processing your request.' });
   }
 });
+
+
+
+
+
 
 
 
@@ -1009,36 +1043,6 @@ app.use(express.json({
 }));
 
 
-
-router.post('/api/checkout-session', ensureAuthenticated, async (req, res) => {
-  const { priceId } = req.body;
-
-  try {
-    const session = await stripeClient.checkout.sessions.create({
-      mode: 'subscription',
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
-      success_url: 'http://localhost:4000/main/main.html', // Replace with your success URL
-      cancel_url: 'http://localhost:4000/main/main.html', // Replace with your cancel URL
-      customer_email: req.user.email, // Pass the user's email to Stripe
-    });
-
-    // Store the Stripe subscription ID in MongoDB
-    const database = client.db('users');
-    const collection = database.collection('users');
-    await collection.updateOne({ _id: new ObjectId(req.user._id) }, { $set: { stripeSubscriptionId: session.subscription } });
-
-    res.status(200).json({ sessionId: session.id });
-  } catch (error) {
-    console.error('Error creating checkout session:', error);
-    res.status(500).json({ error: 'An error occurred while creating the checkout session.' });
-  }
-});
 
 
 
