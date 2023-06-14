@@ -8,18 +8,62 @@ a,
 
 .main-button:hover,
 .secondary-button:hover,
-.close-button:hover {
+.close-button:hover,
+input:hover,
+.select-dropdown:hover,
+.text-button:hover,
+.icon-button:hover,
+.text-icon:hover {
   transform: scale(1.05);
 }
-
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.main-button:active,
+.secondary-button:active,
+.close-button:active,
+.text-button:active,
+input:active,
+.icon-button:active,
+.text-icon:active {
+  transform: scale(.95);
 }
 
+.select-dropdown:focus {
+  transform: scale(1);
+}
+
+.object-button:hover {
+  transform: scale(1.02);
+}
+.object-button:active {
+  transform: scale(.98);
+}
+
+.text-button:hover {
+  font-weight: 600;
+}
+
+.text-icon:hover {
+  transform: scale(1.1);
+}
+
+.text-icon:active {
+  transform: scale(.9);
+}
+
+
 .fade-in {
-  animation: fadeIn ease 1s;
+  opacity: 0;
+  animation-name: fadeIn;
+  animation-duration: .3s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 
@@ -99,7 +143,6 @@ body {
     opacity: 1;
     transition: all 0.15s ease-in-out;
     box-shadow: 0px 2px 5px rgba(0, 0, 4, 0.1);
-
 }
   
   .main-button:hover {
@@ -156,12 +199,11 @@ body {
     color: black;
     opacity: .6;
     cursor: pointer;
-    transition: background-color 0.15s, color 0.3s;
+    transition: all 0.1s ease-in-out;
   }
   
   .text-button:hover {
     background-color: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(100px);
   }
 
 
@@ -183,12 +225,11 @@ body {
 
   /* Cards */
   .card {
-    background-color: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(10px);
     text-align: left;
-    border: 1.5px solid rgba(255, 255, 255, 0.5);
+    outline: 1.5px solid rgba(255, 255, 255, 0.7);
     box-shadow: 0px 2px 5px rgba(0, 0, 4, 0.1);
-    transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    transition: all 0.15s ease-in-out;
     border-radius: 20px;
     padding: 20px;
   }
@@ -220,7 +261,7 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     margin-bottom: 15px;
-    outline: 1px solid #ddd;
+    outline: 1px solid rgba(255, 255, 255, 0.7);
     transition: all 0.3s;
     font-size: 1em;
   }
@@ -423,11 +464,24 @@ body {
   overflow-y: auto;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
   border-radius: 25px;
-  margin-top: 5vh;
-  margin-bottom: 10vh;
   outline: 2px solid rgba(255, 255, 255, 0.7);
   transition: all 0.3s ease-in-out;
 }
+
+.modal-content-generic-wide {
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(500px);
+  margin: auto;
+  padding: 30px;
+  width: 60%;
+  min-width: 300px;
+  overflow-y: auto;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease-in-out;
+}
+
 
 
 #modal-text-content {
@@ -482,7 +536,7 @@ body {
   border-radius: 5px;
   color: #222222;
   opacity: .5;
-  transition: background-color 0.3s, color 0.3s;
+  transition: all 0.15s ease-in-out;
 }
 .text-icon:hover {
   background-color: white;
@@ -514,6 +568,7 @@ body {
   font-size: 15px;
   background-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0px 3px 10px rgba(42, 42, 42, 0.1);
+  transition: all 0.15s ease-in-out;
 
 }
 
@@ -539,13 +594,13 @@ body {
   padding: 5px;
   margin: 2px;
   border-radius: 10px;
+  transition: all 0.15s ease-in-out;
 
 }
 .icon-button:hover {
   background-color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
 }
-
 
 
 .vertical-div {
@@ -677,21 +732,8 @@ height: fit-content;
   cursor:context-menu;
 }
 
-.object-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
-.object-item-left {
-  flex: 1;
-  margin-right: 8px;
-}
 
-.object-item-right {
-  display: flex;
-  align-items: center;
-}
 
 .add-step {
   margin-top: 20px;

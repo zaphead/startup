@@ -62,7 +62,13 @@ h5, h4 {
   display: flex;
   width: 100%;
   flex-direction: row;
-  height: 100%;}
+  height: 100%;
+}
+.container-right {
+  display: flex;
+  justify-content: right;
+  gap: 15px;
+}
 
 .left-section {
   width: calc(20vw);
@@ -109,6 +115,8 @@ section.right-section h2 {
     margin: 0;
 }
 
+
+
 section.right-section .logo {
   position: absolute;
   bottom: 20px;
@@ -116,16 +124,41 @@ section.right-section .logo {
   transform: translateX(-50%);
 }
 
+.object-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.object-item-left {
+  flex: 1;
+  margin-right: 8px;
+  height: 100%;
+  padding: 0;
+}
+
+.object-item-right {
+  display: flex;
+  align-items: center;
+}
+
+.object-button {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  margin: 0;
+}
+
 .toolbar {
+  backdrop-filter: blur(15px);
   height: 40px;
-  /* background-color: rgba(255, 255, 255, 0); */
   text-align: center;
-  outline: 1px solid #ffffff;
+  outline: 1.5px solid rgba(255, 255, 255, 0.7);
   transition: all .2s ease-in-out;
   border-radius: 10px;
   box-shadow: 0px 0px 15px rgba(48, 48, 48, 0.1);
-  background-color: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(15px);
   position: sticky;
   top: 0;
   display: flex;
@@ -134,6 +167,8 @@ section.right-section .logo {
   justify-content: space-between;
   z-index: 200;
 }
+
+
 
 .toolbar:hover {
   box-shadow: 0px 10px 30px rgba(48, 48, 48, 0.1);
@@ -206,10 +241,6 @@ section.right-section .logo {
 
 
 
-.card:hover {
-  box-shadow: 0px 10px 30px rgba(48, 48, 48, 0.1);
-  outline: none;
-}
 .card-group {
   display: flex;
   flex-direction: column;
@@ -289,7 +320,7 @@ section.right-section .logo {
   overflow: auto;
   height: 60%;
   margin-top: 18px;
-  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline: 1.5px solid rgba(255, 255, 255, 0.7);
   border-radius: 25px;
   padding: 20px;
   transition: box-shadow 0.3s ease-in-out;

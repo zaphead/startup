@@ -113,8 +113,7 @@
                 <select id="select3" class="select-dropdown">
                   <option value="straightForward">Straight Forward</option>
                   <option value="soft">Nice and Soft (It won't be very helpful)</option>
-                  <option value="Roast">Roast Me and everything I've built🔥</option>
-                  <option value="anger">👹Absolute anger for no reason. It may hurt your feelings.</option>
+                  <option value="Roast">Roast Me and everything I've built🔥(Might hurt your feelings)</option>
 
                 </select>
               </div>
@@ -239,6 +238,7 @@
         </div>
       </div>
 
+
       <!-- Text Modal -->
       <div id="modal-text" class="modal-generic">
         <div id="modal-text-content" class="modal-content-generic dialogue-box">
@@ -250,6 +250,33 @@
           </div>
         </div>
       </div>
+
+      <!-- Export and Import toolbar modals -->
+      <div id="export-process-modal" class="modal-generic">
+        <div id="export-process-modal-content" class="modal-content-generic-wide">
+          <h2 id="export-process-modal-header" class="title-header"></h2>
+          <div id="export-process-modal-text" class="modal-dialogue-object">
+            <!-- The content of the modal is dynamically created in JavaScript -->
+          </div>
+          <button id="copyProcess" class="main-button">Copy</button>
+        </div>
+      </div>
+
+      <div id="import-process-modal" class="modal-generic" style="display: none">
+        <div id="import-process-modal-content" class="modal-content-generic">
+          <h2 id="import-process-modal-header" class="title-header">Import Process as Text</h2>
+          <textarea id="import-process-modal-text" class="modal-dialogue-textbox large-textbox" placeholder="Enter your process steps as a list: Step Title: Step Description. Separate each step with a new line."></textarea>
+          <div class="container-right">
+            <button id="appendProcess" class="main-button">Append</button>
+            <button id="replaceProcess" class="main-button">Replace</button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      
 
       <!-- Settings Panel -->
       <div id="settingsModal" class="modal-generic settingsModalYo">

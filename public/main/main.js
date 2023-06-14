@@ -1181,6 +1181,8 @@ function displayAllObjects(objects) {
   objects.forEach((object) => {
     const objectElement = createObjectElement(object);
     const deleteButton = createDeleteButton(object.name, object.objectType); // Pass objectType as well
+    const editButton = createEditButton(object.name, object.objectType);
+
 
     // Append the object element and delete button to the respective container based on its objectType
     let parentContainer;
@@ -1203,7 +1205,7 @@ function displayAllObjects(objects) {
     }
 
     // Create and add HTML
-    parentContainer.insertAdjacentHTML('beforeend', createObjectHTML(objectElement, deleteButton));
+    parentContainer.insertAdjacentHTML('beforeend', createObjectHTML(objectElement, editButton, deleteButton));
     // Add event listener to the last child of parentContainer which is our objectElement
     parentContainer.lastElementChild.addEventListener('click', setupMainSection);
   });
@@ -1213,7 +1215,7 @@ function displayAllObjects(objects) {
 // Function to create an HTML element for an object
 function createObjectElement(object) {
   const objectElement = document.createElement("a");
-  objectElement.classList.add("text-button");
+  objectElement.classList.add("text-button", "object-button");
 
   // Add a specific class based on the object type
   switch (object.objectType) {
@@ -1262,9 +1264,23 @@ function createDeleteButton(objectName, objectType) {
   return deleteButton;
 }
 
+function createEditButton(objectName, objectType) {
+  const editButton = document.createElement("a");
+  editButton.classList.add("edit-button");
+  editButton.classList.add("icon-button");
+  editButton.dataset.objectName = objectName; // Assign object name to dataset.objectName
+  editButton.innerHTML = '<img class="image-icon icon-button" src="../Images/icons/edit.svg">';
+  editButton.addEventListener("click", showEditObjectConfirmation);
+
+  editButton.dataset.objectType = objectType; // Assign object type to dataset.objectType
+
+  return editButton;
+}
+
+
 
 // Function to create the HTML for an object
-function createObjectHTML(objectElement, deleteButton) {
+function createObjectHTML(objectElement, editButton, deleteButton) {
   const objectItem = document.createElement("div");
   objectItem.classList.add("object-item");
 
@@ -1272,15 +1288,21 @@ function createObjectHTML(objectElement, deleteButton) {
   objectItemLeft.classList.add("object-item-left");
   objectItemLeft.appendChild(objectElement);
 
-  const objectItemRight = document.createElement("div");
-  objectItemRight.classList.add("object-item-right");
-  objectItemRight.appendChild(deleteButton);
+  const objectItemRight1 = document.createElement("div"); // Corrected variable name
+  objectItemRight1.classList.add("object-item-right"); // Corrected variable name
+  objectItemRight1.appendChild(editButton); // Corrected variable name
+
+  const objectItemRight2 = document.createElement("div"); // New variable for delete button container
+  objectItemRight2.classList.add("object-item-right"); // New variable for delete button container
+  objectItemRight2.appendChild(deleteButton); // New variable for delete button container
 
   objectItem.appendChild(objectItemLeft);
-  objectItem.appendChild(objectItemRight);
+  objectItem.appendChild(objectItemRight1); // Corrected variable name
+  objectItem.appendChild(objectItemRight2); // New variable for delete button container
 
   return objectItem.outerHTML;
 }
+
 
 // Function to clear objects from a container, except for the section header
 function clearObjects(container) {
@@ -1336,6 +1358,39 @@ function showDeleteObjectConfirmation(objectName, objectType) {
     deleteModal.style.display = "none";
   });
 }
+
+//Shows the edit object confirmation modal
+function showEditObjectConfirmation(objectName, objectType) {
+  // Modify the object name by removing hyphens and capitalizing each word
+  const modifiedObjectName = objectName.replace(/-/g, " ").replace(/(^\w|\s\w)/g, (match) => match.toUpperCase());
+
+  // Get the edit modal element
+  const editModal = document.getElementById("modal-dialogue");
+
+  // Set the object name in the modal content
+  const headerElement = editModal.querySelector(".modal-dialogue-header");
+  headerElement.textContent = "Edit Object";
+
+  const textElement = editModal.querySelector(".modal-dialogue-text");
+  textElement.textContent = `Edit the object "${modifiedObjectName}" below:`;
+
+  // Show the edit modal
+  editModal.style.display = "flex";
+
+  // Handle edit confirmation
+  const confirmButton = editModal.querySelector(".main-button");
+  confirmButton.addEventListener("click", () => {
+    editObject(objectName, objectType);
+    editModal.style.display = "none";
+  });
+
+  // Handle cancel edit
+  const cancelButton = editModal.querySelector(".secondary-button");
+  cancelButton.addEventListener("click", () => {
+    editModal.style.display = "none";
+  });
+}
+
 
 
 
@@ -1473,12 +1528,7 @@ function setupMainSection(event) {
 
 
 //========================================LIST EDITOR==========================================//
-class ListEditor {
-  constructor(listName) {
-    console.log("ListEditor is being instantiated with listName: ", listName);
-    // You can add more properties and methods as needed
-  }
-}
+
 
 
 
@@ -1538,6 +1588,8 @@ class ProcessEditor {
         console.log('Received process:', json.process); // Log the fetched process
         this.process = json.process;
         this.renderProcess();
+        setupProcessToolbar();
+
       })
       .catch(e => {
         console.error('An error occurred fetching the process data:', e);
@@ -1633,9 +1685,6 @@ class ProcessEditor {
       mainSection.appendChild(card);
     });
 
-    //Add toolbar functionality after loading in all the dependent objects
-    setupProcessToolbar();
-
 
 
     // New: add an "add button" after all steps
@@ -1657,7 +1706,7 @@ class ProcessEditor {
     deleteButtons.forEach(button => {
       button.addEventListener('click', this.handleDeleteStep);
     });
-
+    setupProcessToolbar();
     
   }
 
@@ -1673,7 +1722,7 @@ class ProcessEditor {
       clearTimeout(this.saveTimeout);
     }
 
-    this.saveTimeout = setTimeout(() => this.saveChanges(this), 1500);
+    this.saveTimeout = setTimeout(() => this.saveChanges(this), 2500);
   }
 
   handleDeleteStep = (event) => {
@@ -1690,9 +1739,13 @@ class ProcessEditor {
       clearTimeout(this.saveTimeout);
     }
   
-    this.saveChanges();
+    // The saveChanges function will be called after 5 seconds if there are no further changes
+    this.saveTimeout = setTimeout(() => this.saveChanges(), 2500); 
+
+    // I'm calling renderProcess immediately so the user can see their step is deleted. If you want to delay this too, move this line inside the setTimeout.
     this.renderProcess();
   }
+
   
 
   saveChanges = () => {
@@ -1708,7 +1761,8 @@ class ProcessEditor {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         this.unsavedChanges = false;
-        showToast('Process saved!', 2000);
+        showToast('Changes Saved', 2000);
+        setupProcessToolbar
         return true;
       })
       .catch(e => {
@@ -1731,7 +1785,10 @@ class ProcessEditor {
       clearTimeout(this.saveTimeout);
     }
 
-    this.saveChanges();
+    // The saveChanges function will be called after 5 seconds if there are no further changes
+    this.saveTimeout = setTimeout(() => this.saveChanges(), 2500); 
+
+    // I'm calling renderProcess immediately so the user can see their new step. If you want to delay this too, move this line inside the setTimeout.
     this.renderProcess();
   }
 
@@ -1741,16 +1798,12 @@ class ProcessEditor {
       event.returnValue = 'You have unsaved changes. Do you really want to leave?';
     }
   }
+  
 }
-
-
-
 
 //=============================PROCESS EDITOR TOOLBAR=============================//
 
 function setupProcessToolbar() {
-
-
   let currentProcessEditor = null;
 
   window.addEventListener('beforeunload', (event) => {
@@ -1761,38 +1814,49 @@ function setupProcessToolbar() {
     }
   });
 
+  // Elements from the DOM
+  const exportButton = document.getElementById('exportButton');
+  const exportModal = document.getElementById('export-process-modal');
+  const exportModalHeader = document.getElementById('export-process-modal-header');
+  const exportModalText = document.getElementById('export-process-modal-text');
+  const copyProcessButton = document.getElementById('copyProcess');
 
-  //INTERPRETING JSON AND RETURNING TEXT
+  const importButton = document.getElementById('importButton');
+  const importModal = document.getElementById('import-process-modal');
+  const importModalText = document.getElementById('import-process-modal-text');
+  const appendProcessButton = document.getElementById('appendProcess');
+  const replaceProcessButton = document.getElementById('replaceProcess');
+
+  // Function to handle modal text click
+  function handleModalTextClick(event) {
+    if (event.target === modalText) {
+      modalText.style.display = 'none';
+    }
+  }
+
+  // Decode HTML entities
+  function decodeHTMLEntities(text) {
+    const textArea = document.createElement('textarea');
+    textArea.innerHTML = text;
+    return textArea.value;
+  }
+
+  // Update the interpretJSON function
   function interpretJSON(jsonData) {
     if (Array.isArray(jsonData)) {
       return jsonData
-        .map(
-          (item, index) =>
-            `${index + 1}. **${item.title}**: ${item.description}`
-        )
-        .join('\n');
+        .map((item) => decodeHTMLEntities(`<div class="modal-dialogue-object"><p><strong>${item.title}</strong>: ${item.description}</p></div>`))
+        .join('');
     } else if (typeof jsonData === 'string') {
       const parsedData = JSON.parse(jsonData);
       if (Array.isArray(parsedData)) {
         return parsedData
-          .map(
-            (item, index) =>
-              `${index + 1}. **${item.title}**: ${item.description}`
-          )
-          .join('\n');
+          .map((item) => decodeHTMLEntities(`<div class="modal-dialogue-object"><p><strong>${item.title}</strong>: ${item.description}</p></div>`))
+          .join('');
       }
     }
-
     return '';
   }
-
-
-
-  // Get a reference to the export button, the modal text, and the modal text content
-  const exportButton = document.getElementById('exportButton');
-  const modalHeaderText = document.getElementById('modal-dialogue-header');
-  const modalTextContent = document.getElementById('modal-text-content');
-  const modalText = document.getElementById('modal-text');
 
   // Add a function to fetch the process data
   async function fetchProcessData(processName) {
@@ -1811,86 +1875,35 @@ function setupProcessToolbar() {
     }
   }
 
-  // Update the exportButton click event listener
-  exportButton.addEventListener('click', async () => {
-    try {
-      //Clear modal text
-      modalTextContent.innerHTML = '';
+// Export button event
+exportButton.addEventListener('click', async () => {
+  try {
+    exportModal.style.display = 'flex';
+    const selectedProcessName = sessionStorage.getItem('selectedProcess');
+    const processData = await fetchProcessData(selectedProcessName);
 
-      // Show the modal
-      modalText.style.display = 'block';
-      const selectedProcessName = sessionStorage.getItem('selectedProcess');
-      const processData = await fetchProcessData(selectedProcessName);
+    exportModalHeader.textContent = `Export ${selectedProcessName}`;
+    exportModalText.innerHTML = interpretJSON(processData);
 
-      modalHeaderText.textContent = `Process Name: ${selectedProcessName}`;
+  } catch (error) {
+    console.error('An error occurred:', error);
+    showToast('An error occurred. Please try again.', 2000);
+  }
+});
 
-      // Create the <h1> element
-      const headingElement = document.createElement('h2');
-      headingElement.className = 'title-header';
-      // Find the position of each hyphen in the selectedProcessName and capitalize the following character
-      const formattedProcessName = selectedProcessName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-
-      // Assign the formatted process name to the heading element's text content
-      headingElement.textContent = `Export ${formattedProcessName}`;
-
-
-
-      // Append the heading element to the modal content
-      modalTextContent.appendChild(headingElement);
-
-
-      // Loop through the process data and create elements for each step
-      processData.forEach((step, index) => {
-        const stepElement = document.createElement('div');
-        stepElement.classList.add('modal-dialogue-object');
-
-        const stepTitleElement = document.createElement('p');
-        const titleElement = document.createElement('strong');
-        titleElement.textContent = step.title;
-        stepTitleElement.appendChild(titleElement);
-        stepTitleElement.innerHTML += `: ${step.description}`;
-
-        stepElement.appendChild(stepTitleElement);
-
-        modalTextContent.appendChild(stepElement);
-      });
-
-      // Create a "Copy" button
-      const copyButton = document.createElement('button');
-      copyButton.classList.add('main-button');
-      copyButton.textContent = 'Copy';
-
-      copyButton.addEventListener('click', () => {
-        const contentToCopy = interpretJSON(processData);
-        navigator.clipboard.writeText(contentToCopy)
-          .then(() => {
-            console.log('Content copied to clipboard');
-            showToast('Copied!', 1000);
-          })
-          .catch((error) => {
-            console.error('Failed to copy content to clipboard:', error);
-          });
-      });
-
-      modalTextContent.appendChild(copyButton);
+// Copy button event
+copyProcessButton.addEventListener('click', () => {
+  navigator.clipboard.writeText(exportModalText.innerHTML)
+    .then(() => {
+      console.log('Content copied to clipboard');
+      showToast('Copied', 1000);
+    })
+    .catch((error) => {
+      console.error('Failed to copy content to clipboard:', error);
+    });
+});
 
 
-    } catch (error) {
-      console.error('An error occurred:', error);
-      showToast('An error occurred. Please try again.', 2000);
-    }
-  });
-
-
-  // Function to handle modal text click
-  function handleModalTextClick(event) {
-    if (event.target === modalText) {
-      modalText.style.display = 'none';
-
-    }
-  };
-
-    
   // Parse the imported text into process data
   function importProcessFromText(text) {
     const trimmedText = text.trim();
@@ -1909,17 +1922,16 @@ function setupProcessToolbar() {
 
         const step = {
           title,
-          description
+          description,
         };
         processData.push(step);
       } else {
-
         if (processData.length > 0) {
-          processData[processData.length - 1].description += "\n" + stepText;
+          processData[processData.length - 1].description += '\n' + stepText;
         } else {
           const step = {
             title: stepText,
-            description: ''
+            description: '',
           };
           processData.push(step);
         }
@@ -1929,16 +1941,15 @@ function setupProcessToolbar() {
     return processData;
   }
 
-
   // Append process data to the existing process
   async function appendProcessData(processName, processData) {
     try {
       const response = await fetch('/api/user/process/append', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ processName, processData })
+        body: JSON.stringify({ processName, processData }),
       });
 
       if (!response.ok) {
@@ -1959,9 +1970,9 @@ function setupProcessToolbar() {
       const response = await fetch('/api/user/process/replace', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ processName, processData })
+        body: JSON.stringify({ processName, processData }),
       });
 
       if (!response.ok) {
@@ -1976,64 +1987,20 @@ function setupProcessToolbar() {
     }
   }
 
-
-  // Get a reference to the import button
-  const importButton = document.getElementById('importButton');
-
-  // Add an event listener to the import button click
+  // Import button event
   importButton.addEventListener('click', () => {
-    // Set the modal header
-    modalHeaderText.textContent = 'Import Process as Text';
+    importModal.style.display = 'flex';
 
-    // Clear any existing content
-    modalTextContent.innerHTML = '';
-
-    // Create the <h1> element
-    const headingElement = document.createElement('h2');
-    headingElement.className = 'title-header';
-    headingElement.textContent = 'Import a List';
-
-    // Append the heading element to the modal content
-    modalTextContent.appendChild(headingElement);
-
-    // Create the textarea element
-    const textarea = document.createElement('textarea');
-    textarea.classList.add('modal-dialogue-textbox', 'large-textbox');
-    textarea.placeholder = 'Enter your process steps as a list:\n\nStep Title: Step Description. Separate each step with a new line.';
-    modalTextContent.appendChild(textarea);
-
-    // Create the button container
-    const buttonContainer = document.createElement('div');
-    buttonContainer.classList.add('modal-dialogue-buttons-container');
-
-    // Create the append button
-    const appendButton = document.createElement('button');
-    appendButton.classList.add('main-button');
-    appendButton.textContent = 'Append';
-    buttonContainer.appendChild(appendButton);
-
-    // Create the replace button
-    const replaceButton = document.createElement('button');
-    replaceButton.classList.add('main-button');
-    replaceButton.textContent = 'Replace';
-    buttonContainer.appendChild(replaceButton);
-
-    // Append the button container to the modal content
-    modalTextContent.appendChild(buttonContainer);
-
-    // Add an event listener to the append button click
-    appendButton.addEventListener('click', async () => {
-      const text = textarea.value;
-      console.log(text);
+    // Append button event
+    appendProcessButton.addEventListener('click', async () => {
+      const text = importModalText.value;
       const processData = importProcessFromText(text);
-      console.log(processData);
 
       try {
         const selectedProcessName = sessionStorage.getItem('selectedProcess');
         await appendProcessData(selectedProcessName, processData);
-        console.log('Process data appended:', processData);
         new ProcessEditor(selectedProcessName);
-        modalText.style.display = 'none';
+        importModal.style.display = 'none';
         showToast('Process data appended successfully!', 2000);
       } catch (error) {
         console.error('Error appending process data:', error);
@@ -2041,33 +2008,35 @@ function setupProcessToolbar() {
       }
     });
 
-    // Add an event listener to the replace button click
-    replaceButton.addEventListener('click', async () => {
-      const text = textarea.value;
-      console.log(text);
+    // Replace button event
+    replaceProcessButton.addEventListener('click', async () => {
+      const text = importModalText.value;
       const processData = importProcessFromText(text);
-      console.log(processData);
 
       try {
         const selectedProcessName = sessionStorage.getItem('selectedProcess');
         await replaceProcessData(selectedProcessName, processData);
-        console.log('Process data replaced:', processData);
         new ProcessEditor(selectedProcessName);
-        modalText.style.display = 'none';
+        importModal.style.display = 'none';
         showToast('Process data replaced successfully!', 2000);
-        
       } catch (error) {
         console.error('Error replacing process data:', error);
         showToast('An error occurred while replacing process data. Please try again.', 2000);
       }
     });
+  });
 
-    // Show the modal
-    modalText.style.display = 'flex';
+  // Close modals when clicking outside the content
+  exportModal.addEventListener('click', (event) => {
+    if (event.target === exportModal) {
+      exportModal.style.display = 'none';
+    }
+  });
 
-    modalText.addEventListener('click', handleModalTextClick);
-
-
-    
+  importModal.addEventListener('click', (event) => {
+    if (event.target === importModal) {
+      importModal.style.display = 'none';
+    }
   });
 }
+

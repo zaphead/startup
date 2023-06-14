@@ -488,7 +488,7 @@ async function generatePrompt(userId, tone, maxWords, analysisScope) {
 
     //Replace input with actual prompt variables
     if (tone === 'Roast') {
-      tone = "Roast the business and it's strategies. Be critical, harsh and don't hold back. Be absolutely BRUTAL. Make it as personal as possible. Also throw in a few snarky jokes in the roast."
+      tone = "Roast the business and it's strategies. Be critical, harsh and don't hold back. Be absolutely BRUTAL. Make it as personal as possible. Be super off the cuff and funny. Make everything a joke. Don't hold back and get personal."
     }
     if (tone === 'anger') {
       tone = "Anger. AlTeRnAtE bEtWeEn CaPiTaL aNd LoWeRcAsE lEtTeRs WiThIn A wOrD, mAiNtAiNiNg ThE oRiGiNaL lEtTeR oRdEr. 'tHiS iS aN aNgRy tExT'. AlWaYs UsE aLtErNaTiNg CaPiTaLs. uSe AlTeRnAtInG cApItAlS."
@@ -800,8 +800,38 @@ router.delete('/api/user/objects/:objectName', ensureAuthenticated, async (req, 
 
 
 
+//=================================LIST ROUTS=================================//
+
+// Get Lists Route
+router.get('/api/user/lists', ensureAuthenticated, async (req, res) => {
+  try {
+    const database = client.db('users');
+    const collection = database.collection('users');
+
+    // Find the document for the current user
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) });
+
+    if (user) {
+      res.status(200).json({ lists: user.lists });
+    } else {
+      res.status(404).json({ message: "User not found." });
+    }
+  } catch (error) {
+    console.error('Error in /api/user/lists:', error);
+    res.status(500).json({ error: 'An error occurred while fetching the lists.' });
+  }
+});
 
 
+
+
+
+
+
+
+
+
+//==============================PROCESS ROUTES==============================//
 
 
 
