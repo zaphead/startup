@@ -238,9 +238,13 @@ router.get('/api/logout', (req, res) => {
   res.status(200).json({ message: 'Logout successful.' });
 });
 
+
+
 router.get('/api/user', ensureAuthenticated, (req, res) => {
   res.status(200).json({ user: req.user });
 });
+
+
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
@@ -297,6 +301,47 @@ router.post('/api/signup', async (req, res) => {
       .json({ error: 'An error occurred while processing your request.', details: error.message });
   }
 });
+
+
+
+// Update first Login route for viewing the tutorial/intro
+router.post('/api/user/updateFirstLogin', ensureAuthenticated, async (req, res) => {
+  try {
+    // Select the "users" collection
+    const collection = client.db("users").collection("users");
+
+    // Update the document for the current user
+    const result = await collection.updateOne(
+      { _id: new ObjectId(req.user._id) },
+      { $set: { firstLogin: 0 } }
+    );
+  } catch (error) {
+    console.error('Error in /api/user/updateFirstLogin:', error.message);
+    res.status(500).json({ message: 'An error occurred while updating first login status.' });
+  }
+});
+
+// Getting firstlogin status for tutorial/intro
+router.get('/api/user/getFirstLogin', ensureAuthenticated, async (req, res) => {
+  try {
+    // Select the "users" collection
+    const collection = client.db("users").collection("users");
+
+    // Find the document that describes the user
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ firstLogin: user.firstLogin });
+  } catch (error) {
+    console.error('An error occurred while fetching user first login status:', error.message);
+    res.status(500).json({ message: 'An error occurred while fetching user first login status' });
+  }
+});
+
+
 
 
 
@@ -624,6 +669,35 @@ router.post('/api/analysis', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ message: 'An error occurred while processing your request.' });
   }
 });
+
+
+// Get analysis for use in viewing in the front end
+router.get('/api/user/analysisResult', ensureAuthenticated, async (req, res) => {
+  try {
+    // Select the "users" collection.
+    const collection = client.db("users").collection("users");
+
+    // Find the document that describes the user.
+    const user = await collection.findOne({ _id: new ObjectId(req.user._id) }); // Changed to _id
+
+    // Check if the user was found.
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the user has an analysis result.
+    if (!user.analysisResult) {
+      return res.status(404).json({ message: 'No analysis result found for user' });
+    }
+
+    res.status(200).json({ analysisResult: user.analysisResult });
+  } catch (error) {
+    console.error('An error occurred while fetching user analysis result:', error.message);
+    res.status(500).json({ message: 'An error occurred while fetching user analysis result' });
+  }
+});
+
+
 
 
 

@@ -29,6 +29,106 @@ modal.addEventListener("click", function(event) {
 });
 
 
+//SLIDESHOW
+//SLIDESHOW 
+
+let images = ["woman-checklist.png", "cook.png", "man-boxes.png", "man-on-phone.png", "man-sign.png", "realtor.png", "camera-guy.png" /* List all image names here... */];
+let index = Math.floor(Math.random() * images.length);
+let imgSlideshow = document.getElementById("imgSlideshow");
+
+let lastImagesIndices = [index]; // initialize the queue with the first index
+
+function changeImage() {
+    let newIndex;
+    do {
+        newIndex = Math.floor(Math.random() * images.length);
+    } while (lastImagesIndices.includes(newIndex));
+    
+    lastImagesIndices.push(newIndex); // add the new index to the queue
+    if (lastImagesIndices.length > 3) {
+        lastImagesIndices.shift(); // remove the oldest index if the queue is full
+    }
+    
+    index = newIndex;
+    imgSlideshow.src = "../Images/owners/" + images[index];
+    imgSlideshow.style.opacity = 1;
+}
+
+setInterval(() => {
+    imgSlideshow.style.opacity = 0;
+    setTimeout(changeImage, 500); //500ms to match with the CSS transition duration
+}, 3000); //3 seconds
+
+//==========================INTRO SCREEN CODE==========================//
+
+document.getElementById("closeIntro").addEventListener("click", function() {
+  const introScreen = document.getElementById("intro-screen");
+
+  introScreen.style.display = "none";
+});
+
+document.getElementById("show-intro").addEventListener("click", function() {
+  const settingsModal = document.getElementById("settingsModal");
+  const introScreen = document.getElementById("intro-screen");
+  settingsModal.style.display = "none";
+
+  introScreen.style.display = "flex";
+  introScreen.style.opacity = '1'; // Immediately reset the opacity to 1
+});
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Fetching first login status...');
+  fetch('/api/user/getFirstLogin', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin' // Include cookies
+  })
+  .then(response => {
+    console.log('Received response:', response);
+    return response.json();
+  })
+  .then(data => {
+    console.log('Received data:', data);
+    if (data.firstLogin === 1) {
+      // Show the intro screen if firstLogin equals 1
+      let introScreen = document.getElementById('intro-screen');
+      introScreen.style.display = 'flex';
+      // We use setTimeout to allow a paint frame to occur so that the transition can work.
+      setTimeout(function() {
+        introScreen.style.opacity = '1';
+      }, 10);
+    }
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+});
+
+
+
+
+
+//Setting first login to 0
+document.getElementById('closeIntro').addEventListener('click', () => {
+  fetch('/api/user/updateFirstLogin', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({}), // added empty object
+    credentials: 'same-origin' // Include cookies
+  })
+});
+
+
+
+
+
 
 //ANALYZE MODAL
 const analyzeButton = document.querySelector('.analyze');
@@ -189,7 +289,7 @@ async function fetchBusinessInfo() {
       businessInfoMap['business_name'] = businessInfo.business_name;
       businessInfoMap['target_market'] = businessInfo.target_market;
       businessInfoMap['product'] = businessInfo.product;
-      businessInfoMap['stage'] = businessInfo.stage;
+      businessInfoMap['stage'] = businessInfo.business_stage;
       businessInfoMap['hours'] = businessInfo.hours;
       businessInfoMap['experience'] = businessInfo.experience;
     } else {
@@ -515,7 +615,6 @@ document.getElementById('analysisForm').addEventListener('submit', async (event)
     runLoadingSequence(roast);
   
     let userInfo = await userResponse.json();
-    console.log('User info received:', userInfo);
     let userId = userInfo.user._id; // Assuming the user info includes _id
   
     // Check if the user is at the analysis limit for the free tier
@@ -573,27 +672,65 @@ document.getElementById('analysisForm').addEventListener('submit', async (event)
 
 //==================================ANALYSIS FULL PAGE MODAL & FUNCTIONS==================================//
 //Open analysis full page modal
+// Open analysis full page modal
 document.addEventListener('DOMContentLoaded', function () {
   var analysisOutput = document.querySelector('.analysis-output');
   var fullAnalysisModal = document.getElementById('full-analysis-modal');
   var fullAnalysisModalContent = document.getElementById('full-analysis-modal-content');
   const closeAnalysis = document.getElementById('close-analysis');
 
-  analysisOutput.addEventListener('click', function () {
-    fullAnalysisModal.style.display = 'flex';
-  });
+  // analysisOutput.addEventListener('click', function () {
+  //   fullAnalysisModal.style.display = 'flex';
+  //   fetchAnalysisResult();
+  // });
 
   fullAnalysisModal.addEventListener('click', function (event) {
     if (event.target === fullAnalysisModal) {
       fullAnalysisModal.style.display = 'none';
     }
-    
   });
 
   closeAnalysis.addEventListener('click', function (event) {
-      fullAnalysisModal.style.display = 'none';
+    fullAnalysisModal.style.display = 'none';
   });
+
+  // Fetch analysisResult and display in analysisPaneLarge
+  fetchAnalysisResult();
 });
+
+async function fetchAnalysisResult() {
+  try {
+    const response = await fetch('/api/user/analysisResult', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const analysisResult = data.analysisResult;
+
+      // Set analysisPaneLarge to analysisResult
+      const analysisPaneLarge = document.getElementById('analysisPaneLarge');
+      const analysisPane = document.getElementById('analysisPane');
+
+      if (analysisResult === '') {
+        analysisPaneLarge.innerText = 'Analysis will appear here.';
+      } else {
+        analysisPaneLarge.innerText = analysisResult;
+        analysisPane.innerText = analysisResult;
+      }
+    } else {
+      console.error('An error occurred while fetching user data:', response.statusText);
+    }
+  } catch (error) {
+    console.error('An error occurred while fetching user data:', error.message);
+  }
+}
+
+
 
 //Set analysisPaneLarge to analysis variable if the variable doesn't equal ''
 let largeAnalysisPaneText = document.getElementById('analysisPaneLarge').innerText;
@@ -780,7 +917,6 @@ async function checkUserTier() {
 
     if (userResponse.ok) {
       let userInfo = await userResponse.json();
-      console.log('User info received:', userInfo);
 
       // Check the user's tier parameter
       const upgradeButton = document.getElementById('upgrade-button');
@@ -1306,7 +1442,7 @@ function createObjectHTML(objectElement, editButton, deleteButton) {
   objectItemRight2.appendChild(deleteButton); // New variable for delete button container
 
   objectItem.appendChild(objectItemLeft);
-  objectItem.appendChild(objectItemRight1); // Corrected variable name
+  // objectItem.appendChild(objectItemRight1); // Corrected variable name
   objectItem.appendChild(objectItemRight2); // New variable for delete button container
 
   return objectItem.outerHTML;
@@ -1538,6 +1674,12 @@ function setupMainSection(event) {
 
 //========================================LIST EDITOR==========================================//
 
+class ListEditor {
+  constructor(listName) {
+    console.log(`ListEditor is being instantiated with listName: ${listName}`);
+    // You can add more properties and methods as needed
+  }
+}
 
 
 
@@ -1648,11 +1790,13 @@ class ProcessEditor {
   mainSection.innerHTML = '';
   
   // New: Create and add the toolbar
+  const modifiedProcessName = this.processName.replace(/-/g, " ").replace(/(^\w|\s\w)/g, (match) => match.toUpperCase());
+
   const toolbar = document.createElement('div');
   toolbar.id = 'toolbar';
   toolbar.classList.add('toolbar');
   toolbar.innerHTML = `
-    <div id="toolbarTitle" class="toolbar-title">Flow Chart</div>
+    <div id="toolbarTitle" class="toolbar-title">${modifiedProcessName}</div>
     <div class="toolbar-items">
       <button id="importButton" class="secondary-button openModalBtn">Import</button>
       <button id="exportButton" class="secondary-button openModalBtn">Export</button>

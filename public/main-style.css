@@ -380,14 +380,15 @@ input:hover {
   font-size: 14px;
   opacity: 0;
   visibility: hidden;
-  
+  width: max-content; /* Adjust the width to fit the content */
+
   /* Position the tooltip text */
   position: absolute;
   z-index: 1;
   bottom: calc(100% + 15px); /* Place the tooltip text above the element */
   left: 50%;
   transform: translateX(-50%); /* Center the tooltip */
-  
+
   /* Fade in tooltip */
   transition: opacity 0.3s, visibility 0.3s;
 }

@@ -215,13 +215,13 @@
             <h3 class="object-header">Processes</h3>
           </div>
           <div class="specific-object-container" id="list-container">
-            <h3 class="object-header">Lists</h3>
+            <h3 class="object-header">Lists (Coming Soon)</h3>
           </div>
           <div class="specific-object-container" id="table-container">
-            <h3 class="object-header">Tables</h3>
+            <h3 class="object-header">Tables (Coming Soon)</h3>
           </div>
           <div class="specific-object-container" id="calendar-container">
-            <h3 class="object-header">Calendars</h3>
+            <h3 class="object-header">Calendars (Coming Soon)</h3>
           </div>
         </div>
       </div>
@@ -289,6 +289,8 @@
                 <p id="authenticated-user-email">Account Holder email</p>
                 <div class="password-div">
                   <button id="change-password" class="main-button password-button">Change Password</button>
+                  <button id="show-intro" class="main-button">Show Intro/Tutorial Screen</button>
+
                 </div>
                 <h3 class="settings-header">Subscription</h3>
                 <button id="cancel-subscription" class="main-button password-button">Manage Subscription</button>
@@ -296,7 +298,8 @@
 
                 <h3 class="settings-header">Danger Zone</h3>
                 <button id="delete-account" class="main-button password-button">Delete Account</button>
-              </div>
+                <h3 class="settings-header">Other</h3>
+                <button onclick="window.open('https://forms.gle/9kC7BjaLpLCPD59P7')" id="survey" class="main-button">Send Feedback</button>              </div>
               <div class="update-notes">
                 <h3 class="settings-header">Update Notes</h3>
               </div>
@@ -304,6 +307,69 @@
         </div>
       </div>
     </div>
+
+    <!-- Intro Screen -->
+    <div id="intro-screen" class="intro-screen">
+      <div class="intro-screen-content">
+        <div class="intro-screen-main">
+          <div class="main-left">
+            <h1 style="font-size: 40px;">Welcome to<br><span style="font-size: 80px;">StrataMind</span></h1>
+            <!-- <img style="width: 100%;" src="../Images/Processeon Logo.png"> -->
+          </div>
+          <div class="main-right">
+            <img class="intro-images" id="imgSlideshow" src="../Images/owners/woman-checklist.png">
+          </div>
+        </div>
+        <h1>It's time to take your business to the <span class="hottext">next level.</span></h1>
+        <h2>Scroll down and we'll show you around.</h1>
+        <div class="explainer-content">
+          <h2 class="header-relative">Now that we have the basics on your situation from that little survey, we can really get into the weeds.</h2>
+          <div class="section-container-short">
+            <div class="main-left">
+              <h3 class="header-left">
+                Start out by creating an <span class="hottext"> Object.</span> These are customized interfaces that you can use to easily describe certain areas of your business
+              </h3>
+            </div>
+            <div class="main-right">
+              <img class="ui-image" src="../Images/ui/objects.png">
+            </div>
+          </div>
+          <div class="section-container-short">
+            <div class="main-left">
+              <img class="ui-image" src="../Images/ui/process.png">
+            </div>
+            <div class="main-right">
+              <h3 class="header-left">
+                <span class="hottext">Processes </span> are great for visualizing exactly how your business goes about an ordered operation, such as attaining clients, marketing your product, and more. <br><br> Already have something written down? Go ahead and import it as plain text and StrataMind will do the rest.
+              </h3>
+            </div>
+          </div>
+          <h1>Ready? Set? <span class="hottext">Analyze.</span></h1>
+          <h2 style="margin-bottom: 25px; margin-top: 0px;">Once you have at least one Object (we also made some starters for you), <br> it's time to analyze.</h1>
+            <div class="section-container-short">
+              <div class="main-left">
+                <img class="ui-image" style="width: 50%;" src="../Images/ui/stratamind.png">
+              </div>
+              <div class="main-right">
+                <h3 style="text-align: right;">
+                  StrataMind is built for trial and error: <span class="hottext"> Write. Analyze. Fix. Repeat.</span> No process is perfect, but our goal is to get yours darn near close.<br> <br>Also don't let the roast mode hurt your feelings; gets a little feisty sometimes.
+                </h3>
+              </div>
+            </div>
+            <div class="colored explainer-content">
+            <h1>Now hop to it! Go build something <span class="hottext">amazing.</span></h1>
+          </div>
+        </div>
+
+        
+        <div class="intro-menu-fixed">
+          <div class="menu-content">
+            <button id="closeIntro" tooltip="You can find this page again in the settings menu if you need it." class="main-button onwhite-button">Close Intro</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
   </body>
   <script src="/dist/bundle.js"></script>
   <script type="module" src="./main.js"></script>
