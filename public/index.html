@@ -27,32 +27,6 @@
 		</div>
 	</div>
 	<script src="./index.js"></script>
-	<!-- <script>
-    document.addEventListener('mousemove', function(event) {
-      var button = document.querySelector('.main-button');
-      var buttonRect = button.getBoundingClientRect();
-      var mouseX = event.clientX;
-      var mouseY = event.clientY;
-
-      var buttonX = buttonRect.left + (buttonRect.width / 2);
-      var buttonY = buttonRect.top + (buttonRect.height / 2);
-
-      var distanceX = mouseX - buttonX;
-      var distanceY = mouseY - buttonY;
-
-      var maxDistance = 250;
-      var fallOff = 0.05;
-
-      if (Math.abs(distanceX) <= maxDistance && Math.abs(distanceY) <= maxDistance) {
-        var translationX = distanceX * fallOff * (1 - Math.abs(distanceX) / maxDistance);
-        var translationY = distanceY * fallOff * (1 - Math.abs(distanceY) / maxDistance);
-
-        button.style.transform = 'translate(' + translationX + 'px, ' + translationY + 'px)';
-      } else {
-        button.style.transform = 'none';
-      }
-    });
-	  </script> -->
 	
 </body>
 </html>

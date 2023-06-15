@@ -29,35 +29,57 @@ modal.addEventListener("click", function(event) {
 });
 
 
-//SLIDESHOW
 //SLIDESHOW 
 
 let images = ["woman-checklist.png", "cook.png", "man-boxes.png", "man-on-phone.png", "man-sign.png", "realtor.png", "camera-guy.png" /* List all image names here... */];
 let index = Math.floor(Math.random() * images.length);
 let imgSlideshow = document.getElementById("imgSlideshow");
 
+// Preload images
+let preloadedImages = images.map(image => {
+  let img = new Image();
+  img.src = "../Images/owners/" + image;
+  return img;
+});
+
 let lastImagesIndices = [index]; // initialize the queue with the first index
 
 function changeImage() {
-    let newIndex;
-    do {
-        newIndex = Math.floor(Math.random() * images.length);
-    } while (lastImagesIndices.includes(newIndex));
-    
-    lastImagesIndices.push(newIndex); // add the new index to the queue
-    if (lastImagesIndices.length > 3) {
-        lastImagesIndices.shift(); // remove the oldest index if the queue is full
-    }
-    
-    index = newIndex;
-    imgSlideshow.src = "../Images/owners/" + images[index];
-    imgSlideshow.style.opacity = 1;
+  let newIndex;
+  do {
+      newIndex = Math.floor(Math.random() * images.length);
+  } while (lastImagesIndices.includes(newIndex));
+  
+  lastImagesIndices.push(newIndex); // add the new index to the queue
+  if (lastImagesIndices.length > 3) {
+      lastImagesIndices.shift(); // remove the oldest index if the queue is full
+  }
+
+  index = newIndex;
+  imgSlideshow.style.opacity = 0; // start fading out the old image immediately
+  
+  let newImgSrc = preloadedImages[index].src;
+  let newImage = new Image(); // create a new Image object
+  newImage.src = newImgSrc; // set the src of the new Image object
+  
+  // add an event listener for the load event on the new Image object
+  newImage.onload = function() {
+    // this code will run after the new image has fully loaded
+    imgSlideshow.src = newImgSrc; // set the src of the img element
+    imgSlideshow.style.opacity = 0; // ensure the img element is fully transparent
+    setTimeout(() => {
+        imgSlideshow.style.opacity = 1; // start the fade-in transition after a delay
+    }, 100);
+};
 }
+
 
 setInterval(() => {
     imgSlideshow.style.opacity = 0;
     setTimeout(changeImage, 500); //500ms to match with the CSS transition duration
 }, 3000); //3 seconds
+
+
 
 //==========================INTRO SCREEN CODE==========================//
 
